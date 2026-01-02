@@ -39,5 +39,3 @@ jobs:
           context: .
           push: false
           tags: blankspace-app:ci
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
