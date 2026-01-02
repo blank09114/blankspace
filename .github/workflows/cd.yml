@@ -1,7 +1,9 @@
 name: cd
 
 on:
-  push:
+  workflow_run:
+    workflows: ["ci"]
+    types: [completed]
     branches: ["dev"]
 
 concurrency:
