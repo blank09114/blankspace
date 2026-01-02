@@ -1,15 +1,10 @@
 name: cd
 
 on:
-<<<<<<< HEAD
   workflow_run:
     workflows: ["ci"]
     types: [completed]
     branches: ["dev"]
-=======
-  push:
-    branches: [ "dev" ]
->>>>>>> 03bb9199f10c1cb3614149d38efb73c828721c31
 
 concurrency:
   group: cd-dev
@@ -17,6 +12,7 @@ concurrency:
 
 jobs:
   build-and-deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,13 +37,18 @@ jobs:
           docker push $IMAGE_BASE:latest
           docker push $IMAGE_BASE:sha-$SHA
 
-      - name: Deploy on EC2
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            set -e
-            echo "Deploying commit ${{ github.sha }}"
-            ~/deploy.sh
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }} # ap-northeast-2
+
+      - name: Deploy on EC2 via SSM
+        run: |
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --targets "Key=instanceIds,Values=${{ secrets.EC2_INSTANCE_ID }}"  \
+            --comment "Deploying commit ${{ github.sha }}" \
+            --parameters commands="cd /home/ec2-user && ./deploy.sh" \
+            --timeout-seconds 600
