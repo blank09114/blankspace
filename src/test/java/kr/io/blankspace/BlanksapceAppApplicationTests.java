@@ -1,4 +1,4 @@
-package kr.io.blanksapce;
+package kr.io.blankspace;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
