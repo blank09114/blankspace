@@ -1,0 +1,13 @@
+package kr.io.blankspace.dto.account.auth;
+
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class LoginResponseDTO {
+    private String userId;
+    private String userMail;
+    private String userName;
+    private String userRole;
+}

@@ -114,3 +114,34 @@ function closeToast()
 
     if (progressBar) { progressBar.style.width = "0%"; }
 }
+
+// 닉네임 불러오기
+function applyAuthGreeting()
+{
+    fetch("/api/auth/me", { credentials: "include" }).then(res =>
+    {
+        if (!res.ok) return null;
+        return res.json();
+    })
+    .then(data =>
+    {
+        if (!data || !data.userName) return;
+
+        const targets = document.querySelectorAll("#authGreetingName");
+        targets.forEach(el => { el.textContent = data.userName; });
+    })
+    .catch(() => { });
+}
+
+// 로그아웃
+function logout()
+{
+    fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include"
+    })
+    .then(() => { location.href = "/?logout=1"; })
+    .catch(() => { location.href = "/?logout=1"; });
+}
+
+addEventListener("DOMContentLoaded", () => { applyAuthGreeting(); });

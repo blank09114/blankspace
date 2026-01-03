@@ -28,7 +28,20 @@ addEventListener("DOMContentLoaded", () =>
 
     if (params.get("joined") === "1")
     {
-        showToast("회원가입이 완료되었습니다.");
+        showToast("회원가입이 완료됐습니다.");
+        history.replaceState({}, "", window.location.pathname);
+    }
+    if (params.get("login") === "1")
+    {
+        fetch("/api/auth/me", { credentials: "include" })
+        .then(res => res.json())
+        .then(data =>
+        { if (data && data.userName) { showToast(`${data.userName}님, 환영합니다.`); } })
+        .finally(() => { history.replaceState({}, "", window.location.pathname); });
+    }
+    if (params.get("logout") === "1")
+    {
+        showToast("로그아웃 됐습니다.");
         history.replaceState({}, "", window.location.pathname);
     }
 });

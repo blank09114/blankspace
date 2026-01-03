@@ -205,7 +205,36 @@ function login()
     if (!validate("idInput", "ID", REGEX.id, MSG.id)) { return; }
     if (!validate("pwInput", "비밀번호", REGEX.pw, MSG.pw)) { return; }
 
-    alert("로그인");
+    const payload =
+    {
+        userId: getValue("idInput"),
+        userPw: getValue("pwInput")
+    };
+
+    fetch("/api/auth/login",
+    {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // ★ 세션 유지 핵심
+        body: JSON.stringify(payload)
+    })
+    .then(async (res) =>
+    {
+        if (res.ok)
+        {
+            location.href = "/?login=1";
+            return;
+        }
+
+        let msg = "로그인 중 오류가 발생했습니다.";
+        try {
+            const data = await res.json();
+            if (data && data.message) msg = data.message;
+        } catch (_) {}
+
+        showToast(msg);
+    })
+    .catch(() => showToast("로그인 중 오류가 발생했습니다."));
 }
 
 // 계정 찾기
