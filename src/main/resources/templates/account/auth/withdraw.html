@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 회원 탈퇴</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
+    <script th:src="@{/js/account/auth.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex align-center justify-center">
+        <form class="authForm" id="findAccountForm">
+            <p class="formHeader title1Text text-center white1">회원 탈퇴</p>
+            <div class="formSection flex flex-column gap-sm pd-md">
+                <div class="inputWrap flex flex-column align-end gap-xs">
+                    <input id="pwInput" type="password" placeholder="PW">
+                    <label class="checkbox flex gap-xs align-center"> <input type="checkbox" onchange="pwToggle()"> 비밀번호 보기 </label>
+                </div>
+                <p class="text1">
+                    이메일 인증을 통해 회원 탈퇴가 진행됩니다.<br>
+                    작성한 방명록과 댓글은 자동으로 삭제되지 않습니다.
+                </p>
+                <button class="btn" type="button" onclick="withdraw()">ID/PW 찾기</button>
+            </div>
+        </form>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

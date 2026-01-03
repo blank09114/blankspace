@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 소설 제목 - 회차 제목</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
+    <script th:src="@{/js/novel/novelForm.js}"></script>
+    <script th:src="@{/js/board/comment.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex flex-column align-center gap-lg">
+        <div class="postConetentWarp pd-md">
+            <div class="postInfo">
+                <p class="text1">1화</p>
+                <p class="title2Text bold">챕터명</p>
+                <p class="text1 black2">YYYY.MM.DD.</p>
+            </div>
+            <div class="postConetent"> 내용 </div>
+            <div class="btnsWrap">
+                <a class="btn">수정</a>
+                <button class="btn">삭제</button>
+            </div>
+        </div>
+        <div class="btnsWrap post">
+            <a class="btn">이전화</a>
+            <a class="btn">목록으로</a>
+            <a class="btn">다음화</a>
+        </div>
+        <div th:replace="fragments/comment :: commentMenu"></div>
+        <div th:replace="fragments/pages :: pages"></div>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

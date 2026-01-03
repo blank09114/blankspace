@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 계정 찾기</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
+    <script th:src="@{/js/account/auth.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex align-center justify-center">
+        <form class="authForm" id="findAccountForm">
+            <p class="formHeader title1Text text-center white1">계정 찾기</p>
+            <div class="formSection flex flex-column gap-sm pd-md">
+                <input id="mailInput" type="text" placeholder="복구 이메일 주소">
+                <button class="btn" type="button" onclick="findAccount()">ID/비밀번호 찾기</button>
+            </div>
+        </form>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

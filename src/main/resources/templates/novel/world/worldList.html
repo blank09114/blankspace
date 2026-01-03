@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 소설 제목 - 설정</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex flex-column align-center gap-lg">
+        <div id="novelIntro"></div>
+        <a class="btn" style="width: 100%;">회차 보기</a>
+        <div class="categories flex justify-end">
+            <button class="category now">· 전체 보기</button>
+            <button class="category">· 세계관</button>
+            <button class="category">· 캐릭터</button>
+            <button class="category">· 기타</button>
+        </div>
+        <div class="list world">
+            <a class="episode">
+                <p class="text1 black2">세계관</p>
+                <p class="text1">제목</p>
+            </a>
+            <a class="episode">
+                <p class="text1 black2">캐릭터</p>
+                <p class="text1">제목</p>
+            </a>
+            <a class="episode">
+                <p class="text1 black2">기타</p>
+                <p class="text1">제목</p>
+            </a>
+        </div>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

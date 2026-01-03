@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 게시글 작성</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
+    <script th:src="@{/js/board/postForm.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex flex-column justify-center align-center">
+        <form id="postForm" class="pd-md flex flex-column gap-sm">
+            <div class="postInfo flex flex-column gap-xs">
+                <div class="inputs flex flex-column-mov gap-xs">
+                    <select class="select">
+                        <option>카테고리</option>
+                        <option>카테고리</option>
+                        <option>카테고리</option>
+                    </select>
+                    <input type="text" id="titleInput" placeholder="제목">
+                </div>
+                <input type="text" id="subTitleInput" placeholder="부제목">
+                <input type="text" id="gitInput" placeholder="GIT 링크">
+                <div class="inputs flex flex-column-mov gap-xs">
+                    <input type="text" id="imgNameInput" placeholder="썸네일" readonly>
+                    <button class="btn select" type="button" onclick="imgInputControll()">썸네일 업로드</button>
+                    <input type="file" id="imglInput" accept="image/*" hidden>
+                </div>
+            </div>
+            <textarea id="postContentInput" placeholder="내용"></textarea>
+            <div class="btnsWrap"> <button type="button" class="btn" onclick="subPost()">등록</button> </div>
+        </form>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 소설 제목 - 설정 등록</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
+    <script th:src="@{/js/novel/novelForm.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex justify-center align-center">
+        <form id="postForm" class="pd-md flex flex-column gap-sm">
+            <div class="inputs flex flex-column-mov gap-xs">
+                <select class="select">
+                    <option>세계관</option>
+                    <option>캐릭터</option>
+                    <option>기타</option>
+                </select>
+                <input type="text" id="titleInput" placeholder="제목">
+            </div>
+            <textarea id="contentInput" placeholder="본문"></textarea>
+            <div class="subBtnWrap"> <button type="button" class="btn" onclick="subWorld()">등록</button> </div>
+        </form>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

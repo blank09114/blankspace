@@ -1,0 +1,120 @@
+/* 애니메이션 */
+.rv { opacity: 0; }
+.rv.in { animation: revealIn .7s ease forwards; animation-delay: var(--d, 0ms); }
+
+/* 애니메이션 효과 */
+@keyframes revealIn
+{
+    from { transform: translate(var(--x, 0), var(--y, 0)); opacity: 0; }
+    to { transform: translate(0, 0); opacity: 1; }
+}
+
+/* 애니메이션 적용 */
+.rv.r { --x: 20px;  --y: 0; }
+.rv.l { --x: -20px; --y: 0; }
+.rv.t { --x: 0; --y: -20px; }
+.rv.b { --x: 0; --y: 20px; }
+
+/* 배너 */
+.banner { width: 100%; }
+
+/* 버튼 */
+.mainBtn
+{
+    width: 200px;
+    height: 24px;
+
+    border: 1px solid var(--black-1);
+
+    font-size: 16px;
+    line-height: 24px;
+    text-decoration: none !important;
+}
+.mainBtn:hover { background-color: var(--black-1); color: var(--white-1); }
+
+/* 메인 배너 */
+.icon { width: 300px; }
+
+/* 어바웃 */
+.about
+{
+    width: 100%;
+    padding: 2px;
+
+    border: 2px solid var(--navy-1);
+    background-color: var(--white-1);
+}
+.about .text1 { padding: 18px; border: 1px solid var(--navy-1); }
+
+/* 포트폴리오 */
+.portList { width: 100%; }
+.port
+{
+    width: 100%;
+    height: unset;
+    aspect-ratio: 16/9;
+
+    background-size: 100%;
+    background-position: center;
+
+    position: relative;
+}
+.port:hover { background-size: 120%; }
+.port:first-child { background-image: url("/img/portfolio/requiem.png"); }
+.port:last-child { background-image: url("/img/portfolio/loveprogress.png"); }
+
+/* 포트폴리오 정보 */
+.portInfo
+{
+    width: 100%;
+
+    position: absolute;
+    bottom: 20px;
+
+    background-color: rgba(250, 250, 248, 0.8);
+}
+.portInfoDetail { display: none; }
+.port:hover .portInfoDetail { display: block; }
+.portInfoDetail .mainBtn { width: 150px; margin-top: 20px; }
+
+/* 소설 */
+.newNovelList
+{
+    width: 100%;
+    padding-bottom: 10px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    
+    scrollbar-width: thin;
+}
+.newNovel
+{
+    flex: 0 0 auto;
+    text-decoration: none !important;
+    position: relative;
+    scroll-snap-align: start; 
+}
+.newNovel * { cursor: var(--cursor-default); }
+.newNovel .up { position: absolute; top: 5px; left: 5px; }
+
+/* 모바일 */
+@media(max-width: 768px)
+{
+    /* 배너 요소 */
+    .about .text1 { padding: 8px; }
+    .icon { width: 200px; }
+
+    /* 포트폴리오 */
+    .portInfo
+    {
+        width: 100%;
+        padding: 5px;
+
+        bottom: 50%;
+        transform: translateY(50%);
+    }
+    .portInfoDetail { display: block; }
+    .portInfoDetail .mainBtn { margin-top: 5px; }
+}

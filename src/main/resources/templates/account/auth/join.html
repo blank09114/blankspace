@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 회원가입</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
+    <script th:src="@{/js/account/auth.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex flex-column align-center justify-center gap-lg">
+        <form class="authForm" id="joinForm">
+            <p class="formHeader title1Text text-center white1">회원가입</p>
+            <div class="formSection flex flex-column gap-sm pd-md">
+                <div class="inputWrap flex flex-column align-end gap-xs">
+                    <span class="text1">닉네임</span>
+                    <input id="nameInput" type="text" placeholder="2~10자">
+                </div>
+                <div class="inputWrap flex flex-column align-end gap-xs">
+                    <span class="text1">ID</span>
+                    <div class="input flex gap-sm">
+                        <input id="idInput" type="text" oninput="resetIdCheck()" placeholder="영문 혹은 영문+숫자, 4~20자">
+                        <button class="btn" type="button" onclick="idUsingCheck()">중복 확인</button>
+                    </div>
+                    <span id="ok" class="text1">사용 가능한 ID입니다.</span>
+                    <span id="no" class="text1">이미 사용 중인 ID입니다.</span>
+                </div>
+                <div class="inputWrap flex flex-column align-end gap-xs">
+                    <span class="text1">PW</span>
+                    <input name="pwInput" id="pwInput" type="password" placeholder="영문+숫자, 8~40자">
+                    <label class="checkbox"> <input type="checkbox" onchange="pwToggle()"> 비밀번호 보기 </label>
+                </div>
+                <div class="inputWrap flex flex-column align-end gap-xs">
+                    <span class="text1">MAIL</span>
+                    <input id="mailInput" type="text" placeholder="naver.com 주소로만 가입 가능">
+                </div>
+                <div class="inputWrap flex flex-column align-end gap-xs">
+                    <label class="checkbox flex gap-xs align-center" id="terms"> <input type="checkbox"> <a>이용약관↗</a> 동의 </label>
+                    <label class="checkbox flex gap-xs align-center" id="privacy"> <input type="checkbox"> <a>개인정보 처리방침↗</a> 동의 </label>
+                    <label class="checkbox flex gap-xs align-center" id="age"> <input type="checkbox"> 만 14세 이상입니다. </label>
+                </div>
+                <button class="btn" type="button" onclick="join()">회원가입</button>
+            </div>
+        </form>
+
+        <form class="authForm" id="tokenForm">
+            <p class="formHeader title1Text text-center white1">회원가입 토큰 재발급</p>
+            <div class="formSection flex flex-column gap-sm pd-md">
+                <input id="findInput" type="text" placeholder="메일 주소 입력">
+                <button class="btn" type="button" onclick="token()">토큰 재발급</button>
+            </div>
+        </form>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

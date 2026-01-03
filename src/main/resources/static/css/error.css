@@ -1,0 +1,28 @@
+/* 에러 */
+.errorBody { background: radial-gradient(circle, var(--gray-1) 0%, var(--gray-2) 50%,var(--gray-1) 100%); }
+.errorBox
+{
+    width: 600px;
+    max-width: 90%;
+
+    background-color: rgba(250, 250, 248, 0.8);
+}
+.code
+{
+    width: 100%;
+    height: 150px;
+
+    background: linear-gradient(90deg,#34495E 0%,#5B728A 50%,#34495E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    font-size: 100px;
+    line-height: 150px;
+    color: transparent;
+}
+.errorBox .btn { margin: auto; margin-top: 20px; }
+
+/* 모바일 */
+@media(max-width: 768px)
+{ .code { height: 120px; line-height: 120px; } .errorBox .btn { margin-top: 10px; } }

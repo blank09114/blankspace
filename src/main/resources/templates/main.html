@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex flex-column align-center gap-xl">
+        <div class="banner flex flex-column align-center gap-lg">
+            <p class="text1 text-center">
+                <span class="title3Text bold">Works. Writing. Records.</span> <br>
+                개발과 창작을 동시에 탐구하는 개인 아카이브
+            </p>
+            <img class="icon" src="/img/logo/icon.png">
+            <p class="text1 text-center">
+                <span class="title3Text bold">공백</span> <br>
+                논리와 구조로 말하는 개발자
+            </p>
+        </div>
+        <div class="banner flex flex-column align-center gap-lg">
+            <p class="title1Text bold text-center">ABOUT</p>
+            <div class="about rv r">
+                <p class="text1">
+                    이 사이트는 프로젝트 결과, 소설, 그리고 프로젝트 과정에서의 기록을 정리한 개인 아카이브입니다.
+                    <br><br>
+                    저는 웹 개발을 주력으로 하며, 서비스의 구조와 흐름을 이해하고 설계하는 과정에 관심이 많습니다. 단순히 기능을 구현하는 것을 넘어, 왜 이런 구조가 필요한지, 어떤 선택이 더 나은 사용자 경험으로 이어지는지 고민하며 작업합니다. 다양한 프로젝트 경험을 통해 사용자 관점에서 화면과 기능을 구성하는 사고방식을 익혔고, 서비스 전반의 흐름을 다루는 경험을 쌓아왔습니다. 또한 규칙과 시스템을 설계하고, 이를 다른 사람에게 전달하는 방식에 대해 꾸준히 탐구했습니다. 이러한 경험은 복잡한 문제를 구조화하고 설명하는 개발자로서의 태도에도 큰 영향을 주었습니다.
+                    <br><br>
+                    이 공간에는 완성된 결과물뿐 아니라, 그 과정에서의 고민과 선택, 시도와 정리를 함께 기록하고 있습니다. 논리와 구조로 생각하고, 기록으로 남기는 작업 방식을 중요하게 여깁니다.
+                </p>
+            </div>
+        </div>
+        <div class="banner flex flex-column align-center gap-lg">
+            <p class="title1Text bold text-center">주요 포트폴리오</p>
+            <div class="portList flex flex-column-mov gap-lg">
+                <div class="port rv t">
+                    <div class="portInfo pd-md">
+                        <p class="title3Text bold">01</p>
+                        <p class="title2Text bold">
+                            REQUIEM <br>
+                            ────
+                        </p>
+                        <div class="portInfoDetail">
+                            <p class="text1">개인 창작물 아카이빙 사이트</p>
+                            <a class="mainBtn text-center">자세히 보기 →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="port rv r">
+                    <div class="portInfo pd-md">
+                        <p class="title3Text bold">02</p>
+                        <p class="title2Text bold">
+                            사랑의 진도 <br>
+                            ────
+                        </p>
+                        <div class="portInfoDetail">
+                            <p class="text1">행사 운영 웹 플랫폼</p>
+                            <a class="mainBtn text-center">자세히 보기 →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btnsWrap"> <a class="mainBtn text-center rv b">모든 포트폴리오 보기 →</a> </div>
+        </div>
+        <div class="banner flex flex-column align-center gap-lg">
+            <p class="title1Text bold text-center">최근 업데이트된 소설</p>
+            <div class="newNovelList flex gap-lg">
+                <a class="newNovel rv r">
+                    <div class="up text3 text-center">UP</div>
+                    <img class="cover">
+                    <p class="text1">제목</p>
+                </a>
+                <a class="newNovel rv r">
+                    <div class="up text3 text-center">UP</div>
+                    <img class="cover">
+                    <p class="text1">제목</p>
+                </a>
+                <a class="newNovel rv r">
+                    <div class="up text3 text-center">UP</div>
+                    <img class="cover">
+                    <p class="text1">제목</p>
+                </a>
+                <a class="newNovel rv r">
+                    <div class="up text3 text-center">UP</div>
+                    <img class="cover">
+                    <p class="text1">제목</p>
+                </a>
+                <a class="newNovel rv r">
+                    <div class="up text3 text-center">UP</div>
+                    <img class="cover">
+                    <p class="text1">제목</p>
+                </a>
+            </div>
+            <div class="btnsWrap"> <a class="mainBtn text-center rv b">전체 소설 보기 →</a> </div>
+        </div>
+        <div class="banner flex flex-column align-center gap-lg">
+            <p class="title1Text bold text-center">블로그 최신글</p>
+            <div class="btnsWrap"> <a class="mainBtn text-center rv b">전체 게시글 보기 →</a> </div>
+        </div>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,285 @@
+/* 임포트 */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+@import url("/css/commons.css");
+@import url("/css/main.css");
+@import url("/css/error.css");
+@import url("/css/account.css");
+@import url("/css/board.css");
+@import url("/css/novel.css");
+
+/* 전역 변수 */
+:root
+{
+    /* 마우스 커서 */
+    --cursor-default: url("/img/cursor/cursor_default.png") 2 2, auto;
+    --cursor-pointer: url("/img/cursor/cursor_pointer.png") 2 2, auto;
+
+    /* 색상 */
+    --white-1: #FAFAF8;
+    --white-2: #F4F6F7;
+    --navy-1: #34495E;
+    --navy-2: #5B728A;
+    --gray-1: #8A93A0;
+    --gray-2: #C2C8D0;
+    --black-1: #24292F;
+    --black-2: #5F6368;
+
+    /* 여백 */
+    --px-xs: 5px;
+    --px-sm: 10px;
+    --px-md: 20px;
+    --px-lg: 30px;
+    --px-xl: 50px; 
+}
+
+/* 전역 스타일 지정 */
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-family: 'Pretendard Variable';
+    color: var(--black-1);
+    
+    transition: all 0.3s ease;
+    cursor: var(--cursor-default);
+}
+
+/* 문서 서식 */
+html { height: 100%; }
+header, footer { flex-shrink: 0; }
+body { min-height: 100vh; flex: 1; background-color: var(--white-2); }
+.container, section { width: 1100px; max-width: 90%; margin: auto; }
+section { padding: 50px 0; flex: 1; }
+
+/* display 패턴 */
+.flex { display: flex; }
+.flex-column { flex-direction: column; }
+.flex-column-mov { flex-direction: row; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); }
+.grid-row { grid-template-columns: repeat(2, 1fr); }
+
+/* 정렬 */
+.justify-start { justify-content: flex-start; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+
+.align-start { align-items: flex-start; }
+.align-center { align-items: center; }
+.align-end { align-items: flex-end; }
+
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* 여백 */
+.gap-xs { gap: var(--px-xs); }
+.gap-sm { gap: var(--px-sm); }
+.gap-md { gap: var(--px-md); }
+.gap-lg { gap: var(--px-lg); }
+.gap-xl { gap: var(--px-xl); }
+
+.pd-xs { padding: var(--px-xs); }
+.pd-sm { padding: var(--px-sm); }
+.pd-md { padding: var(--px-md); }
+
+/* 텍스트 크기 */
+.title1Text, .title2Text, .title3Text, .text1, .text2, .text3 { width: 100%; line-height: 1.5; }
+.title1Text { font-size: 30px; }
+.title2Text { font-size: 24px; }
+.title3Text { font-size: 20px; }
+.text1 { font-size: 16px; }
+.text2 { font-size: 14px; }
+.text3 { font-size: 12px; }
+
+/* 텍스트 스타일 */
+.bold { font-weight: bold; }
+
+/* 텍스트 색상 */
+.black1 { color: var(--black-1); }
+.black2 { color: var(--black-2); }
+.white1 { color: var(--white-1); }
+.white2 { color: var(--white-2); }
+.navy1 { color: var(--navy-1); }
+.navy2 { color: var(--navy-2); }
+.gray1 { color: var(--gray-1); }
+.gray2 { color: var(--gray-2); }
+
+/* 링크 서식 */
+a
+{
+    display: inline-block;
+
+    text-decoration: none;
+    color: var(--black-1);
+    
+    cursor: var(--cursor-pointer);
+}
+a:hover { text-decoration: underline; }
+a * { cursor: var(--cursor-pointer); }
+
+/* 배경 이미지 패턴 */
+.background { background-size: cover; background-position: center; }
+
+/* 버튼 서식 */
+.btnsWrap
+{
+    width: 100%;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px 10px;
+
+    flex-wrap: wrap;
+}
+.btn
+{
+    height: 30px;
+    padding: 0 20px;
+
+    border: none;
+    background-color: var(--navy-1);
+
+    font-size: 16px;
+    color: var(--white-1);
+    text-decoration: none !important;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: var(--cursor-pointer);
+}
+.btn:hover { background-color: var(--navy-2); }
+
+/* 인풋 서식 */
+input[type="text"], input[type="password"], textarea, select
+{
+    display: block;
+    
+    height: 30px;
+    padding: 0 10px;
+
+    outline: none;
+    border: 1px solid var(--gray-2);
+
+    font-size: 16px;
+}
+input[type="text"], input[type="password"], textarea { width: 100%; }
+textarea { padding: var(--px-sm); }
+input[type="text"]:hover, input[type="password"]:hover, textarea:hover, select:hover,
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus
+{ border: 1px solid var(--navy-1); }
+
+/* 체크박스 서식 */
+.checkbox
+{
+    width: auto;
+    height: 30px;
+
+    font-size: 16px;
+
+    cursor: var(--cursor-pointer);
+}
+input[type="checkbox"]
+{
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+
+    border: 1px solid var(--gray-2);
+}
+
+/* 업데이트 표시 */
+.up
+{
+    width: 30px;
+    height: 20px;
+    border-radius: 2px;
+
+    background-color: #C0392B;
+
+    line-height: 20px;
+    color: #FAFAF8;
+}
+
+/* 페이지 */
+.pages { width: 100%; }
+.page
+{
+    width: 30px;
+    height: 30px;
+
+    font-size: 16px;
+    text-align: center;
+    line-height: 30px;
+    text-decoration: none !important;
+}
+.page:hover, .page.now
+{
+    border-radius: 50%;
+    background-color: var(--navy-1);
+    color: var(--white-1);
+}
+
+/* 카드 레이아웃 */
+.cardWrap { width: 100%; }
+.card
+{
+    width: 100%;
+
+    border: 1px solid var(--gray-2);
+    background-color: var(--white-1);
+
+    text-decoration: none !important;
+}
+.card:hover { box-shadow: 2px 2px 2px 2px rgba(194, 200, 208, 0.5); }
+
+/* 카테고리 */
+.categoryMenu, .categories { width: 100%; }
+.categories { flex-wrap: wrap; gap: 5px 30px; }
+.category
+{
+    width: auto;
+    height: 30px;
+
+    border: none;
+    background: none;
+
+    font-size: 16px;
+    color: var(--black-2);
+
+    cursor: var(--cursor-pointer);
+}
+.category:hover, .category.now { color: var(--navy-1); font-weight: bold; }
+
+/* 광고 */
+.ad { width: 100%; height: 100px; border: 1px solid red; }
+
+/* 모바일 */
+@media(max-width: 768px)
+{
+    /* 문서 서식 */
+    section { padding: 30px 0; }
+
+    /* display 패턴 */
+    .grid, .flex-column-mov, .grid-row { display: flex; flex-direction: column; }
+
+    /* 여백 */
+    .gap-sm { gap: var(--px-xs); }
+    .gap-md, .gap-lg { gap: var(--px-sm); }
+    .gap-xl { gap: var(--px-lg); }
+
+    .pd-sm { padding: var(--px-xs); }
+    .pd-md { padding: var(--px-sm); }
+
+    /* 텍스트 크기 */
+    .title1Text { font-size: 24px; }
+    .title2Text { font-size: 20px; }
+    .title3Text { font-size: 18px; }
+
+    /* 버튼 */
+    .btn { height: 24px; font-size: 14px; }
+}
