@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 회원 정보</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/account/user.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex flex-column align-center gap-xl">
+        <p class="title1Text bold text-center">회원 정보</p>
+        <a class="card pd-md user flex flex-column gap-sm">
+            <button class="btn block">차단 해제</button>
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">닉네임</p>
+                <p class="title3Text">닉네임</p>
+                <form name="nameForm" class="flex flex-column-mov gap-sm">
+                    <input type="text" name="name">
+                    <button class="btn" type="button" onclick="editName(this)">저장</button>
+                </form>
+                <button class="btn" onclick="nameToggle(this)">변경</button>
+            </div>
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">ID</p>
+                <p class="title3Text">ID</p>
+            </div>
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">MAIL</p>
+                <p class="title3Text">메일주소@nsver.com</p>
+            </div>
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">가입일</p>
+                <p class="title3Text">YYYY.MM.DD.</p>
+            </div>
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">차단 사유</p>
+                <p class="title3Text">병신</p>
+            </div>
+        </a>
+        <div class="activityMenu flex flex-column gap-lg">
+            <p class="title3Text text-center bold">로그인 기록</p>
+            <div class="activities">
+                <div class="activity flex flex-column align-center head">
+                    <span class="text1">IP</span>
+                    <span class="text1 date">로그인 일자</span>
+                </div>
+                <div class="activity flex flex-column align-center">
+                    <span class="text3 black2">세션 유지 중</span>
+                    <div class="activityBottom flex align-center">
+                        <span class="text1">1.23.456</span>
+                        <span class="text2 date">YYYY.MM.DD.</span>
+                    </div>
+                </div>
+                <div class="activity flex flex-column align-center">
+                    <span class="text3 black2">YYYY년 MM월 DD일 로그아웃됨</span>
+                    <div class="activityBottom flex align-center">
+                        <span class="text1">1.23.456</span>
+                        <span class="text2 date">YYYY.MM.DD.</span>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="fragments/pages :: pages"></div>
+        </div>
+        <div class="activityMenu flex flex-column gap-lg">
+            <p class="title3Text text-center bold">활동</p>
+            <div class="categories flex justify-end">
+                <button class="category now">· 전체 보기</button>
+                <button class="category">· 방명록</button>
+                <button class="category">· 소설 댓글</button>
+                <button class="category">· 블로그 댓글</button>
+            </div>
+            <div class="activities">
+                <div class="activity flex flex-column align-center head">
+                    <span class="text1">내용</span>
+                    <span class="text1 date">작성일</span>
+                </div>
+                <a class="activity flex flex-column align-center">
+                    <span class="text3 black2">방명록</span>
+                    <div class="activityBottom flex align-center">
+                        <span class="text1">내용</span>
+                        <span class="text2 date">YYYY.MM.DD.</span>
+                    </div>
+                </a>
+                <a class="activity flex flex-column align-center">
+                    <span class="text3 black2">방명록</span>
+                    <div class="activityBottom flex align-center">
+                        <span class="text1">내용</span>
+                        <span class="text2 date">YYYY.MM.DD.</span>
+                    </div>
+                </a>
+            </div>
+            <div th:replace="fragments/pages :: pages"></div>
+        </div>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

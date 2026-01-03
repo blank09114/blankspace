@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 비밀번호 변경</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
+    <script th:src="@{/js/account/auth.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex align-center justify-center">
+        <form class="authForm" id="findAccountForm">
+            <p class="formHeader title1Text text-center white1">비밀번호 변경</p>
+            <div class="formSection flex flex-column gap-sm pd-md">
+                <input name="pwInput" id="pwInput" type="password" placeholder="현재 PW">
+                <input name="pwInput" id="newPwInput" type="password" placeholder="변경할 PW">
+                <label class="checkbox flex gap-xs align-center"> <input type="checkbox" onchange="pwToggle()"> 비밀번호 보기 </label>
+                <button class="btn" type="button" onclick="changePw()">비밀번호 변경</button>
+            </div>
+        </form>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

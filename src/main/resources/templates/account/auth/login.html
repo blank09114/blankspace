@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 로그인</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
+    <script th:src="@{/js/account/auth.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex align-center justify-center">
+        <form class="authForm" id="loginForm">
+            <p class="formHeader title1Text text-center white1">로그인</p>
+            <div class="formSection flex flex-column gap-sm pd-md">
+                <input id="idInput" type="text" placeholder="ID">
+                <div class="inputWrap flex flex-column align-end gap-xs">
+                    <input name="pwInput" id="pwInput" type="password" placeholder="PW">
+                    <label class="checkbox flex gap-xs align-center"> <input type="checkbox" onchange="pwToggle()"> 비밀번호 보기 </label>
+                </div>
+                <button class="btn" type="button" onclick="login()">로그인</button>
+            </div>
+        </form>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

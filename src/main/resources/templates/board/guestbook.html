@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 방명록</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
+    <script th:src="@{/js/board/board.js}"></script>
+    <script th:src="@{/js/board/guestbook.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex flex-column align-center gap-xl">
+        <div class="guestbookHeader flex flex-column gap-lg">
+            <p class="title1Text text-center bold">GUESTBOOK</p>
+            <form class="guestbookForm" id="guestbookForm">
+                <div class="guestFormHeader flex justify-between">
+                    <p class="title3Text bold">방명록 작성하기</p>
+                    <div class="flex align-center gap-sm">    
+                        <label class="checkbox flex gap-xs align-center"> <input type="checkbox"> 비밀글 </label>
+                        <button type="button" class="btn" onclick="subGuestbook()">등록</button>
+                    </div>
+                </div>
+                <textarea class="guestbookContent" id="guestbookContent" placeholder="500자 이내, 등록 후 수정이 불가합니다."></textarea>
+            </form>
+        </div>
+        <p class="title3Text text-center bold">◆　◆　◆</p>
+        <div class="guestbookListWrap flex flex-column gap-lg">
+            <div class="guestbookList flex flex-column gap-lg">
+                <div class="guestbookItem flex flex-column gap-sm">
+                    <div class="guestbook flex flex-column gap-sm pd-md">
+                        <div class="guestbookInfo">
+                            <a class="title3Text bold">닉네임(ID)</a>
+                            <div class="manualBtns flex gap-sm justify-end">
+                                <button class="btn" onclick="toggleForm(this)">답변</button>
+                                <button class="btn" onclick="deleteGuestbook()">삭제</button>
+                            </div>
+                            <p class="text1 black2">YYYY.MM.DD. HH:MM</p>
+                        </div>
+                        <p class="text1">내용</p>
+                    </div>
+                    <form class="guestbookForm" name="answerForm">
+                        <div class="guestFormHeader flex justify-between">
+                            <p class="title3Text bold">방명록 답변하기</p>
+                            <button type="button" class="btn" onclick="subAnswer(this)">등록</button>
+                        </div>
+                        <textarea class="guestbookContent" name="answerForm"></textarea>
+                    </form>
+                    <div class="guestbook flex flex-column gap-sm pd-md">
+                        <div class="guestbookInfo">
+                            <a class="title3Text bold">공백</a>
+                            <div class="manualBtns flex gap-sm justify-end"> <button class="btn">삭제</button> </div>
+                            <p class="text1 black2">YYYY.MM.DD. HH:MM</p>
+                        </div>
+                        <p class="text1">내용</p>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="fragments/pages :: pages"></div>
+        </div>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

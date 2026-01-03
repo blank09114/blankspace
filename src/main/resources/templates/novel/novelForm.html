@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 소설 등록</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
+    <script th:src="@{/js/novel/novelForm.js}"></script>
+</head>
+<body class="flex flex-column">
+    <nav th:replace="fragments/commons :: nav"></nav>
+
+    <div th:replace="fragments/commons :: toast"></div>
+
+    <header th:replace="fragments/commons :: header"></header>
+
+    <section class="flex justify-center align-center">
+        <form id="postForm" class="pd-md flex flex-column gap-sm">
+            <div class="postInfo flex flex-column gap-xs">
+                <div class="inputs flex flex-column-mov gap-xs">
+                    <select id="typeSelect" class="select" onchange="onTypeChange(this)">
+                        <option>1차</option>
+                        <option>2차</option>
+                    </select>
+                    <input type="text" id="originInput" placeholder="원작" readonly>
+                </div>
+                <input type="text" id="titleInput" placeholder="제목">
+                <div class="inputs flex flex-column-mov gap-xs">
+                    <input type="text" id="imgNameInput" placeholder="표지" readonly>
+                    <button class="btn select" type="button" onclick="imgInputControll()">표지 업로드</button>
+                    <input type="file" id="imglInput" accept="image/*" hidden>
+                </div>
+            </div>
+            <textarea id="introInput" placeholder="소개글"></textarea>
+            <div class="btnsWrap"> <button type="button" class="btn" onclick="subNovel()">등록</button> </div>
+        </form>
+    </section>
+
+    <footer th:replace="fragments/commons :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,133 @@
+/* 페이지 제목 */
+.boardName { margin-bottom: 20px; }
+
+/* 조작 버튼 */
+.manualBtns { position: absolute; top: 10px; right: 10px; }
+
+/* 카테고리 폼 */
+.forms.grid-row.gap-sm { width: 100%; margin-top: 10px; display: none; }
+form[name="categoryForm"] { width: 100%; }
+.forms form:nth-child(3), .forms form:nth-child(3) .btn { grid-column: 1 / -1; }
+
+/* 게시글 목록 */
+.postList { width: 100%; }
+.thumbnail
+{
+    display: block;
+
+    width: 100%;
+    height: unset;
+    aspect-ratio: 16/9;
+    margin-bottom: 5px;
+    object-fit: cover;
+}
+
+/* 게시글 */
+.postConetentWarp
+{
+    width: 100%;
+
+    background-color: var(--white-1);
+    box-shadow: 0 0 4px 4px rgba(194, 200, 208, 0.3);
+}
+.postInfo { padding-bottom: 5px; border-bottom: 1px solid var(--gray-2); }
+.postConetent { min-height: 300px; margin-top: 10px; }
+.btnsWrap.post { justify-content: space-between; }
+
+/* 댓글 */
+.commentMenu, .commentForm { width: 100%; }
+.commentInput { height: 100px; }
+
+/* 댓글 */
+.comment
+{
+    width: 100%;
+    margin-top: 10px;
+
+    border: 1px solid var(--gray-2);
+    background-color: var(--white-1);
+
+    position: relative;
+}
+.comment:first-child { margin-top: 0; }
+
+/* 대댓글 */
+.recomment
+{
+    width: 100%;
+    margin-top: 5px;
+    border-left: 1px solid var(--gray-2);
+}
+.recomment .comment { margin-top: 0; }
+.recommentLine
+{
+    width: 100px;
+    height: 30px;
+
+    border-bottom: 1px solid var(--gray-2);
+
+    position: relative;
+}
+.recommentRing
+{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+
+    border: 1px solid var(--gray-2);
+    background-color: var(--white-1);
+
+    position: absolute;
+    left: -5px;
+    bottom: -5px;
+}
+.commentContent { width: 100%; background-color: rgba(194, 200, 208, 0.3); }
+form[name="recommentForm"] { display: none; }
+
+/* 게시글 작성 폼 */
+#postForm { width: 100%; background-color: var(--white-1); }
+.inputs, input { width: 100%; }
+.select { width: 200px; flex-shrink: 0; }
+#postForm textarea { width: 100%; height: 300px; }
+
+/* 방명록 */
+.guestbookHeader, .guestbookForm { width: 100%; }
+
+/* 방명록 작성 폼 */
+.guestFormHeader { width: 100%; height: 30px; }
+.guestFormHeader * { width: auto !important; flex-shrink: 0; }
+.guestbookContent { width: 100%; height: 100px; margin-top: 5px; }
+
+/* 방명록 목록 */
+.guestbookListWrap, .guestbookList, .guestbookItem, .guestbook { width: 100%; }
+.guestbook
+{
+    width: 80%;
+
+    border: 1px solid var(--gray-2);
+    background-color: var(--white-1);
+
+    position: relative;
+}
+.guestbook:last-child { border-radius: 8px 8px 0 8px; align-self: flex-end; }
+.guestbook:first-child { border-radius: 8px 8px 8px 0; align-self: flex-start; }
+
+/* 정보 */
+.guestbookInfo { width: 100%; position: relative; }
+.guestbookInfo .manualBtns { top: 0; bottom: 0; }
+
+/* 답변 폼 숨김 */
+form[name="answerForm"] { display: none; }
+
+/* 모바일 */
+@media(max-width: 768px)
+{
+    /* 조작 버튼 */
+    .manualBtns { position: static; align-self: flex-end; }
+
+    /* 게시글 */
+    .postConetentWarp { padding: 10px; }
+
+    /* 게시글 작성 폼 */
+    .select { width: 100%; }
+}

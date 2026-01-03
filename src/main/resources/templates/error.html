@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLANKSPACE - 에러!</title>
+    <link rel="icon" th:href="@{/img/logo/icon.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/global/commons.js}"></script>
+</head>
+<body class="flex align-center justify-center errorBody">
+    <div class="errorBox pd-md">
+        <p class="title1Text text-center bold">· ERROR ·</p>
+        <p class="code text-center bold">000</p>
+        <p class="title2Text text-center bold">응답 내용</p>
+        <button class="btn">이전 페이지로 가기</button>
+    </div>
+</body>
+</html>

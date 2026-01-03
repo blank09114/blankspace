@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<header th:fragment="header">
+    <div class="container">
+        <div class="headerTop flex justify-end align-center gap-sm">
+            <a class="text3 black2">로그인</a>
+            <a class="text3 black2">회원가입</a>
+            <a class="text3 black2">계정 찾기</a>
+        </div>
+        <div class="headerBottom flex justify-between align-center">
+            <div class="logo background"></div>
+            <div class="headerMenu bold flex gap-lg">
+                <a class="title3Text">PORTFOLIO</a>
+                <a class="title3Text">NOVEL</a>
+                <a class="title3Text">BLOG</a>
+                <a class="title3Text">GUESTBOOK</a>
+            </div>
+        </div>
+        <button class="hamburger align-center justify-center" onclick="openDrawer()">☰</button>
+        <div class="drawer flex-column gap-sm">
+            <button class="hamburger flex align-center justify-center" onclick="closeDrawer()">X</button>
+            <p class="text1"><span class="title2Text bold">비회원</span> 님 안녕하세요.</p>
+            <div class="drawerMenu bold navy1 pd-md flex flex-column gap-xs">
+                <a class="text1">로그인</a>
+                <a class="text1">회원가입</a>
+                <a class="text1">계정 찾기</a>
+            </div>
+            <p class="text1 bold">MENU</p>
+            <div class="drawerMenu bold navy1 pd-md flex flex-column gap-xs">
+                <a class="title2Text">PORTFOLIO</a>
+                <a class="title2Text">NOVEL</a>
+                <a class="title2Text">BLOG</a>
+                <a class="title2Text">GUESTBOOK</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<footer th:fragment="footer">
+    <div class="container flex flex-column gap-md">
+        <div class="footerTop flex flex-column-mov gap-lg">
+            <div class="logo background"></div>
+            <div class="footerTopMenu flex align-center gap-lg">
+                <a class="text1">이용약관</a>
+                <a class="text1">개인정보 처리방침</a>
+                <a class="text1">청소년 보호 정책</a>
+                <a class="text1">외주·협업 안내</a>
+            </div>
+        </div>
+        <div class="snsList flex gap-sm justify-center">
+            <a class="sns background"></a>
+            <a class="sns background" href="https://github.com/blank09114" target="_blank"></a>
+            <a class="sns background" href="https://crepe.cm/@blank0914" target="_blank"></a>
+            <a class="sns background"></a>
+        </div>
+        <p class="text1">
+            <strong>COPYRIGHT</strong> © 2026 BLANKSPACE. All rights reserved. <br>
+            <strong>사업자 정보</strong> 상호 BLANKSPACE | 사업자등록번호 716-50-01088 | 개인정보 보호 책임자 박예린 <br>
+            <strong>MAIL</strong> b1ank09114@gmail.com
+        </p>
+    </div>
+</footer>
+
+<nav class="flex flex-column" th:fragment="nav">
+    <button class="navBtn" onclick="toScroll('up')"> ↑ </button>
+    <button class="navBtn" onclick="toScroll('down')"> ↓ </button>
+</nav>
+
+<div class="toastWarp" th:fragment="toast">
+    <div class="toast">
+        <div class="toastContent flex align-center gap-xs">
+            <span id="toastText" class="text1 left"></span>
+            <button class="toastBtn text-center" onclick="closeToast()">X</button>
+            <div class="progress"> <div class="progressBar"></div> </div>
+        </div>
+    </div>
+</div>
+</html>

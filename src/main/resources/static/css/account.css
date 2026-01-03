@@ -1,0 +1,89 @@
+/* 인증 */
+.authForm
+{
+    width: 600px;
+    max-width: 90%;
+
+    border: 1px solid var(--navy-1);
+    background-color: var(--white-1);
+}
+.formHeader
+{
+    height: 40px;
+    background-color: var(--navy-1);
+    line-height: 40px !important;
+}
+
+/* 인풋 */
+.formSection, .inputWrap, .input { width: 100%; }
+.input .btn { width: 150px; flex-shrink: 0; }
+#terms, #privacy, #age { width: 100%; }
+
+/* 확인 문구 */
+#ok, #no { display: none; }
+#ok { color: var(--navy-1); }
+#no { color: #E74C3C; }
+
+/* 회원 정보 */
+.userListWrap, .userList { width: 100%; }
+.card.user { position: relative; }
+
+/* 정보 영역 */
+.userInfo { width: 100%; height: 30px; }
+.userInfo .title3Text:first-child { width: 200px; flex-shrink: 0; }
+.userInfo .title3Text:nth-child(2) { width: auto; }
+
+/* 닉네임 변경 폼 */
+form[name="nameForm"] { display: none; }
+form[name="nameForm"] .btn { flex-shrink: 0; }
+
+/* 버튼 */
+.block
+{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+/* 활동 목록 */
+.activityMenu, .activities { width: 100%; }
+.activities
+{
+    border-top: 2px solid var(--navy-1);
+    border-bottom: 2px solid var(--navy-1);
+    background-color: var(--white-1);
+}
+
+/* 활동 */
+.activity
+{
+    width: 100%;
+    padding: 5px 10px;
+
+    border-bottom: 1px solid var(--gray-2);
+}
+.activity:last-child { border: none; }
+
+/* 제목 행 */
+.activity.head
+{
+    height: 30px;
+    flex-direction: row;
+    text-decoration: none !important;
+}
+.activity.head * { text-align: center; cursor: var(--cursor-pointer); }
+
+/* 텍스트 */
+.text1.date, .text2.date { width: 100px; flex-shrink: 0; text-align: center; }
+.activity .text3 { height: 20px; }
+.activityBottom { width: 100%; min-height: 30px; }
+
+/* 모바일 */
+@media(max-width: 768px)
+{
+    /* 유저 카드 */
+    .userInfo { height: auto; gap: 5px !important; }
+    .userInfo .title3Text:first-child { width: 100%; }
+    form[name="nameForm"] { gap: 5px !important; }
+    .block { width: 100%; position: static; }
+}
