@@ -8,5 +8,5 @@ public class MainController
 {
     // 메인
     @GetMapping("/")
-    public String Main() { return "main"; }
+    public String main() { return "main"; }
 }

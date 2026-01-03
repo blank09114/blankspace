@@ -3,9 +3,14 @@
 <header th:fragment="header">
     <div class="container">
         <div class="headerTop flex justify-end align-center gap-sm">
-            <a class="text3 black2">로그인</a>
-            <a class="text3 black2">회원가입</a>
-            <a class="text3 black2">계정 찾기</a>
+            <a class="text3 black2" th:href="@{/auth/login}">로그인</a>
+            <a class="text3 black2" th:href="@{/auth/join}">회원가입</a>
+            <a class="text3 black2" th:href="@{/auth/findAccount}">계정 찾기</a>
+            <a class="text3 black2">회원 목록</a>
+            <a class="text3 black2">내 정보</a>
+            <a class="text3 black2" th:href="@{/auth/changePw}">비밀번호 변경</a>
+            <a class="text3 black2" th:href="@{/auth/withdraw}">회원 탈퇴</a>
+            <a class="text3 black2">로그아웃</a>
         </div>
         <div class="headerBottom flex justify-between align-center">
             <div class="logo background"></div>
@@ -21,9 +26,14 @@
             <button class="hamburger flex align-center justify-center" onclick="closeDrawer()">X</button>
             <p class="text1"><span class="title2Text bold">비회원</span> 님 안녕하세요.</p>
             <div class="drawerMenu bold navy1 pd-md flex flex-column gap-xs">
-                <a class="text1">로그인</a>
-                <a class="text1">회원가입</a>
-                <a class="text1">계정 찾기</a>
+                <a class="text1" th:href="@{/auth/login}">로그인</a>
+                <a class="text1" th:href="@{/auth/join}">회원가입</a>
+                <a class="text1" th:href="@{/auth/findAccount}">계정 찾기</a>
+                <a class="text1">회원 목록</a>
+                <a class="text1">내 정보</a>
+                <a class="text1" th:href="@{/auth/changePw}">비밀번호 변경</a>
+                <a class="text1" th:href="@{/auth/withdraw}">회원 탈퇴</a>
+                <a class="text1">로그아웃</a>
             </div>
             <p class="text1 bold">MENU</p>
             <div class="drawerMenu bold navy1 pd-md flex flex-column gap-xs">
@@ -48,10 +58,10 @@
             </div>
         </div>
         <div class="snsList flex gap-sm justify-center">
-            <a class="sns background"></a>
+            <a class="sns background" href="https://x.com/blankspace_rep" target="_blank"></a>
             <a class="sns background" href="https://github.com/blank09114" target="_blank"></a>
             <a class="sns background" href="https://crepe.cm/@blank0914" target="_blank"></a>
-            <a class="sns background"></a>
+            <a class="sns background" href="https://kmong.com/@%EA%B3%B5%EB%B0%B1b1ank" target="_blank"></a>
         </div>
         <p class="text1">
             <strong>COPYRIGHT</strong> © 2026 BLANKSPACE. All rights reserved. <br>
