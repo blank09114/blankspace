@@ -1,4 +1,4 @@
-package kr.io.blankspace.setting;
+package kr.io.blankspace.setting.loginLog;
 
 import kr.io.blankspace.domain.account.loginLog.LoginLogRepository;
 import lombok.RequiredArgsConstructor;

@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 
 public interface LoginLogRepository extends JpaRepository<LoginLog, Long> {
-
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
         update LoginLog l
@@ -34,4 +33,12 @@ public interface LoginLogRepository extends JpaRepository<LoginLog, Long> {
                 and l.logoutDate < :cutoff
     """)
     int deleteEndedBefore(@Param("cutoff") LocalDateTime cutoff);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+    update LoginLog l
+       set l.logoutDate = :now
+     where l.logoutDate is null
+""")
+    int markAllActiveAsRestarted(@Param("now") LocalDateTime now);
 }
