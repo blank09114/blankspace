@@ -1,4 +1,4 @@
-package kr.io.blanksapce;
+package kr.io.blankspace;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

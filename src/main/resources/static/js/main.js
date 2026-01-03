@@ -17,5 +17,18 @@ const bindRv = (sel = ".rv", { off = 80 } = {}) =>
 const seq = (sel, step = 120, base = 0) =>
 { document.querySelectorAll(sel).forEach((el, i) => { el.style.setProperty("--d", `${base + i * step}ms`); }); };
 
-// 애니메이션 적용
-addEventListener("DOMContentLoaded", () => { seq(".newNovelList .newNovel.rv", 120, 0); bindRv(".rv", { off: 80 }); });
+// 이벤트 리스너
+addEventListener("DOMContentLoaded", () =>
+{
+    // 애니메이션 적용
+    seq(".newNovelList .newNovel.rv", 120, 0); bindRv(".rv", { off: 80 });
+
+    // 인증 알림
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("joined") === "1")
+    {
+        showToast("회원가입이 완료되었습니다.");
+        history.replaceState({}, "", window.location.pathname);
+    }
+});

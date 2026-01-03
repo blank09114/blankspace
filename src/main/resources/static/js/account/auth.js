@@ -48,21 +48,38 @@ function idUsingCheck()
     const ok = document.getElementById("ok");
     const no = document.getElementById("no");
 
-    // 임시 로직
-    if (id === "blank0914")
+    // 초기화
+    ok.style.display = "none";
+    no.style.display = "none";
+
+    fetch(`/api/auth/exists/${encodeURIComponent(id)}`, { method: "GET" })
+    .then(res =>
+    {
+        if (!res.ok) { throw new Error("중복 확인 실패"); }
+        return res.json();
+    })
+    .then(data =>
+    {
+        // 서버 응답: { exists: true/false }
+        if (data.exists === true)
+        {
+            ok.style.display = "none";
+            no.style.display = "inline";
+            showToast("이미 사용 중인 ID입니다.");
+        }
+        else
+        {
+            no.style.display = "none";
+            ok.style.display = "inline";
+            showToast("사용 가능한 ID입니다.");
+        }
+    })
+    .catch(() =>
     {
         ok.style.display = "none";
-        no.style.display = "inline";
-        showToast('이미 사용 중인 ID입니다.');
-        return;
-    }
-    else
-    {
         no.style.display = "none";
-        ok.style.display = "inline";
-        showToast('사용 가능한 ID입니다.');
-        return;
-    }
+        showToast("중복 확인 중 오류가 발생했습니다.");
+    });
 }
 
 // ID 중복 검사 상태 초기화
@@ -107,7 +124,7 @@ function pwToggle()
 }
 
 // 동작
-// 회원가입
+// 회원가입 요청
 function join()
 {
     if (!validate("nameInput", "닉네임", REGEX.name, MSG.name)) { return; }
@@ -117,7 +134,69 @@ function join()
     if (!validate("mailInput", "메일 주소", REGEX.mail, MSG.mail)) { return; }
     if (!termsCheck()) { return; }
 
-    showToast("회원가입 메일을 발송했습니다.");
+    const payload =
+    {
+        userId: getValue("idInput"),
+        userName: getValue("nameInput"),
+        userPw: getValue("pwInput"),
+        userMail: getValue("mailInput")
+    };
+
+    fetch("/api/auth/join/request",
+    {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(async (res) =>
+    {
+        if (res.ok)
+        {
+            showToast("회원가입 메일을 발송했습니다.");
+            return;
+        }
+
+        let msg = "회원가입 중 오류가 발생했습니다.";
+        try {
+            const data = await res.json();
+            if (data && data.message) msg = data.message;
+        } catch (_) {}
+
+        showToast(msg);
+    })
+    .catch(() => showToast("회원가입 중 오류가 발생했습니다."));
+}
+
+// 토큰 재발급
+function token()
+{
+    if (!validate("findInput", "메일 주소", REGEX.mail, MSG.mail)) { return; }
+
+    const payload = { userMail: getValue("findInput") };
+
+    fetch("/api/auth/join/resend",
+    {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(async (res) =>
+    {
+        if (res.ok)
+        {
+            showToast("토큰을 재발급했습니다.");
+            return;
+        }
+
+        // 서버가 JSON 에러 내려주면 메시지 우선 사용
+        let msg = "토큰 재발급 중 오류가 발생했습니다.";
+        try {
+            const data = await res.json();
+            if (data && data.message) msg = data.message;
+        } catch (_) {}
+        showToast(msg);
+    })
+    .catch(() => showToast("토큰 재발급 중 오류가 발생했습니다."));
 }
 
 // 로그인
