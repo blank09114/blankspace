@@ -1,4 +1,4 @@
-package kr.io.blankspace.setting.util;
+package kr.io.blankspace.setting;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

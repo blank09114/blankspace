@@ -12,7 +12,7 @@ import kr.io.blankspace.dto.account.auth.JoinRequestDTO;
 import kr.io.blankspace.dto.account.auth.LoginRequestDTO;
 import kr.io.blankspace.dto.account.auth.LoginResponseDTO;
 import kr.io.blankspace.service.GeoIpService;
-import kr.io.blankspace.setting.util.TokenUtil;
+import kr.io.blankspace.setting.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

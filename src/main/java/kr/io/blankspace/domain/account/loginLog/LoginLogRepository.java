@@ -17,4 +17,21 @@ public interface LoginLogRepository extends JpaRepository<LoginLog, Long> {
             and l.logoutDate is null
     """)
     int markLogout(@Param("loginHash") String loginHash, @Param("logoutAt") LocalDateTime logoutAt);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+        update LoginLog l
+            set l.logoutDate = :logoutAt
+        where l.loginHash = :loginHash
+            and l.logoutDate is null
+    """)
+    int markLogoutIfNotExists(@Param("loginHash") String loginHash, @Param("logoutAt") LocalDateTime logoutAt);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+        delete from LoginLog l
+            where l.logoutDate is not null
+                and l.logoutDate < :cutoff
+    """)
+    int deleteEndedBefore(@Param("cutoff") LocalDateTime cutoff);
 }
