@@ -2,6 +2,8 @@ package kr.io.blankspace.service.account;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.io.blankspace.domain.account.loginLog.LoginLog;
+import kr.io.blankspace.domain.account.loginLog.LoginLogRepository;
 import kr.io.blankspace.domain.account.token.Token;
 import kr.io.blankspace.domain.account.token.TokenRepository;
 import kr.io.blankspace.domain.account.user.User;
@@ -9,6 +11,7 @@ import kr.io.blankspace.domain.account.user.UserRepository;
 import kr.io.blankspace.dto.account.auth.JoinRequestDTO;
 import kr.io.blankspace.dto.account.auth.LoginRequestDTO;
 import kr.io.blankspace.dto.account.auth.LoginResponseDTO;
+import kr.io.blankspace.service.GeoIpService;
 import kr.io.blankspace.setting.util.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,12 +33,14 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    private static final String SESSION_LOGIN_HASH = "LOGIN_HASH";
     private final AuthenticationManager authenticationManager;
-
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final LoginLogRepository loginLogRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
+    private final GeoIpService geoIpService;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -56,14 +61,9 @@ public class AuthService {
 
         // user 생성
         User user = User.builder()
-        .userId(req.getUserId())
-        .userMail(req.getUserMail())
-        .userName(req.getUserName())
-        .userPw(passwordEncoder.encode(req.getUserPw()))
-        .userRole(User.UserRole.USER)
-        .userEnabled(false)
-        .isBlocked(false)
-        .build();
+        .userId(req.getUserId()).userMail(req.getUserMail()).userName(req.getUserName())
+        .userPw(passwordEncoder.encode(req.getUserPw())).userRole(User.UserRole.USER)
+        .userEnabled(false).isBlocked(false).build();
         userRepository.save(user);
 
         // JOIN 토큰 저장
@@ -71,11 +71,8 @@ public class AuthService {
         String tokenHash = TokenUtil.sha256Hex(rawToken);
 
         Token token = Token.builder()
-        .user(user)
-        .tokenType(Token.TokenType.JOIN)
-        .tokenHash(tokenHash)
-        .expiresAt(LocalDateTime.now().plusMinutes(joinTokenMinutes))
-        .build();
+        .user(user).tokenType(Token.TokenType.JOIN).tokenHash(tokenHash)
+        .expiresAt(LocalDateTime.now().plusMinutes(joinTokenMinutes)).build();
         tokenRepository.save(token);
 
         // 메일 발송
@@ -141,6 +138,17 @@ public class AuthService {
         return userRepository.existsById(trimmed);
     }
 
+    // IP 추출
+    private String resolveClientIp(HttpServletRequest request) {
+        String xff = request.getHeader("X-Forwarded-For");
+        if (xff != null && !xff.isBlank()) { return xff.split(",")[0].trim(); }
+
+        String xrip = request.getHeader("X-Real-IP");
+        if (xrip != null && !xrip.isBlank()) return xrip.trim();
+
+        return request.getRemoteAddr();
+    }
+
     // 로그인
     @Transactional
     public void login(LoginRequestDTO req, HttpServletRequest request) {
@@ -150,16 +158,30 @@ public class AuthService {
 
             SecurityContextHolder.getContext().setAuthentication(auth);
 
-            // 세션에 컨텍스트 저장
             HttpSession session = request.getSession(true);
             session.setAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext()
             );
+
+            String userId = auth.getName();
+            User user = userRepository.findById(userId).orElseThrow();
+
+            String sessionId = session.getId();
+            String loginHash = TokenUtil.sha256Hex(sessionId);
+            session.setAttribute(SESSION_LOGIN_HASH, loginHash);
+
+            String ip = resolveClientIp(request);
+            String region = geoIpService.resolveRegion(ip);
+
+            LoginLog log = LoginLog.builder()
+            .user(user).loginHash(loginHash).loginIp(ip).loginRegion(region).build();
+
+            loginLogRepository.save(log);
+
         } catch (DisabledException e)
-        { throw new ResponseStatusException(HttpStatus.FORBIDDEN, "인증되지 않은 계정입니다."); }
-        catch (LockedException e)
-        { throw new ResponseStatusException(HttpStatus.FORBIDDEN, "차단된 계정입니다."); }
+        { throw new ResponseStatusException(HttpStatus.FORBIDDEN, "미인증 계정입니다."); }
+        catch (LockedException e) { throw new ResponseStatusException(HttpStatus.FORBIDDEN, "차단된 계정입니다."); }
         catch (BadCredentialsException | UsernameNotFoundException e)
         { throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다."); }
     }
@@ -185,11 +207,17 @@ public class AuthService {
     // 로그아웃
     @Transactional
     public void logout(HttpServletRequest request) {
-        // 세션 무효화
         HttpSession session = request.getSession(false);
-        if (session != null) { session.invalidate(); }
 
-        // 시큐리티 컨텍스트 제거
+        if (session != null) {
+            Object h = session.getAttribute(SESSION_LOGIN_HASH);
+            if (h != null) {
+                String loginHash = String.valueOf(h);
+                loginLogRepository.markLogout(loginHash, LocalDateTime.now());
+            }
+            session.invalidate();
+        }
+
         SecurityContextHolder.clearContext();
     }
 }
