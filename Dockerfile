@@ -13,13 +13,14 @@ RUN ./gradlew clean bootJar -x test
 
 # Run stage
 FROM eclipse-temurin:17-jre
+
 WORKDIR /app
 
 RUN useradd -ms /bin/bash appuser
+
+COPY app.jar /app/app.jar
+RUN chown -R appuser:appuser /app
+
 USER appuser
-COPY --from=build /app/build/libs/*.jar /app/app.jar
-
 EXPOSE 8080
-
-ENV JAVA_OPTS=""
-ENTRYPOINT ["sh","-c","java $JAVA_OPTS -jar /app/app.jar"]
+ENTRYPOINT ["java","-jar","/app/app.jar"]
