@@ -15,7 +15,6 @@ RUN ./gradlew clean bootJar -x test
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
-
 RUN useradd -ms /bin/bash appuser
 
 COPY app.jar /app/app.jar

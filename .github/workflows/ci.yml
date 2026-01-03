@@ -28,6 +28,11 @@ jobs:
       - name: Build bootJar
         run: ./gradlew bootJar -x test
 
+      - name: Prepare app.jar for Docker
+        run: |
+          cp build/libs/*.jar app.jar
+          ls -al app.jar
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
