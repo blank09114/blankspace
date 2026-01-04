@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
 @Getter
-public class ChangePasswordRequestDTO {
+public class ChangePWRequestDTO {
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9]{8,40}$")
     private String currentPw;

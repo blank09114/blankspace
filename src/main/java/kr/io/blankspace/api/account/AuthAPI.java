@@ -8,8 +8,6 @@ import kr.io.blankspace.dto.ApiOk;
 import kr.io.blankspace.dto.account.auth.*;
 import kr.io.blankspace.service.account.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,7 +32,7 @@ public class AuthAPI {
 
     // 토큰 재발급
     @PostMapping("/join/resend")
-    public ResponseEntity<ApiOk> resendJoin(@RequestBody @Valid ResendJoinTokenRequest req) {
+    public ResponseEntity<ApiOk> resendJoin(@RequestBody @Valid ResendTokenRequest req) {
         authService.resendJoinToken(req.getUserMail());
         return ok();
     }
@@ -74,7 +72,7 @@ public class AuthAPI {
 
     // 비밀번호 재설정 요청
     @PostMapping("/password/reset/request")
-    public ResponseEntity<ApiOk> resetRequest(@RequestBody @Valid PasswordResetRequestDTO dto) {
+    public ResponseEntity<ApiOk> resetRequest(@RequestBody @Valid PWResetRequestDTO dto) {
         authService.requestPasswordReset(dto.getUserMail());
         return ok();
     }
@@ -91,7 +89,7 @@ public class AuthAPI {
     // 비밀번호 변경
     @PostMapping("/password/change")
     public ResponseEntity<ApiOk> changePassword
-    (@RequestBody @Valid ChangePasswordRequestDTO dto, Authentication authentication, HttpServletRequest request) {
+    (@RequestBody @Valid ChangePWRequestDTO dto, Authentication authentication, HttpServletRequest request) {
         authService.changePassword(authentication.getName(), dto.getCurrentPw(), dto.getNewPw(), request);
         return ok();
     }
