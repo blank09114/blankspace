@@ -215,7 +215,7 @@ function login()
     {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // ★ 세션 유지 핵심
+        credentials: "include",
         body: JSON.stringify(payload)
     })
     .then(async (res) =>
@@ -241,7 +241,28 @@ function login()
 function findAccount()
 {
     if (!validate("mailInput", "메일 주소", REGEX.mail, MSG.mail)) { return; }
-    showToast('계정 복구 메일을 발송했습니다.');
+
+    const payload = { userMail: getValue("mailInput") };
+
+    fetch("/api/auth/password/reset/request",
+    {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(async (res) =>
+    {
+        if (res.ok) { showToast("계정 복구 메일을 발송했습니다."); return; }
+
+        let msg = "계정 찾기 중 오류가 발생했습니다.";
+        try {
+            const data = await res.json();
+            if (data && data.message) msg = data.message;
+        } catch (_) {}
+
+        showToast(msg);
+    })
+    .catch(() => showToast("계정 찾기 중 오류가 발생했습니다."));
 }
 
 // 비밀번호 변경

@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -19,23 +20,42 @@ public class MailService {
     @Value("${app.mail.from:}")
     private String from;
 
+    // 회원가입 메일
     public void sendJoinVerifyMail(String to, String verifyLink) {
-        String html = loadTemplate("templates/mail/join.html")
-                .replace("{{VERIFY_LINK}}", verifyLink);
+        String html = renderTemplate
+        ("templates/mail/join.html", Map.of("{{VERIFY_LINK}}", verifyLink));
+        sendHtml(to, "[BLANKSPACE] 이메일 인증을 완료해주세요", html);
+    }
 
+    // 비밀번호 재설정 메일
+    public void sendPasswordResetMail(String to, String userId, String tempPassword, String applyLink) {
+        String html = renderTemplate(
+            "templates/mail/reset.html",
+            Map.of("{{USER_ID}}", userId, "{{TEMP_PASSWORD}}", tempPassword, "{{RESET_APPLY_LINK}}", applyLink)
+        );
+        sendHtml(to, "[BLANKSPACE] 비밀번호 재설정 안내", html);
+    }
+
+    // 공통 유틸
+    private void sendHtml(String to, String subject, String html) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
+
             helper.setTo(to);
-            helper.setSubject("[BLANKSPACE] 이메일 인증을 완료해주세요");
+            helper.setSubject(subject);
             helper.setText(html, true);
 
             if (from != null && !from.isBlank()) helper.setFrom(from);
 
             mailSender.send(message);
-        } catch (Exception e) {
-            throw new RuntimeException("메일 발송 실패", e);
-        }
+        } catch (Exception e) { throw new RuntimeException("메일 발송 실패", e); }
+    }
+
+    private String renderTemplate(String classpathLocation, Map<String, String> vars) {
+        String html = loadTemplate(classpathLocation);
+        for (Map.Entry<String, String> e : vars.entrySet()) { html = html.replace(e.getKey(), e.getValue()); }
+        return html;
     }
 
     private String loadTemplate(String classpathLocation) {
@@ -43,8 +63,7 @@ public class MailService {
             ClassPathResource res = new ClassPathResource(classpathLocation);
             byte[] bytes = res.getInputStream().readAllBytes();
             return new String(bytes, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new RuntimeException("메일 템플릿 로드 실패: " + classpathLocation, e);
         }
+        catch (Exception e) { throw new RuntimeException("메일 템플릿 로드 실패: " + classpathLocation, e); }
     }
 }

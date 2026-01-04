@@ -25,6 +25,7 @@ addEventListener("DOMContentLoaded", () =>
 
     // 인증 알림
     const params = new URLSearchParams(window.location.search);
+    const reset = params.get("reset");
 
     if (params.get("joined") === "1")
     {
@@ -42,6 +43,16 @@ addEventListener("DOMContentLoaded", () =>
     if (params.get("logout") === "1")
     {
         showToast("로그아웃 됐습니다.");
+        history.replaceState({}, "", window.location.pathname);
+    }
+    if (reset === "done")
+    {
+        showToast("임시 비밀번호가 적용됐습니다.");
+        history.replaceState({}, "", window.location.pathname);
+    }
+    if (reset === "expired")
+    {
+        showToast("링크가 만료됐거나 유효하지 않습니다. 다시 시도해주세요.");
         history.replaceState({}, "", window.location.pathname);
     }
 });

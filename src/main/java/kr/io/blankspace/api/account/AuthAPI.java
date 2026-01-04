@@ -2,7 +2,6 @@ package kr.io.blankspace.api.account;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import kr.io.blankspace.domain.account.user.User;
 import kr.io.blankspace.dto.account.auth.*;
 import kr.io.blankspace.service.account.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -21,38 +20,35 @@ public class AuthAPI {
 
     // 회원가입 요청
     @PostMapping("/join/request")
-    public ResponseEntity<ApiOk> request(@RequestBody @Valid JoinRequestDTO dto) {
+    public ResponseEntity<ApiOk> requestJoin(@RequestBody @Valid JoinRequestDTO dto) {
         authService.requestJoin(dto);
-        return ResponseEntity.ok(new ApiOk(true));
+        return ok();
     }
 
     // 토큰 재발급
     @PostMapping("/join/resend")
-    public ResponseEntity<ApiOk> resend(@RequestBody @Valid ResendJoinTokenRequest req) {
+    public ResponseEntity<ApiOk> resendJoin(@RequestBody @Valid ResendJoinTokenRequest req) {
         authService.resendJoinToken(req.getUserMail());
-        return ResponseEntity.ok(new ApiOk(true));
+        return ok();
     }
 
-    // 인증
+    // 회원가입
     @GetMapping("/join/verify")
-    public ResponseEntity<Void> verify(@RequestParam("token") String token) {
+    public ResponseEntity<Void> verifyJoin(@RequestParam("token") String token) {
         authService.verifyJoin(token);
-        return ResponseEntity.status(302).location(URI.create("/?joined=1")).build();
+        return redirect("/?joined=1");
     }
 
     // ID 중복 검사
     @GetMapping("/exists/{userId}")
-    public Map<String, Boolean> exists(@PathVariable String userId) {
-        boolean exists = authService.existsUserId(userId);
-        return Map.of("exists", exists);
-    }
+    public Map<String, Boolean> exists(@PathVariable String userId)
+    { return Map.of("exists", authService.existsUserId(userId)); }
 
-    // 로그인 요청
+    // 로그인
     @PostMapping("/login")
-    public ResponseEntity<ApiOk> login
-    (@RequestBody @Valid LoginRequestDTO dto, HttpServletRequest request) {
+    public ResponseEntity<ApiOk> login(@RequestBody @Valid LoginRequestDTO dto, HttpServletRequest request) {
         authService.login(dto, request);
-        return ResponseEntity.ok(new ApiOk(true));
+        return ok();
     }
 
     // 로그인 정보 반환
@@ -64,6 +60,26 @@ public class AuthAPI {
     @PostMapping("/logout")
     public ResponseEntity<ApiOk> logout(HttpServletRequest request) {
         authService.logout(request);
-        return ResponseEntity.ok(new ApiOk(true));
+        return ok();
     }
+
+    // 비밀번호 재설정 요청
+    @PostMapping("/password/reset/request")
+    public ResponseEntity<ApiOk> resetRequest(@RequestBody @Valid PasswordResetRequestDTO dto) {
+        authService.requestPasswordReset(dto.getUserMail());
+        return ok();
+    }
+
+    // 비밀번호 재설정
+    @GetMapping("/password/reset/apply")
+    public ResponseEntity<Void> resetApply(@RequestParam("token") String token) {
+        try {
+            authService.applyPasswordReset(token);
+            return redirect("/?reset=done");
+        } catch (IllegalArgumentException e) { return redirect("/?reset=expired"); }
+    }
+
+    // 헬퍼
+    private ResponseEntity<ApiOk> ok() { return ResponseEntity.ok(new ApiOk(true)); }
+    private ResponseEntity<Void> redirect(String location) { return ResponseEntity.status(302).location(URI.create(location)).build(); }
 }

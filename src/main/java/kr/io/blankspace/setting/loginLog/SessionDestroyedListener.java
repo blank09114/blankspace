@@ -1,11 +1,11 @@
-package kr.io.blankspace.setting.loginLog;
+package kr.io.blankspace.setting.security;
 
 import kr.io.blankspace.domain.account.loginLog.LoginLogRepository;
+import kr.io.blankspace.setting.loginLog.LoginLogKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.web.session.HttpSessionDestroyedEvent;
+import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -13,15 +13,14 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class SessionDestroyedListener {
     private final LoginLogRepository loginLogRepository;
-    private static final String SESSION_LOGIN_HASH = "LOGIN_HASH";
 
     @EventListener
-    @Transactional
-    public void onSessionDestroyed(HttpSessionDestroyedEvent event) {
-        Object hash = event.getSession().getAttribute(SESSION_LOGIN_HASH);
-        if (hash == null) return;
+    public void onSessionDestroyed(SessionDestroyedEvent event) {
+        if (event == null) return;
 
-        String loginHash = String.valueOf(hash);
-        loginLogRepository.markLogoutIfNotExists(loginHash, LocalDateTime.now());
+        String sessionId = event.getId();
+        String loginHash = kr.io.blankspace.setting.TokenUtil.sha256Hex(sessionId);
+
+        loginLogRepository.markLogout(loginHash, LocalDateTime.now());
     }
 }

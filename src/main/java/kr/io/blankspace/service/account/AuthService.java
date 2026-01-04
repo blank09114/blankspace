@@ -2,16 +2,12 @@ package kr.io.blankspace.service.account;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import kr.io.blankspace.domain.account.loginLog.LoginLog;
-import kr.io.blankspace.domain.account.loginLog.LoginLogRepository;
 import kr.io.blankspace.domain.account.token.Token;
-import kr.io.blankspace.domain.account.token.TokenRepository;
 import kr.io.blankspace.domain.account.user.User;
 import kr.io.blankspace.domain.account.user.UserRepository;
 import kr.io.blankspace.dto.account.auth.JoinRequestDTO;
 import kr.io.blankspace.dto.account.auth.LoginRequestDTO;
 import kr.io.blankspace.dto.account.auth.LoginResponseDTO;
-import kr.io.blankspace.service.GeoIpService;
 import kr.io.blankspace.setting.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,19 +24,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private static final String SESSION_LOGIN_HASH = "LOGIN_HASH";
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
-    private final TokenRepository tokenRepository;
-    private final LoginLogRepository loginLogRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
-    private final GeoIpService geoIpService;
+    private final TokenService tokenService;
+    private final LoginLogService loginLogService;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -48,10 +41,12 @@ public class AuthService {
     @Value("${app.join-token-minutes:30}")
     private long joinTokenMinutes;
 
+    @Value("${app.reset-token-minutes:30}")
+    private long resetTokenMinutes;
+
     // 회원가입 요청
     @Transactional
     public void requestJoin(JoinRequestDTO req) {
-        // 서버에서도 정책 강제: naver.com만 가입 허용
         validateNaverOnly(req.getUserMail());
 
         if (userRepository.existsById(req.getUserId()))
@@ -59,21 +54,14 @@ public class AuthService {
         if (userRepository.existsByUserMail(req.getUserMail()))
         { throw new IllegalArgumentException("이미 사용 중인 이메일입니다."); }
 
-        // user 생성
         User user = User.builder()
         .userId(req.getUserId()).userMail(req.getUserMail()).userName(req.getUserName())
         .userPw(passwordEncoder.encode(req.getUserPw())).userRole(User.UserRole.USER)
         .userEnabled(false).isBlocked(false).build();
+
         userRepository.save(user);
 
-        // JOIN 토큰 저장
-        String rawToken = TokenUtil.generateToken(48);
-        String tokenHash = TokenUtil.sha256Hex(rawToken);
-
-        Token token = Token.builder()
-        .user(user).tokenType(Token.TokenType.JOIN).tokenHash(tokenHash)
-        .expiresAt(LocalDateTime.now().plusMinutes(joinTokenMinutes)).build();
-        tokenRepository.save(token);
+        String rawToken = tokenService.issue(user, Token.TokenType.JOIN, joinTokenMinutes, 48);
 
         // 메일 발송
         String encoded = URLEncoder.encode(rawToken, StandardCharsets.UTF_8);
@@ -90,16 +78,9 @@ public class AuthService {
 
         // 계정 유무 노출 방지: 없어도 그냥 성공처럼 처리
         if (user == null) return;
+        if (user.isUserEnabled()) return;
 
-        if (user.isUserEnabled()) { return; }
-
-        String rawToken = TokenUtil.generateToken(48);
-        String tokenHash = TokenUtil.sha256Hex(rawToken);
-
-        Token token = Token.builder()
-        .user(user).tokenType(Token.TokenType.JOIN).tokenHash(tokenHash)
-        .expiresAt(LocalDateTime.now().plusMinutes(joinTokenMinutes)).build();
-        tokenRepository.save(token);
+        String rawToken = tokenService.issue(user, Token.TokenType.JOIN, joinTokenMinutes, 48);
 
         String encoded = URLEncoder.encode(rawToken, StandardCharsets.UTF_8);
         String verifyLink = baseUrl + "/api/auth/join/verify?token=" + encoded;
@@ -110,16 +91,13 @@ public class AuthService {
     // 인증
     @Transactional
     public void verifyJoin(String rawToken) {
-        String hash = TokenUtil.sha256Hex(rawToken);
-
-        Token token = tokenRepository.findValidWithUser(hash, Token.TokenType.JOIN, LocalDateTime.now())
-        .orElseThrow(() -> new IllegalArgumentException("토큰이 유효하지 않거나 만료되었습니다."));
-
+        Token token = tokenService.getValidTokenWithUser(rawToken, Token.TokenType.JOIN);
         User user = token.getUser();
 
         // 이미 인증 완료면 멱등 처리
-        if (!user.isUserEnabled()) { user.enable(); }
-        token.markUsed();
+        if (!user.isUserEnabled()) user.enable();
+
+        tokenService.markUsed(token);
     }
 
     // 이메일 형식 검증
@@ -136,17 +114,6 @@ public class AuthService {
         String trimmed = userId.trim();
         if (trimmed.isEmpty()) return false;
         return userRepository.existsById(trimmed);
-    }
-
-    // IP 추출
-    private String resolveClientIp(HttpServletRequest request) {
-        String xff = request.getHeader("X-Forwarded-For");
-        if (xff != null && !xff.isBlank()) { return xff.split(",")[0].trim(); }
-
-        String xrip = request.getHeader("X-Real-IP");
-        if (xrip != null && !xrip.isBlank()) return xrip.trim();
-
-        return request.getRemoteAddr();
     }
 
     // 로그인
@@ -166,22 +133,11 @@ public class AuthService {
 
             String userId = auth.getName();
             User user = userRepository.findById(userId).orElseThrow();
-
-            String sessionId = session.getId();
-            String loginHash = TokenUtil.sha256Hex(sessionId);
-            session.setAttribute(SESSION_LOGIN_HASH, loginHash);
-
-            String ip = resolveClientIp(request);
-            String region = geoIpService.resolveRegion(ip);
-
-            LoginLog log = LoginLog.builder()
-            .user(user).loginHash(loginHash).loginIp(ip).loginRegion(region).build();
-
-            loginLogRepository.save(log);
-
+            loginLogService.recordLogin(user, session, request);
         } catch (DisabledException e)
         { throw new ResponseStatusException(HttpStatus.FORBIDDEN, "미인증 계정입니다."); }
-        catch (LockedException e) { throw new ResponseStatusException(HttpStatus.FORBIDDEN, "차단된 계정입니다."); }
+        catch (LockedException e)
+        { throw new ResponseStatusException(HttpStatus.FORBIDDEN, "차단된 계정입니다."); }
         catch (BadCredentialsException | UsernameNotFoundException e)
         { throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다."); }
     }
@@ -195,7 +151,6 @@ public class AuthService {
         if (principal == null || "anonymousUser".equals(principal)) return null;
 
         String userId = authentication.getName();
-
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) return null;
 
@@ -208,16 +163,49 @@ public class AuthService {
     @Transactional
     public void logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        loginLogService.markLogout(session);
 
-        if (session != null) {
-            Object h = session.getAttribute(SESSION_LOGIN_HASH);
-            if (h != null) {
-                String loginHash = String.valueOf(h);
-                loginLogRepository.markLogout(loginHash, LocalDateTime.now());
-            }
-            session.invalidate();
-        }
-
+        if (session != null) session.invalidate();
         SecurityContextHolder.clearContext();
+    }
+
+    // 계정 찾기
+    @Transactional
+    public void requestPasswordReset(String userMail) {
+        if (userMail == null) return;
+
+        String mail = userMail.trim();
+        if (!mail.toLowerCase().endsWith("@naver.com")) return;
+
+        User user = userRepository.findByUserMail(mail).orElse(null);
+        if (user == null) return; // 존재 여부 노출 방지
+
+        // 임시 비밀번호 + 토큰 생성
+        String tempPw = TokenUtil.generateToken(12);
+        String nonce = TokenUtil.generateToken(36);
+        String rawToken = tempPw + "." + nonce;
+
+        tokenService.issueWithRaw(user, Token.TokenType.RESET, resetTokenMinutes, rawToken);
+
+        String encoded = URLEncoder.encode(rawToken, StandardCharsets.UTF_8);
+        String link = baseUrl + "/api/auth/password/reset/apply?token=" + encoded;
+
+        mailService.sendPasswordResetMail(user.getUserMail(), user.getUserId(), tempPw, link);
+    }
+
+    // 비밀번호 재설정 적용
+    @Transactional
+    public void applyPasswordReset(String rawToken) {
+        Token token = tokenService.getValidTokenWithUser(rawToken, Token.TokenType.RESET);
+
+        int dot = rawToken.indexOf('.');
+        if (dot <= 0) throw new IllegalArgumentException("토큰 형식이 올바르지 않습니다.");
+
+        String tempPw = rawToken.substring(0, dot);
+
+        User user = token.getUser();
+        user.changePassword(passwordEncoder.encode(tempPw));
+
+        tokenService.markUsed(token);
     }
 }
