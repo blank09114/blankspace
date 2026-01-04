@@ -4,8 +4,10 @@ import kr.io.blankspace.domain.account.user.User;
 import kr.io.blankspace.domain.account.user.UserRepository;
 import kr.io.blankspace.setting.PasswordChangedLogoutFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -58,9 +60,39 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
         .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
         .formLogin(f -> f.disable())
-        .httpBasic(b -> b.disable());
+        .httpBasic(b -> b.disable())
+        .authorizeHttpRequests(auth -> auth
+            // 정적 리소스
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+            .requestMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico").permitAll()
+
+            // 메일 링크
+            .requestMatchers(HttpMethod.GET, "/api/auth/join/verify").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/auth/password/reset/apply").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/auth/withdraw/apply").permitAll()
+
+            // 비로그인만 허용
+            .requestMatchers(HttpMethod.GET, "/auth/login").anonymous()
+            .requestMatchers(HttpMethod.GET, "/auth/join").anonymous()
+            .requestMatchers(HttpMethod.GET, "/auth/findAccount").anonymous()
+            .requestMatchers(HttpMethod.POST, "/api/auth/login").anonymous()
+            .requestMatchers(HttpMethod.POST, "/api/auth/join/request").anonymous()
+            .requestMatchers(HttpMethod.POST, "/api/auth/join/resend").anonymous()
+            .requestMatchers(HttpMethod.POST, "/api/auth/password/reset/request").anonymous()
+            .requestMatchers(HttpMethod.GET,  "/api/auth/exists/**").anonymous()
+
+            // 로그인만 허용
+            .requestMatchers(HttpMethod.GET, "/auth/changePw").authenticated()
+            .requestMatchers(HttpMethod.GET, "/auth/withdraw").authenticated()
+            .requestMatchers(HttpMethod.GET,  "/api/auth/me").authenticated()
+            .requestMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
+            .requestMatchers(HttpMethod.POST, "/api/auth/password/change").authenticated()
+            .requestMatchers(HttpMethod.POST, "/api/auth/withdraw/request").authenticated()
+
+            // 나머지는 전부 허용
+            .anyRequest().permitAll()
+        );
 
         http.addFilterAfter(passwordChangedLogoutFilter(), SecurityContextHolderFilter.class);
 
