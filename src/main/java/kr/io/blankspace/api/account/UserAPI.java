@@ -2,10 +2,13 @@ package kr.io.blankspace.api.account;
 
 
 import jakarta.validation.Valid;
-import kr.io.blankspace.dto.account.user.ChangeNameRequestDTO;
-import kr.io.blankspace.dto.account.user.UserCardDto;
+import kr.io.blankspace.dto.account.user.BlockToggleRequest;
+import kr.io.blankspace.dto.account.user.ChangeNameRequest;
+import kr.io.blankspace.dto.account.user.LoginLogDTO;
+import kr.io.blankspace.dto.account.user.UserCardDTO;
 import kr.io.blankspace.service.account.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +20,24 @@ public class UserAPI {
 
     // 닉네임 변경
     @PatchMapping("/{userId}/name")
-    public UserCardDto changeName(@PathVariable String userId,
+    public UserCardDTO changeName(@PathVariable String userId,
     @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal,
-    @RequestBody @Valid ChangeNameRequestDTO req) {
+    @RequestBody @Valid ChangeNameRequest req) {
         String viewerId = principal.getUsername();
         return userService.changeMyName(viewerId, userId, req.userName());
     }
+
+    // 차단/차단 해제
+    @PatchMapping("/{userId}/block")
+    public UserCardDTO toggleBlock
+    (@PathVariable String userId, @RequestBody(required = false) @Valid BlockToggleRequest req) {
+        String reason = (req == null) ? null : req.reason();
+        return userService.toggleBlock(userId, reason);
+    }
+
+    // 로그인 기록 조회 (관리자만 or 본인만)
+    @GetMapping("/{userId}/login-logs")
+    public Page<LoginLogDTO> getLoginLogs
+    (@PathVariable String userId, @RequestParam(defaultValue = "0") int page)
+    { return userService.getLoginLogs(userId, page); }
 }

@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
             "/api/auth/logout",
             "/api/auth/password/reset/request",
             "/api/auth/withdraw/request",
-            "/api/user/**"
+            "/api/user/*/name"
         );
     }
 }

@@ -1,6 +1,6 @@
 package kr.io.blankspace.dto.account.user;
 
-public record UserCardDto(
+public record UserCardDTO(
     String userId,
     String userName,
     String userMail,
@@ -8,8 +8,8 @@ public record UserCardDto(
     boolean isBlocked,
     String blockedReason
 ) {
-    public static UserCardDto from(kr.io.blankspace.domain.account.user.User u) {
-        return new UserCardDto(
+    public static UserCardDTO from(kr.io.blankspace.domain.account.user.User u) {
+        return new UserCardDTO(
             u.getUserId(),
             u.getUserName(),
             u.getUserMail(),

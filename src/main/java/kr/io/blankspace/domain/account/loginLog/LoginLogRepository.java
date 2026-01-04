@@ -1,5 +1,7 @@
 package kr.io.blankspace.domain.account.loginLog;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -41,4 +43,6 @@ public interface LoginLogRepository extends JpaRepository<LoginLog, Long> {
      where l.logoutDate is null
 """)
     int markAllActiveAsRestarted(@Param("now") LocalDateTime now);
+
+    Page<LoginLog> findByUser_UserIdOrderByLoginDateDesc(String userId, Pageable pageable);
 }

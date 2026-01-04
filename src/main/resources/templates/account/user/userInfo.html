@@ -7,7 +7,6 @@
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>
-    <script th:src="@{/js/account/user.js}"></script>
 </head>
 <body th:attr="data-user-id=${userCard.userId}" class="flex flex-column">
     <nav th:replace="fragments/commons :: nav"></nav>
@@ -19,10 +18,10 @@
     <section class="flex flex-column align-center gap-xl">
         <p class="title1Text bold text-center">회원 정보</p>
         <a class="card pd-md user flex flex-column gap-sm">
-            <button class="btn block" sec:authorize="hasRole('ADMIN')" th:if="${!userCard.blocked}">
+            <button class="btn block" sec:authorize="hasRole('ADMIN')" th:if="${!userCard.blocked}" type="button" onclick="toggleBlock(this)">
                 차단
             </button>
-            <button class="btn block" sec:authorize="hasRole('ADMIN')" th:if="${userCard.blocked}">
+            <button class="btn block" sec:authorize="hasRole('ADMIN')" th:if="${userCard.blocked}" type="button" onclick="toggleBlock(this)">
                 차단 해제
             </button>
             <div class="userInfo flex flex-column-mov gap-sm">
@@ -51,29 +50,15 @@
                 <p class="title3Text" th:text="${userCard.blockedReason}"></p>
             </div>
         </a>
-        <div class="activityMenu flex flex-column gap-sm">
+        <div class="activityMenu flex flex-column gap-sm" th:if="${isSelf} or ${#authorization.expression('hasRole(''ADMIN'')')}">
             <p class="title3Text text-center bold">로그인 기록</p>
-            <div class="activities">
+            <div class="activities" id="loginLogList">
                 <div class="activity flex flex-column align-center head">
                     <span class="text1">IP(지역)</span>
                     <span class="text1 date">로그인 일자</span>
                 </div>
-                <div class="activity flex flex-column align-center">
-                    <span class="text3 black2">세션 유지 중</span>
-                    <div class="activityBottom flex align-center">
-                        <span class="text1">1.23.456(대한민국 서울)</span>
-                        <span class="text2 date">YYYY.MM.DD.</span>
-                    </div>
-                </div>
-                <div class="activity flex flex-column align-center">
-                    <span class="text3 black2">YYYY년 MM월 DD일 로그아웃됨</span>
-                    <div class="activityBottom flex align-center">
-                        <span class="text1">1.23.456(대한민국 서울)</span>
-                        <span class="text2 date">YYYY.MM.DD.</span>
-                    </div>
-                </div>
             </div>
-            <div th:replace="fragments/pages :: pages"></div>
+            <div class="pages flex justify-center gap-sm" th:fragment="pages" data-pagination></div>
         </div>
         <div class="activityMenu flex flex-column gap-sm">
             <p class="title3Text text-center bold">활동</p>
@@ -103,10 +88,12 @@
                     </div>
                 </a>
             </div>
-            <div th:replace="fragments/pages :: pages"></div>
+            <div class="pages flex justify-center gap-sm" th:fragment="pages" data-pagination></div>
         </div>
     </section>
 
     <footer th:replace="fragments/commons :: footer"></footer>
+
+    <script th:src="@{/js/account/user.js}"></script>
 </body>
 </html>
