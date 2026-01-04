@@ -1,0 +1,69 @@
+package kr.io.blankspace.setting.config;
+
+import kr.io.blankspace.domain.account.user.User;
+import kr.io.blankspace.domain.account.user.UserRepository;
+import kr.io.blankspace.setting.PasswordChangedLogoutFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
+
+@Configuration
+@RequiredArgsConstructor
+public class SecurityConfig {
+    private final UserRepository userRepository;
+
+    // 비밀번호 암호화
+    @Bean
+    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+
+    // 권한 조회
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return (String userId) -> {
+            User u = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("not found"));
+
+            boolean disabled = !u.isUserEnabled();
+            boolean locked = u.isBlocked();
+
+            return org.springframework.security.core.userdetails.User
+            .withUsername(u.getUserId()).password(u.getUserPw()).roles(u.getUserRole().name())
+            .disabled(disabled).accountLocked(locked).build();
+        };
+    }
+
+    // 인증 매니저
+    @Bean
+    public AuthenticationManager authenticationManager(UserDetailsService uds, PasswordEncoder encoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(uds);
+        provider.setPasswordEncoder(encoder);
+        return new ProviderManager(provider);
+    }
+
+    // 비밀번호 변경 감지
+    @Bean
+    public PasswordChangedLogoutFilter passwordChangedLogoutFilter()
+    { return new PasswordChangedLogoutFilter(userRepository); }
+
+    // 접근 제어
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+        .formLogin(f -> f.disable())
+        .httpBasic(b -> b.disable());
+
+        http.addFilterAfter(passwordChangedLogoutFilter(), SecurityContextHolderFilter.class);
+
+        return http.build();
+    }
+}

@@ -35,7 +35,6 @@ function validate(inputId, inputName, regex, failMsg)
 {
     if (!check(inputId, inputName)) { return false; }
     if (regex && !regexCheck(inputId, regex, failMsg)) { return false; }
-
     return true;
 }
 
@@ -48,21 +47,36 @@ function idUsingCheck()
     const ok = document.getElementById("ok");
     const no = document.getElementById("no");
 
-    // 임시 로직
-    if (id === "blank0914")
+    ok.style.display = "none";
+    no.style.display = "none";
+
+    fetchJson(`/api/auth/exists/${encodeURIComponent(id)}`, { method: "GET" }, {
+        defaultErrorMessage: "중복 확인 중 오류가 발생했습니다.",
+        parseJson: true
+    })
+    .then((data) =>
+    {
+        if (!data) return;
+
+        if (data.exists === true)
+        {
+            ok.style.display = "none";
+            no.style.display = "inline";
+            showToast("이미 사용 중인 ID입니다.");
+        }
+        else
+        {
+            no.style.display = "none";
+            ok.style.display = "inline";
+            showToast("사용 가능한 ID입니다.");
+        }
+    })
+    .catch(() =>
     {
         ok.style.display = "none";
-        no.style.display = "inline";
-        showToast('이미 사용 중인 ID입니다.');
-        return;
-    }
-    else
-    {
         no.style.display = "none";
-        ok.style.display = "inline";
-        showToast('사용 가능한 ID입니다.');
-        return;
-    }
+        showToast("중복 확인 중 오류가 발생했습니다.");
+    });
 }
 
 // ID 중복 검사 상태 초기화
@@ -101,13 +115,11 @@ function termsCheck()
 function pwToggle()
 {
     const pwInputs = document.getElementsByName("pwInput");
-
     pwInputs.forEach(input =>
     { if (input.type === "password") { input.type = "text"; } else { input.type = "password"; } });
 }
 
-// 동작
-// 회원가입
+// 회원가입 요청
 function join()
 {
     if (!validate("nameInput", "닉네임", REGEX.name, MSG.name)) { return; }
@@ -117,7 +129,33 @@ function join()
     if (!validate("mailInput", "메일 주소", REGEX.mail, MSG.mail)) { return; }
     if (!termsCheck()) { return; }
 
-    showToast("회원가입 메일을 발송했습니다.");
+    const payload =
+    {
+        userId: getValue("idInput"),
+        userName: getValue("nameInput"),
+        userPw: getValue("pwInput"),
+        userMail: getValue("mailInput")
+    };
+
+    postJson("/api/auth/join/request", payload, {
+        defaultErrorMessage: "회원가입 중 오류가 발생했습니다.",
+        toastOnSuccess: "회원가입 메일을 발송했습니다.",
+        parseJson: false
+    });
+}
+
+// 토큰 재발급
+function token()
+{
+    if (!validate("findInput", "메일 주소", REGEX.mail, MSG.mail)) { return; }
+
+    const payload = { userMail: getValue("findInput") };
+
+    postJson("/api/auth/join/resend", payload, {
+        defaultErrorMessage: "토큰 재발급 중 오류가 발생했습니다.",
+        toastOnSuccess: "토큰을 재발급했습니다.",
+        parseJson: false
+    });
 }
 
 // 로그인
@@ -126,14 +164,26 @@ function login()
     if (!validate("idInput", "ID", REGEX.id, MSG.id)) { return; }
     if (!validate("pwInput", "비밀번호", REGEX.pw, MSG.pw)) { return; }
 
-    alert("로그인");
+    const payload = { userId: getValue("idInput"), userPw: getValue("pwInput") };
+
+    postJson("/api/auth/login", payload, {
+        defaultErrorMessage: "로그인 중 오류가 발생했습니다.",
+        parseJson: false
+    }).then((r) => { if (!r) return; location.href = "/?login=1"; });
 }
 
 // 계정 찾기
 function findAccount()
 {
     if (!validate("mailInput", "메일 주소", REGEX.mail, MSG.mail)) { return; }
-    showToast('계정 복구 메일을 발송했습니다.');
+
+    const payload = { userMail: getValue("mailInput") };
+
+    postJson("/api/auth/password/reset/request", payload, {
+        defaultErrorMessage: "계정 찾기 중 오류가 발생했습니다.",
+        toastOnSuccess: "계정 복구 메일을 발송했습니다.",
+        parseJson: false
+    });
 }
 
 // 비밀번호 변경
@@ -142,12 +192,23 @@ function changePw()
     if (!validate("pwInput", "기존 비밀번호", REGEX.pw, MSG.pw)) { return; }
     if (!validate("newPwInput", "변경할 비밀번호", REGEX.pw, MSG.pw)) { return; }
 
-    showToast("비밀번호를 변경했습니다.");
+    const payload = { currentPw: getValue("pwInput"), newPw: getValue("newPwInput") };
+
+    postJson("/api/auth/password/change", payload,
+    { defaultErrorMessage: "비밀번호 변경 중 오류가 발생했습니다.", parseJson: false })
+    .then((r) => { if (!r) return; location.href = "/?logout=1"; });
 }
 
 // 회원 탈퇴
 function withdraw()
 {
     if (!validate("pwInput", "비밀번호", REGEX.pw, MSG.pw)) { return; }
-    showToast("회원 탈퇴 메일을 발송했습니다.");
+
+    const payload = { userPw: getValue("pwInput") };
+
+    postJson("/api/auth/withdraw/request", payload, {
+        defaultErrorMessage: "회원 탈퇴 요청 중 오류가 발생했습니다.",
+        toastOnSuccess: "회원 탈퇴 확인 메일을 발송했습니다.",
+        parseJson: false
+    });
 }

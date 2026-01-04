@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>BLANKSPACE 회원 탈퇴 확인</title>
+</head>
+<body style="margin:0;padding:0;background:#F4F6F7;">
+<!-- preheader (메일 미리보기) -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
+    BLANKSPACE 회원 탈퇴 요청을 완료하려면 확인이 필요합니다.
+</div>
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+       style="background:#F4F6F7;margin:0;padding:0;">
+    <tr>
+        <td align="center" style="padding:32px 12px;">
+            <!-- 컨테이너 -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600"
+                   style="width:600px;max-width:600px;border:1px solid #34495E;background:#FAFAF8;">
+                <!-- 헤더바 (formHeader 느낌) -->
+                <tr>
+                    <td style="background:#34495E;height:40px;line-height:40px;padding:0 16px;">
+              <span style="font-family:Arial, Helvetica, sans-serif;font-size:18px;color:#FAFAF8;font-weight:700;">
+                BLANKSPACE · 회원 탈퇴
+              </span>
+                    </td>
+                </tr>
+
+                <!-- 본문 -->
+                <tr>
+                    <td style="padding:20px 20px 8px 20px;">
+                        <div style="font-family:Arial, Helvetica, sans-serif;font-size:16px;color:#24292F;line-height:1.6;">
+                            아래 버튼을 클릭해 <b>회원 탈퇴</b>를 완료하세요.<br>
+                            탈퇴한 계정은 복구할 수 없습니다.
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- 버튼 -->
+                <tr>
+                    <td align="center" style="padding:16px 20px 8px 20px;">
+                        <!--[if mso]>
+                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{WITHDRAW_LINK}}"
+                                     style="height:42px;v-text-anchor:middle;width:280px;" arcsize="6%" strokecolor="#34495E" fillcolor="#34495E">
+                            <w:anchorlock/>
+                            <center style="color:#FAFAF8;font-family:Arial, Helvetica, sans-serif;font-size:16px;font-weight:bold;">
+                                회원 탈퇴
+                            </center>
+                        </v:roundrect>
+                        <![endif]-->
+                        <!--[if !mso]><!-- -->
+                        <a href="{{WITHDRAW_LINK}}"
+                           style="display:inline-block;background:#34495E;color:#FAFAF8;text-decoration:none;
+                        padding:12px 22px;font-family:Arial, Helvetica, sans-serif;font-size:16px;font-weight:700;
+                        border-radius:4px;border:1px solid #34495E;">
+                            회원 탈퇴
+                        </a>
+                        <!--<![endif]-->
+                    </td>
+                </tr>
+
+                <!-- 보조 텍스트 -->
+                <tr>
+                    <td style="padding:8px 20px 0 20px;">
+                        <div style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#5F6368;line-height:1.6;">
+                            버튼이 동작하지 않으면 아래 링크를 주소창에 입력하세요.
+                        </div>
+                        <div style="word-break:break-all;margin-top:6px;">
+                            <a href="{{WITHDRAW_LINK}}"
+                               style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#34495E;text-decoration:underline;">
+                                {{WITHDRAW_LINK}}
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- 구분선 -->
+                <tr>
+                    <td style="padding:16px 20px 0 20px;">
+                        <div style="height:1px;background:#C2C8D0;"></div>
+                    </td>
+                </tr>
+
+                <!-- 안내/주의 -->
+                <tr>
+                    <td style="padding:12px 20px 20px 20px;">
+                        <div style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#5F6368;line-height:1.6;">
+                            • 이 링크는 일정 시간이 지나면 만료됩니다.<br/>
+                            • 본인이 요청하지 않았다면 이 메일을 무시하세요.<br/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 바깥쪽 작은 푸터 -->
+            <div style="width:600px;max-width:600px;margin-top:10px;font-family:Arial, Helvetica, sans-serif;
+                    font-size:12px;color:#5F6368;line-height:1.6;text-align:center;">
+                © BLANKSPACE
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -17,5 +17,48 @@ const bindRv = (sel = ".rv", { off = 80 } = {}) =>
 const seq = (sel, step = 120, base = 0) =>
 { document.querySelectorAll(sel).forEach((el, i) => { el.style.setProperty("--d", `${base + i * step}ms`); }); };
 
-// 애니메이션 적용
-addEventListener("DOMContentLoaded", () => { seq(".newNovelList .newNovel.rv", 120, 0); bindRv(".rv", { off: 80 }); });
+// 이벤트 리스너
+addEventListener("DOMContentLoaded", () =>
+{
+    // 애니메이션 적용
+    seq(".newNovelList .newNovel.rv", 120, 0); bindRv(".rv", { off: 80 });
+
+    // 인증 알림
+    const params = new URLSearchParams(window.location.search);
+    const reset = params.get("reset");
+    const withdraw = params.get("withdraw");
+
+    if (params.get("joined") === "1")
+    {
+        showToast("회원가입이 완료됐습니다.");
+        history.replaceState({}, "", window.location.pathname);
+    }
+    if (params.get("login") === "1")
+    {
+        fetch("/api/auth/me", { credentials: "include" })
+        .then(res => res.json())
+        .then(data =>
+        { if (data && data.userName) { showToast(`${data.userName}님, 환영합니다.`); } })
+        .finally(() => { history.replaceState({}, "", window.location.pathname); });
+    }
+    if (params.get("logout") === "1")
+    {
+        showToast("로그아웃 됐습니다.");
+        history.replaceState({}, "", window.location.pathname);
+    }
+    if (reset === "done")
+    {
+        showToast("임시 비밀번호가 적용됐습니다.");
+        history.replaceState({}, "", window.location.pathname);
+    }
+    if (withdraw === "done")
+    {
+        showToast("회원 탈퇴가 완료됐습니다. 떠나다니 아쉽습니다.");
+        history.replaceState({}, "", window.location.pathname);
+    }
+    if (withdraw === "expired")
+    {
+        showToast("링크가 만료됐거나 유효하지 않습니다. 다시 시도해주세요.");
+        history.replaceState({}, "", window.location.pathname);
+    }
+});

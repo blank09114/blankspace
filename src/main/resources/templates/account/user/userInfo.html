@@ -48,25 +48,9 @@
         </a>
         <div class="activityMenu flex flex-column gap-lg">
             <p class="title3Text text-center bold">로그인 기록</p>
-            <div class="activities">
-                <div class="activity flex flex-column align-center head">
-                    <span class="text1">IP</span>
-                    <span class="text1 date">로그인 일자</span>
-                </div>
-                <div class="activity flex flex-column align-center">
-                    <span class="text3 black2">세션 유지 중</span>
-                    <div class="activityBottom flex align-center">
-                        <span class="text1">1.23.456</span>
-                        <span class="text2 date">YYYY.MM.DD.</span>
-                    </div>
-                </div>
-                <div class="activity flex flex-column align-center">
-                    <span class="text3 black2">YYYY년 MM월 DD일 로그아웃됨</span>
-                    <div class="activityBottom flex align-center">
-                        <span class="text1">1.23.456</span>
-                        <span class="text2 date">YYYY.MM.DD.</span>
-                    </div>
-                </div>
+            <div class="activity flex flex-column align-center head">
+                <span class="text1">IP(지역)</span>
+                <span class="text1 date">로그인 일자</span>
             </div>
             <div th:replace="fragments/pages :: pages"></div>
         </div>
