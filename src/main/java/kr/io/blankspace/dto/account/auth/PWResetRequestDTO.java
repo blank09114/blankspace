@@ -1,6 +1,6 @@
 package kr.io.blankspace.dto.account.auth;
 
-public class PasswordResetRequestDTO {
+public class PWResetRequestDTO {
     @jakarta.validation.constraints.NotBlank
     private String userMail;
     public String getUserMail() { return userMail; }

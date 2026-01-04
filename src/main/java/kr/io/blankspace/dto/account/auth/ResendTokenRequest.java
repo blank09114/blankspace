@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResendJoinTokenRequest {
+public class ResendTokenRequest {
     @NotBlank
     @Email
     private String userMail;

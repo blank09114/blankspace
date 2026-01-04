@@ -9,10 +9,10 @@
                 <a class="text3 black2" th:href="@{/auth/findAccount}">계정 찾기</a>
             </th:block>
             <th:block sec:authorize="hasRole('ADMIN')">
-                <a class="text3 black2">회원 목록</a>
+                <a class="text3 black2" th:href="@{/user/list}">회원 목록</a>
             </th:block>
             <th:block sec:authorize="isAuthenticated()">
-                <a class="text3 black2">내 정보</a>
+                <a class="text3 black2" th:href="@{/user/me}">내 정보</a>
                 <a class="text3 black2" th:href="@{/auth/changePw}">비밀번호 변경</a>
                 <a class="text3 black2" th:href="@{/auth/withdraw}">회원 탈퇴</a>
                 <a class="text3 black2" href="#" onclick="logout(); return false;">로그아웃</a>
@@ -38,10 +38,10 @@
                     <a class="text1" th:href="@{/auth/findAccount}">계정 찾기</a>
                 </th:block>
                 <th:block sec:authorize="hasRole('ADMIN')">
-                    <a class="text1">회원 목록</a>
+                    <a class="text1" th:href="@{/user/list}">회원 목록</a>
                 </th:block>
                 <th:block sec:authorize="isAuthenticated()">
-                    <a class="text1">내 정보</a>
+                    <a class="text1" th:href="@{/user/me}">내 정보</a>
                     <a class="text1" th:href="@{/auth/changePw}">비밀번호 변경</a>
                     <a class="text1" th:href="@{/auth/withdraw}">회원 탈퇴</a>
                     <a class="text1" href="#" onclick="logout(); return false;">로그아웃</a>

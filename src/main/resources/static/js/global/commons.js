@@ -190,4 +190,78 @@ async function fetchJson(url, options = {}, {
 function postJson(url, bodyObj, opts = {})
 { return fetchJson(url, { method: "POST", body: JSON.stringify(bodyObj) }, opts); }
 
+// 날짜 포맷
+function formatDate(dateStr)
+{
+    if (!dateStr) return "";
+
+    const d = new Date(dateStr);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+
+    return `${yyyy}.${mm}.${dd}.`;
+}
+
+function formatDateTime(dateStr)
+{
+    if (!dateStr) return "";
+
+    const d = new Date(dateStr);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const hh = String(d.getHours()).padStart(2, "0");
+    const mi = String(d.getMinutes()).padStart(2, "0");
+
+    return `${yyyy}.${mm}.${dd}. ${hh}:${mi}`;
+}
+
+// 공통 페이지 유틸
+function renderPagination(container, currentPage, totalPages, onPageClick)
+{
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const createBtn = (label, page, opts = {}) =>
+    {
+        const { isNow = false, disabled = false } = opts;
+
+        const a = document.createElement("a");
+        a.className = "page" + (isNow ? " now" : "") + (disabled ? " disabled" : "");
+        a.textContent = label;
+        a.href = "javascript:void(0)";
+
+        if (!disabled) { a.onclick = () => onPageClick(page); }
+        else
+        {
+            a.onclick = e => e.preventDefault();
+            a.setAttribute("aria-disabled", "true");
+            a.setAttribute("tabindex", "-1");
+        }
+        return a;
+    };
+
+    // 이전
+    const prevDisabled = (totalPages <= 1) || (currentPage <= 0);
+    container.appendChild(createBtn("<", Math.max(0, currentPage - 1), { disabled: prevDisabled }));
+
+    // 번호
+    if (totalPages <= 1)
+    { container.appendChild(createBtn("1", 0, { isNow: true, disabled: true })); }
+    else
+    {
+        const start = Math.max(0, currentPage - 2);
+        const end = Math.min(totalPages - 1, currentPage + 2);
+
+        for (let i = start; i <= end; i++)
+        { container.appendChild(createBtn(String(i + 1), i, { isNow: i === currentPage })); }
+    }
+
+    // 다음
+    const nextDisabled = (totalPages <= 1) || (currentPage >= totalPages - 1);
+    container.appendChild(createBtn(">", Math.min(totalPages - 1, currentPage + 1), { disabled: nextDisabled }));
+}
+
 addEventListener("DOMContentLoaded", () => { applyAuthGreeting(); });

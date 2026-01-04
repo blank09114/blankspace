@@ -72,7 +72,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/api/auth/password/reset/apply").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/auth/withdraw/apply").permitAll()
 
-            // 비로그인만 허용
+            // 비로그인 사용자만 허용
             .requestMatchers(HttpMethod.GET, "/auth/login").anonymous()
             .requestMatchers(HttpMethod.GET, "/auth/join").anonymous()
             .requestMatchers(HttpMethod.GET, "/auth/findAccount").anonymous()
@@ -82,13 +82,21 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/auth/password/reset/request").anonymous()
             .requestMatchers(HttpMethod.GET,  "/api/auth/exists/**").anonymous()
 
-            // 로그인만 허용
+            // 로그인 사용자만 허용
             .requestMatchers(HttpMethod.GET, "/auth/changePw").authenticated()
             .requestMatchers(HttpMethod.GET, "/auth/withdraw").authenticated()
             .requestMatchers(HttpMethod.GET,  "/api/auth/me").authenticated()
             .requestMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
             .requestMatchers(HttpMethod.POST, "/api/auth/password/change").authenticated()
             .requestMatchers(HttpMethod.POST, "/api/auth/withdraw/request").authenticated()
+            .requestMatchers(HttpMethod.GET, "/user/me").authenticated()
+            .requestMatchers(HttpMethod.GET, "/api/user/*/login-logs").authenticated()
+            .requestMatchers(HttpMethod.PATCH, "/api/user/*/name").authenticated()
+
+            // 관리자만 허용
+            .requestMatchers(HttpMethod.GET, "/user/list").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/api/user/list").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.PATCH, "/api/user/*/block").hasRole("ADMIN")
 
             // 나머지는 전부 허용
             .anyRequest().permitAll()

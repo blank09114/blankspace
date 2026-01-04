@@ -81,4 +81,6 @@ public class User {
         String suffix = java.util.UUID.randomUUID().toString().replace("-", "");
         this.userMail = "deleted_" + suffix + "@deleted.local";
     }
+
+    public void changeName(String newName) { this.userName = newName; }
 }

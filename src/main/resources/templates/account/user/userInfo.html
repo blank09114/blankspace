@@ -7,9 +7,8 @@
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>
-    <script th:src="@{/js/account/user.js}"></script>
 </head>
-<body class="flex flex-column">
+<body th:attr="data-user-id=${userCard.userId}" class="flex flex-column">
     <nav th:replace="fragments/commons :: nav"></nav>
 
     <div th:replace="fragments/commons :: toast"></div>
@@ -19,42 +18,49 @@
     <section class="flex flex-column align-center gap-xl">
         <p class="title1Text bold text-center">회원 정보</p>
         <a class="card pd-md user flex flex-column gap-sm">
-            <button class="btn block">차단 해제</button>
+            <button class="btn block" sec:authorize="hasRole('ADMIN')" th:if="${!userCard.blocked}" type="button" onclick="toggleBlock(this)">
+                차단
+            </button>
+            <button class="btn block" sec:authorize="hasRole('ADMIN')" th:if="${userCard.blocked}" type="button" onclick="toggleBlock(this)">
+                차단 해제
+            </button>
             <div class="userInfo flex flex-column-mov gap-sm">
                 <p class="title3Text bold">닉네임</p>
-                <p class="title3Text">닉네임</p>
-                <form name="nameForm" class="flex flex-column-mov gap-sm">
+                <p class="title3Text" th:text="${userCard.userName}"></p>
+                <form name="nameForm" class="flex flex-column-mov gap-sm" th:if="${isSelf}" sec:authorize="isAuthenticated()">
                     <input type="text" name="name">
                     <button class="btn" type="button" onclick="editName(this)">저장</button>
                 </form>
-                <button class="btn" onclick="nameToggle(this)">변경</button>
+                <button class="btn" onclick="nameToggle(this)" th:if="${isSelf}" sec:authorize="isAuthenticated()">변경</button>
             </div>
             <div class="userInfo flex flex-column-mov gap-sm">
                 <p class="title3Text bold">ID</p>
-                <p class="title3Text">ID</p>
+                <p class="title3Text" th:text="${userCard.userId}">ID</p>
             </div>
             <div class="userInfo flex flex-column-mov gap-sm">
                 <p class="title3Text bold">MAIL</p>
-                <p class="title3Text">메일주소@nsver.com</p>
+                <p class="title3Text" th:text="${userCard.userMail}"></p>
             </div>
             <div class="userInfo flex flex-column-mov gap-sm">
                 <p class="title3Text bold">가입일</p>
-                <p class="title3Text">YYYY.MM.DD.</p>
+                <p class="title3Text" th:text="${#temporals.format(userCard.userDate, 'yyyy.MM.dd.')}"></p>
             </div>
-            <div class="userInfo flex flex-column-mov gap-sm">
+            <div class="userInfo flex flex-column-mov gap-sm" th:if="${userCard.blocked}">
                 <p class="title3Text bold">차단 사유</p>
-                <p class="title3Text">병신</p>
+                <p class="title3Text" th:text="${userCard.blockedReason}"></p>
             </div>
         </a>
-        <div class="activityMenu flex flex-column gap-lg">
+        <div class="activityMenu flex flex-column gap-sm" th:if="${isSelf} or ${#authorization.expression('hasRole(''ADMIN'')')}">
             <p class="title3Text text-center bold">로그인 기록</p>
-            <div class="activity flex flex-column align-center head">
-                <span class="text1">IP(지역)</span>
-                <span class="text1 date">로그인 일자</span>
+            <div class="activities" id="loginLogList">
+                <div class="activity flex flex-column align-center head">
+                    <span class="text1">IP(지역)</span>
+                    <span class="text1 date">로그인 일자</span>
+                </div>
             </div>
-            <div th:replace="fragments/pages :: pages"></div>
+            <div class="pages flex justify-center gap-sm" th:fragment="pages" data-pagination></div>
         </div>
-        <div class="activityMenu flex flex-column gap-lg">
+        <div class="activityMenu flex flex-column gap-sm">
             <p class="title3Text text-center bold">활동</p>
             <div class="categories flex justify-end">
                 <button class="category now">· 전체 보기</button>
@@ -82,10 +88,12 @@
                     </div>
                 </a>
             </div>
-            <div th:replace="fragments/pages :: pages"></div>
+            <div class="pages flex justify-center gap-sm" th:fragment="pages" data-pagination></div>
         </div>
     </section>
 
     <footer th:replace="fragments/commons :: footer"></footer>
+
+    <script th:src="@{/js/account/user.js}"></script>
 </body>
 </html>
