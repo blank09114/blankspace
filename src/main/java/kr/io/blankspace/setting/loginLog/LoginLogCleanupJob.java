@@ -1,6 +1,6 @@
 package kr.io.blankspace.setting.loginLog;
 
-import kr.io.blankspace.domain.account.loginLog.LoginLogRepository;
+import kr.io.blankspace.repository.LoginLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

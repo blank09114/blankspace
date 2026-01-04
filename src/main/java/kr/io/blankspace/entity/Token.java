@@ -1,6 +1,5 @@
-package kr.io.blankspace.domain.account.token;
+package kr.io.blankspace.entity;
 import jakarta.persistence.*;
-import kr.io.blankspace.domain.account.user.User;
 import lombok.*;
 
 import java.time.LocalDateTime;

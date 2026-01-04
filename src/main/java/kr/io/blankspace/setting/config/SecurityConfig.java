@@ -1,7 +1,7 @@
 package kr.io.blankspace.setting.config;
 
-import kr.io.blankspace.domain.account.user.User;
-import kr.io.blankspace.domain.account.user.UserRepository;
+import kr.io.blankspace.entity.User;
+import kr.io.blankspace.repository.UserRepository;
 import kr.io.blankspace.setting.PasswordChangedLogoutFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;

@@ -2,9 +2,9 @@ package kr.io.blankspace.service.account.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import kr.io.blankspace.domain.account.token.Token;
-import kr.io.blankspace.domain.account.user.User;
-import kr.io.blankspace.domain.account.user.UserRepository;
+import kr.io.blankspace.entity.Token;
+import kr.io.blankspace.entity.User;
+import kr.io.blankspace.repository.UserRepository;
 import kr.io.blankspace.dto.account.auth.JoinRequestDTO;
 import kr.io.blankspace.dto.account.auth.LoginRequestDTO;
 import kr.io.blankspace.dto.account.auth.LoginResponseDTO;

@@ -1,4 +1,4 @@
-package kr.io.blankspace.domain.account.user;
+package kr.io.blankspace.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;

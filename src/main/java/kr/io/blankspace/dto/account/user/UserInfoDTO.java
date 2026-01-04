@@ -1,5 +1,7 @@
 package kr.io.blankspace.dto.account.user;
 
+import kr.io.blankspace.entity.User;
+
 public record UserInfoDTO(
     String userId,
     String userName,
@@ -8,7 +10,7 @@ public record UserInfoDTO(
     boolean isBlocked,
     String blockedReason
 ) {
-    public static UserInfoDTO from(kr.io.blankspace.domain.account.user.User u) {
+    public static UserInfoDTO from(User u) {
         return new UserInfoDTO(
             u.getUserId(),
             u.getUserName(),

@@ -1,6 +1,6 @@
 package kr.io.blankspace.dto.account.user;
 
-import kr.io.blankspace.domain.account.loginLog.LoginLog;
+import kr.io.blankspace.entity.LoginLog;
 
 import java.time.LocalDateTime;
 
