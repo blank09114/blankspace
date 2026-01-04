@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import kr.io.blankspace.dto.account.user.BlockToggleRequest;
 import kr.io.blankspace.dto.account.user.ChangeNameRequest;
 import kr.io.blankspace.dto.account.user.LoginLogDTO;
-import kr.io.blankspace.dto.account.user.UserCardDTO;
+import kr.io.blankspace.dto.account.user.UserInfoDTO;
 import kr.io.blankspace.service.account.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,16 +20,16 @@ public class UserAPI {
 
     // 닉네임 변경
     @PatchMapping("/{userId}/name")
-    public UserCardDTO changeName(@PathVariable String userId,
-    @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal,
-    @RequestBody @Valid ChangeNameRequest req) {
+    public UserInfoDTO changeName(@PathVariable String userId,
+                                  @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal,
+                                  @RequestBody @Valid ChangeNameRequest req) {
         String viewerId = principal.getUsername();
         return userService.changeMyName(viewerId, userId, req.userName());
     }
 
     // 차단/차단 해제
     @PatchMapping("/{userId}/block")
-    public UserCardDTO toggleBlock
+    public UserInfoDTO toggleBlock
     (@PathVariable String userId, @RequestBody(required = false) @Valid BlockToggleRequest req) {
         String reason = (req == null) ? null : req.reason();
         return userService.toggleBlock(userId, reason);
@@ -44,6 +44,6 @@ public class UserAPI {
 
     // 회원 목록 조회
     @GetMapping("/list")
-    public Page<UserCardDTO> getUserList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
+    public Page<UserInfoDTO> getUserList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
     { return userService.getUserList(page, size); }
 }
