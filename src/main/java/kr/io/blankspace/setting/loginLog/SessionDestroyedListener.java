@@ -18,7 +18,7 @@ public class SessionDestroyedListener {
         if (event == null) return;
 
         String sessionId = event.getId();
-        String loginHash = kr.io.blankspace.setting.TokenUtil.sha256Hex(sessionId);
+        String loginHash = TokenUtil.sha256Hex(sessionId);
 
         loginLogRepository.markLogout(loginHash, LocalDateTime.now());
     }

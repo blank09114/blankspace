@@ -1,4 +1,4 @@
-package kr.io.blankspace.setting;
+package kr.io.blankspace.setting.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
