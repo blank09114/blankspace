@@ -144,4 +144,50 @@ function logout()
     .catch(() => { location.href = "/?logout=1"; });
 }
 
+// API 응답 실패
+async function handleApiError(res, defaultMessage = "요청 처리 중 문제가 발생했습니다.")
+{
+    if (res.status === 429) {  showToast("잠시 후 다시 시도해주세요."); return; } // 레이트 리밋
+    try
+    {
+        const data = await res.json();
+        if (data && data.message) { showToast(data.message); return; }
+    }
+    catch (_) { }
+
+    showToast(defaultMessage);
+}
+
+// JSON API 래퍼
+async function fetchJson(url, options = {}, {
+    defaultErrorMessage = "요청 처리 중 문제가 발생했습니다.",
+    toastOnSuccess = null, parseJson = true
+} = {})
+{
+    const opts = { credentials: "include", ...options };
+    if (opts.body && typeof opts.body === "string")
+    { opts.headers = { "Content-Type": "application/json", ...(opts.headers || {}) }; }
+
+    try
+    {
+        const res = await fetch(url, opts);
+
+        if (!res.ok) { await handleApiError(res, defaultErrorMessage); return null; }
+
+        if (toastOnSuccess) showToast(toastOnSuccess);
+
+        if (!parseJson) return { ok: true };
+
+        const ct = (res.headers.get("content-type") || "").toLowerCase();
+        if (!ct.includes("application/json")) return null;
+
+        return await res.json();
+    }
+    catch (_) { showToast("네트워크 오류가 발생했습니다."); return null; }
+}
+
+// POST JSON 편의 함수
+function postJson(url, bodyObj, opts = {})
+{ return fetchJson(url, { method: "POST", body: JSON.stringify(bodyObj) }, opts); }
+
 addEventListener("DOMContentLoaded", () => { applyAuthGreeting(); });

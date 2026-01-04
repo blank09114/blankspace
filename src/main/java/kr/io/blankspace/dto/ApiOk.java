@@ -1,4 +1,4 @@
-package kr.io.blankspace.dto.account.auth;
+package kr.io.blankspace.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -35,7 +35,6 @@ function validate(inputId, inputName, regex, failMsg)
 {
     if (!check(inputId, inputName)) { return false; }
     if (regex && !regexCheck(inputId, regex, failMsg)) { return false; }
-
     return true;
 }
 
@@ -48,19 +47,17 @@ function idUsingCheck()
     const ok = document.getElementById("ok");
     const no = document.getElementById("no");
 
-    // 초기화
     ok.style.display = "none";
     no.style.display = "none";
 
-    fetch(`/api/auth/exists/${encodeURIComponent(id)}`, { method: "GET" })
-    .then(res =>
-    {
-        if (!res.ok) { throw new Error("중복 확인 실패"); }
-        return res.json();
+    fetchJson(`/api/auth/exists/${encodeURIComponent(id)}`, { method: "GET" }, {
+        defaultErrorMessage: "중복 확인 중 오류가 발생했습니다.",
+        parseJson: true
     })
-    .then(data =>
+    .then((data) =>
     {
-        // 서버 응답: { exists: true/false }
+        if (!data) return;
+
         if (data.exists === true)
         {
             ok.style.display = "none";
@@ -118,12 +115,10 @@ function termsCheck()
 function pwToggle()
 {
     const pwInputs = document.getElementsByName("pwInput");
-
     pwInputs.forEach(input =>
     { if (input.type === "password") { input.type = "text"; } else { input.type = "password"; } });
 }
 
-// 동작
 // 회원가입 요청
 function join()
 {
@@ -142,29 +137,11 @@ function join()
         userMail: getValue("mailInput")
     };
 
-    fetch("/api/auth/join/request",
-    {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    })
-    .then(async (res) =>
-    {
-        if (res.ok)
-        {
-            showToast("회원가입 메일을 발송했습니다.");
-            return;
-        }
-
-        let msg = "회원가입 중 오류가 발생했습니다.";
-        try {
-            const data = await res.json();
-            if (data && data.message) msg = data.message;
-        } catch (_) {}
-
-        showToast(msg);
-    })
-    .catch(() => showToast("회원가입 중 오류가 발생했습니다."));
+    postJson("/api/auth/join/request", payload, {
+        defaultErrorMessage: "회원가입 중 오류가 발생했습니다.",
+        toastOnSuccess: "회원가입 메일을 발송했습니다.",
+        parseJson: false
+    });
 }
 
 // 토큰 재발급
@@ -174,29 +151,11 @@ function token()
 
     const payload = { userMail: getValue("findInput") };
 
-    fetch("/api/auth/join/resend",
-    {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    })
-    .then(async (res) =>
-    {
-        if (res.ok)
-        {
-            showToast("토큰을 재발급했습니다.");
-            return;
-        }
-
-        // 서버가 JSON 에러 내려주면 메시지 우선 사용
-        let msg = "토큰 재발급 중 오류가 발생했습니다.";
-        try {
-            const data = await res.json();
-            if (data && data.message) msg = data.message;
-        } catch (_) {}
-        showToast(msg);
-    })
-    .catch(() => showToast("토큰 재발급 중 오류가 발생했습니다."));
+    postJson("/api/auth/join/resend", payload, {
+        defaultErrorMessage: "토큰 재발급 중 오류가 발생했습니다.",
+        toastOnSuccess: "토큰을 재발급했습니다.",
+        parseJson: false
+    });
 }
 
 // 로그인
@@ -205,36 +164,12 @@ function login()
     if (!validate("idInput", "ID", REGEX.id, MSG.id)) { return; }
     if (!validate("pwInput", "비밀번호", REGEX.pw, MSG.pw)) { return; }
 
-    const payload =
-    {
-        userId: getValue("idInput"),
-        userPw: getValue("pwInput")
-    };
+    const payload = { userId: getValue("idInput"), userPw: getValue("pwInput") };
 
-    fetch("/api/auth/login",
-    {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload)
-    })
-    .then(async (res) =>
-    {
-        if (res.ok)
-        {
-            location.href = "/?login=1";
-            return;
-        }
-
-        let msg = "로그인 중 오류가 발생했습니다.";
-        try {
-            const data = await res.json();
-            if (data && data.message) msg = data.message;
-        } catch (_) {}
-
-        showToast(msg);
-    })
-    .catch(() => showToast("로그인 중 오류가 발생했습니다."));
+    postJson("/api/auth/login", payload, {
+        defaultErrorMessage: "로그인 중 오류가 발생했습니다.",
+        parseJson: false
+    }).then((r) => { if (!r) return; location.href = "/?login=1"; });
 }
 
 // 계정 찾기
@@ -244,25 +179,11 @@ function findAccount()
 
     const payload = { userMail: getValue("mailInput") };
 
-    fetch("/api/auth/password/reset/request",
-    {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    })
-    .then(async (res) =>
-    {
-        if (res.ok) { showToast("계정 복구 메일을 발송했습니다."); return; }
-
-        let msg = "계정 찾기 중 오류가 발생했습니다.";
-        try {
-            const data = await res.json();
-            if (data && data.message) msg = data.message;
-        } catch (_) {}
-
-        showToast(msg);
-    })
-    .catch(() => showToast("계정 찾기 중 오류가 발생했습니다."));
+    postJson("/api/auth/password/reset/request", payload, {
+        defaultErrorMessage: "계정 찾기 중 오류가 발생했습니다.",
+        toastOnSuccess: "계정 복구 메일을 발송했습니다.",
+        parseJson: false
+    });
 }
 
 // 비밀번호 변경

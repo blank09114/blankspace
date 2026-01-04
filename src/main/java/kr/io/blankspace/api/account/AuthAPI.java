@@ -2,6 +2,7 @@ package kr.io.blankspace.api.account;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import kr.io.blankspace.dto.ApiOk;
 import kr.io.blankspace.dto.account.auth.*;
 import kr.io.blankspace.service.account.AuthService;
 import lombok.RequiredArgsConstructor;
