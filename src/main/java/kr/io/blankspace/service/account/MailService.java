@@ -36,6 +36,15 @@ public class MailService {
         sendHtml(to, "[BLANKSPACE] 비밀번호 재설정 안내", html);
     }
 
+    // 탈퇴 메일
+    public void sendWithdrawMail(String to, String withdrawLink) {
+        String html = renderTemplate(
+            "templates/mail/withdraw.html",
+            Map.of("{{WITHDRAW_LINK}}", withdrawLink)
+        );
+        sendHtml(to, "[BLANKSPACE] 회원 탈퇴 확인", html);
+    }
+
     // 공통 유틸
     private void sendHtml(String to, String subject, String html) {
         try {

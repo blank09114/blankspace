@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -43,6 +44,9 @@ public class AuthService {
 
     @Value("${app.reset-token-minutes:30}")
     private long resetTokenMinutes;
+
+    @Value("${app.withdraw-token-minutes:30}")
+    private long withdrawTokenMinutes;
 
     // 회원가입 요청
     @Transactional
@@ -238,5 +242,37 @@ public class AuthService {
         loginLogService.markLogout(session);
         if (session != null) session.invalidate();
         SecurityContextHolder.clearContext();
+    }
+
+    @Transactional
+    public void requestWithdraw(String userId, String userPw) {
+
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다.")
+        );
+
+        String pw = userPw == null ? "" : userPw.trim();
+
+        if (!passwordEncoder.matches(pw, user.getUserPw())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 올바르지 않습니다.");
+        }
+
+        String rawToken = tokenService.issue(user, Token.TokenType.WITHDRAW, withdrawTokenMinutes, 48);
+
+        String encoded = URLEncoder.encode(rawToken, StandardCharsets.UTF_8);
+        String link = baseUrl + "/api/auth/withdraw/apply?token=" + encoded;
+
+        mailService.sendWithdrawMail(user.getUserMail(), link);
+    }
+
+    @Transactional
+    public void applyWithdraw(String encodedToken) {
+        String rawToken = URLDecoder.decode(encodedToken, StandardCharsets.UTF_8);
+
+        Token token = tokenService.getValidTokenWithUser(rawToken, Token.TokenType.WITHDRAW);
+        User user = token.getUser();
+
+        tokenService.markUsed(token);
+        user.withdrawAnonymize(passwordEncoder, TokenUtil.generateToken(32));
     }
 }

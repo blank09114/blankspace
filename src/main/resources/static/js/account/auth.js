@@ -203,5 +203,12 @@ function changePw()
 function withdraw()
 {
     if (!validate("pwInput", "비밀번호", REGEX.pw, MSG.pw)) { return; }
-    showToast("회원 탈퇴 메일을 발송했습니다.");
+
+    const payload = { userPw: getValue("pwInput") };
+
+    postJson("/api/auth/withdraw/request", payload, {
+        defaultErrorMessage: "회원 탈퇴 요청 중 오류가 발생했습니다.",
+        toastOnSuccess: "회원 탈퇴 확인 메일을 발송했습니다.",
+        parseJson: false
+    });
 }

@@ -1,6 +1,7 @@
 package kr.io.blankspace.domain.account.user;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -70,4 +71,14 @@ public class User {
     }
 
     public enum UserRole { USER, ADMIN }
+
+    public void withdrawAnonymize(PasswordEncoder encoder, String rawRandomPassword) {
+        this.userEnabled = false;
+        this.isBlocked = false;
+        this.blockedReason = null;
+        this.userName = "탈퇴한 사용자";
+        this.changePassword(encoder.encode(rawRandomPassword));
+        String suffix = java.util.UUID.randomUUID().toString().replace("-", "");
+        this.userMail = "deleted_" + suffix + "@deleted.local";
+    }
 }

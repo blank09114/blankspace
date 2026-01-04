@@ -26,7 +26,7 @@ addEventListener("DOMContentLoaded", () =>
     // 인증 알림
     const params = new URLSearchParams(window.location.search);
     const reset = params.get("reset");
-    const pw = params.get("pw");
+    const withdraw = params.get("withdraw");
 
     if (params.get("joined") === "1")
     {
@@ -51,14 +51,14 @@ addEventListener("DOMContentLoaded", () =>
         showToast("임시 비밀번호가 적용됐습니다.");
         history.replaceState({}, "", window.location.pathname);
     }
-    if (reset === "expired")
+    if (withdraw === "done")
     {
-        showToast("링크가 만료됐거나 유효하지 않습니다. 다시 시도해주세요.");
+        showToast("회원 탈퇴가 완료됐습니다. 떠나다니 아쉽습니다.");
         history.replaceState({}, "", window.location.pathname);
     }
-    if (pw === "changed")
+    if (withdraw === "expired")
     {
-        showToast("비밀번호가 변경됐습니다. 다시 로그인해주세요.");
+        showToast("링크가 만료됐거나 유효하지 않습니다. 다시 시도해주세요.");
         history.replaceState({}, "", window.location.pathname);
     }
 });
