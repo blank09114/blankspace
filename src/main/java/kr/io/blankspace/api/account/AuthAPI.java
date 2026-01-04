@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kr.io.blankspace.dto.ApiOk;
 import kr.io.blankspace.dto.account.auth.*;
-import kr.io.blankspace.service.account.AuthService;
+import kr.io.blankspace.service.account.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

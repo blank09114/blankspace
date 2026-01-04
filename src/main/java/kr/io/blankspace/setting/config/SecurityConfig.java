@@ -89,8 +89,14 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
             .requestMatchers(HttpMethod.POST, "/api/auth/password/change").authenticated()
             .requestMatchers(HttpMethod.POST, "/api/auth/withdraw/request").authenticated()
+            .requestMatchers(HttpMethod.GET, "/user/me").authenticated()
+            .requestMatchers(HttpMethod.GET, "/api/user/*/login-logs").authenticated()
+            .requestMatchers(HttpMethod.PATCH, "/api/user/*/name").authenticated()
 
             // 관리자만 허용
+            .requestMatchers(HttpMethod.GET, "/user/list").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/api/user/list").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.PATCH, "/api/user/*/block").hasRole("ADMIN")
 
             // 나머지는 전부 허용
             .anyRequest().permitAll()

@@ -9,7 +9,7 @@
                 <a class="text3 black2" th:href="@{/auth/findAccount}">계정 찾기</a>
             </th:block>
             <th:block sec:authorize="hasRole('ADMIN')">
-                <a class="text3 black2">회원 목록</a>
+                <a class="text3 black2" th:href="@{/user/list}">회원 목록</a>
             </th:block>
             <th:block sec:authorize="isAuthenticated()">
                 <a class="text3 black2" th:href="@{/user/me}">내 정보</a>
@@ -38,7 +38,7 @@
                     <a class="text1" th:href="@{/auth/findAccount}">계정 찾기</a>
                 </th:block>
                 <th:block sec:authorize="hasRole('ADMIN')">
-                    <a class="text1">회원 목록</a>
+                    <a class="text1" th:href="@{/user/list}">회원 목록</a>
                 </th:block>
                 <th:block sec:authorize="isAuthenticated()">
                     <a class="text1" th:href="@{/user/me}">내 정보</a>

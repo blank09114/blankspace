@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,9 +65,31 @@ public class UserService {
 
     // 로그인 기록 조회
     @Transactional(readOnly = true)
-    public Page<LoginLogDTO> getLoginLogs(String userId, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+    public Page<LoginLogDTO> getLoginLogs(UserDetails principal, String targetUserId, int page) {
+        if (principal == null) throw new IllegalStateException("로그인이 필요합니다.");
+
+        String viewerId = principal.getUsername();
+        boolean isAdmin = principal.getAuthorities().stream()
+        .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+
+        if (!viewerId.equals(targetUserId) && !isAdmin)
+        { throw new SecurityException("본인 또는 관리자만 접근할 수 있습니다."); }
+
+        int safePage = Math.max(0, page);
+        Pageable pageable = PageRequest.of(safePage, 10);
+
         return loginLogRepository
-        .findByUser_UserIdOrderByLoginDateDesc(userId, pageable).map(LoginLogDTO::from);
+        .findByUser_UserIdOrderByLoginDateDesc(targetUserId, pageable).map(LoginLogDTO::from);
+    }
+
+    // 회원 목록 조회
+    @Transactional(readOnly = true)
+    public Page<UserCardDTO> getUserList(int page, int size) {
+        int safePage = Math.max(page, 0);
+        int safeSize = (size <= 0) ? 10 : Math.min(size, 100);
+
+        Pageable pageable = PageRequest.of(safePage, safeSize, Sort.by(Sort.Direction.DESC, "userDate"));
+
+        return userRepository.findAll(pageable).map(UserCardDTO::from);
     }
 }

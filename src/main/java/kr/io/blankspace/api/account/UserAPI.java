@@ -35,9 +35,15 @@ public class UserAPI {
         return userService.toggleBlock(userId, reason);
     }
 
-    // 로그인 기록 조회 (관리자만 or 본인만)
+    // 로그인 기록 조회
     @GetMapping("/{userId}/login-logs")
-    public Page<LoginLogDTO> getLoginLogs
-    (@PathVariable String userId, @RequestParam(defaultValue = "0") int page)
-    { return userService.getLoginLogs(userId, page); }
+    public Page<LoginLogDTO> getLoginLogs(
+        @PathVariable String userId, @RequestParam(defaultValue = "0") int page,
+        @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal
+    ) { return userService.getLoginLogs(principal, userId, page); }
+
+    // 회원 목록 조회
+    @GetMapping("/list")
+    public Page<UserCardDTO> getUserList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
+    { return userService.getUserList(page, size); }
 }

@@ -1,4 +1,4 @@
-package kr.io.blankspace.service.account;
+package kr.io.blankspace.service.account.auth;
 
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package kr.io.blankspace.service.account;
+package kr.io.blankspace.service.account.auth;
 
 import kr.io.blankspace.domain.account.token.Token;
 import kr.io.blankspace.domain.account.token.TokenRepository;

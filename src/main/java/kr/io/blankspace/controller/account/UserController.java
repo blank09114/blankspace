@@ -36,4 +36,6 @@ public class UserController {
     }
 
     // 회원 목록
+    @GetMapping("/list")
+    public String userList() { return "account/user/userList"; }
 }

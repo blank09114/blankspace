@@ -1,4 +1,4 @@
-package kr.io.blankspace.service.account;
+package kr.io.blankspace.service.account.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -8,6 +8,7 @@ import kr.io.blankspace.domain.account.user.UserRepository;
 import kr.io.blankspace.dto.account.auth.JoinRequestDTO;
 import kr.io.blankspace.dto.account.auth.LoginRequestDTO;
 import kr.io.blankspace.dto.account.auth.LoginResponseDTO;
+import kr.io.blankspace.service.account.LoginLogService;
 import kr.io.blankspace.setting.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

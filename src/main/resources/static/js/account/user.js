@@ -1,3 +1,91 @@
+// 회원 목록 불러오기
+async function loadUserList(page = 0)
+{
+    const list = document.querySelector(".userList");
+    if (!list) return;
+
+    const data = await fetchJson(
+        `/api/user/list?page=${page}&size=10`,
+        { method: "GET" },
+        { defaultErrorMessage: "회원 목록을 불러오지 못했습니다." }
+    );
+
+    if (!data) return;
+
+    renderUserList(data.content);
+
+    const pagination = document.querySelector("[data-pagination]");
+    if (pagination) renderPagination(pagination, data.number, data.totalPages, loadUserList);
+}
+
+// 회원 카드 렌더링
+function renderUserList(users)
+{
+    const list = document.querySelector(".userList");
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    if (!users || users.length === 0)
+    {
+        const empty = document.createElement("div");
+        empty.className = "card pd-md flex flex-column align-center";
+        empty.innerHTML = `<span class="text3 black2">표시할 회원이 없습니다.</span>`;
+        list.appendChild(empty);
+        return;
+    }
+
+    users.forEach(u =>
+    {
+        const a = document.createElement("a");
+        a.className = "card pd-md user flex flex-column gap-sm";
+        a.href = `/user/${encodeURIComponent(u.userId)}`;
+        a.dataset.userId = u.userId;
+
+        const blockText = u.isBlocked ? "차단됨" : "정상";
+        const reasonText = u.isBlocked ? (u.blockedReason || "-") : "-";
+        const joinDateText = u.userDate ? formatDate(u.userDate) : "-";
+
+        a.innerHTML =
+        `
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">닉네임</p>
+                <p class="title3Text">${escapeHtml(u.userName || "-")}</p>
+            </div>
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">ID</p>
+                <p class="title3Text">${escapeHtml(u.userId || "-")}</p>
+            </div>
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">MAIL</p>
+                <p class="title3Text">${escapeHtml(u.userMail || "-")}</p>
+            </div>
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">가입일</p>
+                <p class="title3Text">${joinDateText}</p>
+            </div>
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">상태</p>
+                <p class="title3Text">${blockText}</p>
+            </div>
+            <div class="userInfo flex flex-column-mov gap-sm">
+                <p class="title3Text bold">차단 사유</p>
+                <p class="title3Text">${escapeHtml(reasonText)}</p>
+            </div>
+        `;
+
+        list.appendChild(a);
+    });
+}
+
+// XSS 방지용(메일/닉네임/사유 문자열 안전 처리)
+function escapeHtml(str)
+{
+    return String(str ?? "")
+    .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+}
+
 // 닉네임 폼 토글
 function nameToggle(btn)
 {
@@ -162,4 +250,7 @@ window.addEventListener("load", () =>
 {
     // 로그인 기록 불러오기
     if (document.getElementById("loginLogList")) { loadLoginLogs(0); }
+
+    // 회원 목록 불러오기
+    if (document.querySelector(".userList")) { loadUserList(0); }
 });
