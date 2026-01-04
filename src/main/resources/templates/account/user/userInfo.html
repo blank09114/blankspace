@@ -9,7 +9,7 @@
     <script th:src="@{/js/global/commons.js}"></script>
     <script th:src="@{/js/account/user.js}"></script>
 </head>
-<body class="flex flex-column">
+<body th:attr="data-user-id=${userCard.userId}" class="flex flex-column">
     <nav th:replace="fragments/commons :: nav"></nav>
 
     <div th:replace="fragments/commons :: toast"></div>
