@@ -2,6 +2,7 @@ package kr.io.blankspace.setting.config;
 
 import kr.io.blankspace.domain.account.user.User;
 import kr.io.blankspace.domain.account.user.UserRepository;
+import kr.io.blankspace.setting.PasswordChangedLogoutFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -29,7 +31,6 @@ public class SecurityConfig {
         return (String userId) -> {
             User u = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("not found"));
 
-            // user_enabled / is_blocked 정책을 “계정 상태”로 반영
             boolean disabled = !u.isUserEnabled();
             boolean locked = u.isBlocked();
 
@@ -39,15 +40,20 @@ public class SecurityConfig {
         };
     }
 
-    // 세션
+    // 인증 매니저
     @Bean
-    public AuthenticationManager authenticationManager
-    (UserDetailsService uds, PasswordEncoder encoder) {
+    public AuthenticationManager authenticationManager(UserDetailsService uds, PasswordEncoder encoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(uds);
         provider.setPasswordEncoder(encoder);
         return new ProviderManager(provider);
     }
 
+    // 비밀번호 변경 감지
+    @Bean
+    public PasswordChangedLogoutFilter passwordChangedLogoutFilter()
+    { return new PasswordChangedLogoutFilter(userRepository); }
+
+    // 접근 제어
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -55,6 +61,8 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
         .formLogin(f -> f.disable())
         .httpBasic(b -> b.disable());
+
+        http.addFilterAfter(passwordChangedLogoutFilter(), SecurityContextHolderFilter.class);
 
         return http.build();
     }

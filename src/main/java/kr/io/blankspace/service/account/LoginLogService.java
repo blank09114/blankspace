@@ -27,6 +27,7 @@ public class LoginLogService {
         String loginHash = TokenUtil.sha256Hex(sessionId);
 
         session.setAttribute(LoginLogKeys.SESSION_LOGIN_HASH, loginHash);
+        session.setAttribute(LoginLogKeys.SESSION_LOGIN_AT, LocalDateTime.now());
 
         String ip = resolveClientIp(request);
         String region = geoIpService.resolveRegion(ip);

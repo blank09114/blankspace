@@ -96,7 +96,7 @@
     position: relative;
     scroll-snap-align: start; 
 }
-.newNovel * { cursor: var(--cursor-default); }
+.newNovel * { cursor: var(--cursor-pointer); }
 .newNovel .up { position: absolute; top: 5px; left: 5px; }
 
 /* 모바일 */

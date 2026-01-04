@@ -80,6 +80,14 @@ public class AuthAPI {
         } catch (IllegalArgumentException e) { return redirect("/?reset=expired"); }
     }
 
+    // 비밀번호 변경
+    @PostMapping("/password/change")
+    public ResponseEntity<ApiOk> changePassword
+    (@RequestBody @Valid ChangePasswordRequestDTO dto, Authentication authentication, HttpServletRequest request) {
+        authService.changePassword(authentication.getName(), dto.getCurrentPw(), dto.getNewPw(), request);
+        return ok();
+    }
+
     // 헬퍼
     private ResponseEntity<ApiOk> ok() { return ResponseEntity.ok(new ApiOk(true)); }
     private ResponseEntity<Void> redirect(String location) { return ResponseEntity.status(302).location(URI.create(location)).build(); }

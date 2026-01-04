@@ -192,7 +192,11 @@ function changePw()
     if (!validate("pwInput", "기존 비밀번호", REGEX.pw, MSG.pw)) { return; }
     if (!validate("newPwInput", "변경할 비밀번호", REGEX.pw, MSG.pw)) { return; }
 
-    showToast("비밀번호를 변경했습니다.");
+    const payload = { currentPw: getValue("pwInput"), newPw: getValue("newPwInput") };
+
+    postJson("/api/auth/password/change", payload,
+    { defaultErrorMessage: "비밀번호 변경 중 오류가 발생했습니다.", parseJson: false })
+    .then((r) => { if (!r) return; location.href = "/?logout=1"; });
 }
 
 // 회원 탈퇴

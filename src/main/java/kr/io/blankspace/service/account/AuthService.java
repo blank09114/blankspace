@@ -208,4 +208,35 @@ public class AuthService {
 
         tokenService.markUsed(token);
     }
+
+    // 비밀번호 변경
+    @Transactional
+    public void changePassword(String userId, String currentPw, String newPw, HttpServletRequest request) {
+
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다.")
+        );
+
+        String cur = currentPw.trim();
+        String next = newPw.trim();
+
+        // 현재 비밀번호 검증
+        if (!passwordEncoder.matches(cur, user.getUserPw())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "현재 비밀번호가 올바르지 않습니다.");
+        }
+
+        // 같은 비밀번호로 변경 방지(선택)
+        if (passwordEncoder.matches(next, user.getUserPw())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "새 비밀번호는 기존 비밀번호와 달라야 합니다.");
+        }
+
+        // 저장 (pw_change_at 갱신 포함)
+        user.changePassword(passwordEncoder.encode(next));
+
+        // 비밀번호 변경 시: 모든 세션 로그아웃 정책 -> "현재 세션" 즉시 종료
+        HttpSession session = request.getSession(false);
+        loginLogService.markLogout(session);
+        if (session != null) session.invalidate();
+        SecurityContextHolder.clearContext();
+    }
 }
