@@ -5,7 +5,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kr.io.blankspace.dto.ApiOk;
-import kr.io.blankspace.dto.account.auth.*;
+import kr.io.blankspace.dto.account.auth.AuthRequests;
+import kr.io.blankspace.dto.account.auth.UserBasicDTO;
 import kr.io.blankspace.service.account.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +26,14 @@ public class AuthAPI {
 
     // 회원가입 요청
     @PostMapping("/join/request")
-    public ResponseEntity<ApiOk> requestJoin(@RequestBody @Valid JoinRequestDTO dto) {
+    public ResponseEntity<ApiOk> requestJoin(@RequestBody @Valid AuthRequests.Join dto) {
         authService.requestJoin(dto);
         return ok();
     }
 
     // 토큰 재발급
     @PostMapping("/join/resend")
-    public ResponseEntity<ApiOk> resendJoin(@RequestBody @Valid ResendTokenRequest req) {
+    public ResponseEntity<ApiOk> resendJoin(@RequestBody @Valid AuthRequests.EmailRequest req) {
         authService.resendJoinToken(req.getUserMail());
         return ok();
     }
@@ -53,15 +54,14 @@ public class AuthAPI {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<ApiOk> login(@RequestBody @Valid LoginRequestDTO dto, HttpServletRequest request) {
+    public ResponseEntity<ApiOk> login(@RequestBody @Valid AuthRequests.Login dto, HttpServletRequest request) {
         authService.login(dto, request);
         return ok();
     }
 
-    // 로그인 정보 반환
+    // 로그인 정보 반환 (B안: UserBasicDTO 직접 반환)
     @GetMapping("/me")
-    public ResponseEntity<LoginResponseDTO> me(Authentication authentication)
-    { return ResponseEntity.ok(authService.me(authentication)); }
+    public ResponseEntity<UserBasicDTO> me(Authentication authentication) { return ResponseEntity.ok(authService.me(authentication)); }
 
     // 로그아웃
     @PostMapping("/logout")
@@ -72,7 +72,7 @@ public class AuthAPI {
 
     // 비밀번호 재설정 요청
     @PostMapping("/password/reset/request")
-    public ResponseEntity<ApiOk> resetRequest(@RequestBody @Valid PWResetRequestDTO dto) {
+    public ResponseEntity<ApiOk> resetRequest(@RequestBody @Valid AuthRequests.EmailRequest dto) {
         authService.requestPasswordReset(dto.getUserMail());
         return ok();
     }
@@ -88,23 +88,28 @@ public class AuthAPI {
 
     // 비밀번호 변경
     @PostMapping("/password/change")
-    public ResponseEntity<ApiOk> changePassword
-    (@RequestBody @Valid ChangePWRequestDTO dto, Authentication authentication, HttpServletRequest request) {
+    public ResponseEntity<ApiOk> changePassword(
+        @RequestBody @Valid AuthRequests.ChangePassword dto,
+        Authentication authentication, HttpServletRequest request
+    ) {
         authService.changePassword(authentication.getName(), dto.getCurrentPw(), dto.getNewPw(), request);
         return ok();
     }
 
     // 회원 탈퇴 요청
     @PostMapping("/withdraw/request")
-    public ResponseEntity<ApiOk> withdrawRequest
-    (@RequestBody @Valid WithdrawRequestDTO dto, Authentication authentication) {
+    public ResponseEntity<ApiOk> withdrawRequest(
+        @RequestBody @Valid AuthRequests.WithdrawRequest dto, Authentication authentication
+    ) {
         authService.requestWithdraw(authentication.getName(), dto.getUserPw());
         return ok();
     }
 
     // 회원 탈퇴
     @GetMapping("/withdraw/apply")
-    public void withdrawApply(@RequestParam("token") String token, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void withdrawApply(
+        @RequestParam("token") String token, HttpServletRequest request, HttpServletResponse response
+    ) throws IOException {
         try {
             authService.applyWithdraw(token);
             HttpSession session = request.getSession(false);
@@ -117,5 +122,6 @@ public class AuthAPI {
 
     // 헬퍼
     private ResponseEntity<ApiOk> ok() { return ResponseEntity.ok(new ApiOk(true)); }
+    @SuppressWarnings("unused")
     private ResponseEntity<Void> redirect(String location) { return ResponseEntity.status(302).location(URI.create(location)).build(); }
 }

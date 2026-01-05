@@ -1,6 +1,7 @@
-package kr.io.blankspace.setting.security;
+package kr.io.blankspace.setting.loginLog;
 
 import kr.io.blankspace.repository.LoginLogRepository;
+import kr.io.blankspace.setting.security.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.core.session.SessionDestroyedEvent;
