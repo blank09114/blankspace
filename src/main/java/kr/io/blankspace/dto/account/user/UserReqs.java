@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-public class UserRequests {
+public class UserReqs {
     // 닉네임 변경
     @Getter @Setter
     public static class ChangeName {

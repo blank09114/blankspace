@@ -1,6 +1,6 @@
 package kr.io.blankspace.dto.account.auth;
 
-import kr.io.blankspace.entity.User;
+import kr.io.blankspace.entity.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

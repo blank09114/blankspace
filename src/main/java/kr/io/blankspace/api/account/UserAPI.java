@@ -3,7 +3,7 @@ package kr.io.blankspace.api.account;
 import jakarta.validation.Valid;
 import kr.io.blankspace.dto.account.user.LoginLogDTO;
 import kr.io.blankspace.dto.account.user.UserInfoDTO;
-import kr.io.blankspace.dto.account.user.UserRequests;
+import kr.io.blankspace.dto.account.user.UserReqs;
 import kr.io.blankspace.service.account.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ public class UserAPI {
     public UserInfoDTO changeName(
         @PathVariable String userId,
         @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal,
-        @RequestBody @Valid UserRequests.ChangeName req
+        @RequestBody @Valid UserReqs.ChangeName req
     ) {
         String viewerId = principal.getUsername();
         return userService.changeMyName(viewerId, userId, req.getUserName());
@@ -30,7 +30,7 @@ public class UserAPI {
     // 차단/차단 해제
     @PatchMapping("/{userId}/block")
     public UserInfoDTO toggleBlock(
-        @PathVariable String userId, @RequestBody(required = false) @Valid UserRequests.BlockToggle req
+        @PathVariable String userId, @RequestBody(required = false) @Valid UserReqs.BlockToggle req
     ) {
         String reason = (req == null) ? null : req.getReason();
         return userService.toggleBlock(userId, reason);

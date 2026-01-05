@@ -2,11 +2,11 @@ package kr.io.blankspace.service.account.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import kr.io.blankspace.dto.account.auth.AuthRequests;
+import kr.io.blankspace.dto.account.auth.AuthReqs;
 import kr.io.blankspace.dto.account.auth.UserBasicDTO;
-import kr.io.blankspace.entity.Token;
-import kr.io.blankspace.entity.User;
-import kr.io.blankspace.repository.UserRepository;
+import kr.io.blankspace.entity.account.Token;
+import kr.io.blankspace.entity.account.User;
+import kr.io.blankspace.repository.account.UserRepository;
 import kr.io.blankspace.service.account.LoginLogService;
 import kr.io.blankspace.setting.security.TokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class AuthService {
 
     // 회원가입 요청
     @Transactional
-    public void requestJoin(AuthRequests.Join req) {
+    public void requestJoin(AuthReqs.Join req) {
         validateNaverOnly(req.getUserMail());
 
         if (userRepository.existsById(req.getUserId()))
@@ -108,7 +108,7 @@ public class AuthService {
 
     // 로그인
     @Transactional
-    public void login(AuthRequests.Login req, HttpServletRequest request) {
+    public void login(AuthReqs.Login req, HttpServletRequest request) {
         String userId = (req.getUserId() == null) ? "" : req.getUserId().trim();
         String userPw = (req.getUserPw() == null) ? "" : req.getUserPw().trim();
 

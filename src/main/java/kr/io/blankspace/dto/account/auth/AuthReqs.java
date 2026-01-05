@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-public class AuthRequests {
+public class AuthReqs {
     // 회원가입
     @Getter @Setter
     public static class Join {
@@ -36,14 +36,14 @@ public class AuthRequests {
 
     // 메일 발송
     @Getter @Setter
-    public static class EmailRequest {
+    public static class EmailReq {
         @NotBlank @Email
         private String userMail;
     }
 
     // 비밀번호 변경
     @Getter @Setter
-    public static class ChangePassword {
+    public static class ChangePW {
         @NotBlank
         @Pattern(regexp = "^[a-zA-Z0-9]{8,40}$")
         private String currentPw;
@@ -55,7 +55,7 @@ public class AuthRequests {
 
     // 회원 탈퇴
     @Getter @Setter
-    public static class WithdrawRequest {
+    public static class WithdrawReq {
         @NotBlank
         @Pattern(regexp = "^[a-zA-Z0-9]{8,40}$")
         private String userPw;

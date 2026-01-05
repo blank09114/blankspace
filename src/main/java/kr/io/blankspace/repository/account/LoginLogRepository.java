@@ -1,6 +1,6 @@
-package kr.io.blankspace.repository;
+package kr.io.blankspace.repository.account;
 
-import kr.io.blankspace.entity.LoginLog;
+import kr.io.blankspace.entity.account.LoginLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

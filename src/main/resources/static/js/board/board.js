@@ -1,4 +1,11 @@
-/* 카테고리 편집 폼 토글 */
+// 게시판 이름 가져오기
+function getBoardName()
+{
+    const el = document.querySelector(".boardName");
+    return (el?.textContent || "").trim();
+}
+
+// 카테고리 편집 폼 토글
 function toggleForms()
 {
     const forms = document.querySelector(".forms");
@@ -8,35 +15,56 @@ function toggleForms()
     forms.style.display = isMobile ? "flex" : "grid";
 }
 
-/* 카테고리 추가 */
+// 카테고리 추가
 function addCate()
 {
-    const input = event.target.closest("form").querySelector("input");
-    const value = input.value.trim();
+    const input = document.querySelector("form[name='categoryForm'] input[name='categoryInput']");
+    const name = (input?.value || "").trim();
+    const boardName = getBoardName();
 
-    if (!value)
+    if (!name) { showToast("추가할 카테고리를 입력하세요."); input?.focus(); return; }
+    if (!boardName) { showToast("게시판 정보를 불러오지 못했습니다."); return; }
+
+    const payload = { name };
+
+    postJson(`/api/board/${encodeURIComponent(boardName)}/category`, payload,
     {
-        showToast("카테고리명을 입력하세요.");
-        input.focus();
-        return;
-    }
-
-    showToast(`카테고리 추가: ${value}`);
-    input.value = "";
+        defaultErrorMessage: "카테고리 추가 중 오류가 발생했습니다.",
+        toastOnSuccess: "카테고리를 추가했습니다.",
+        parseJson: true
+    })
+    .then((data) =>
+    {
+        if (!data) return;
+        input.value = "";
+        location.reload();
+    });
 }
 
-/* 카테고리 삭제 */
+// 카테고리 삭제
 function deleteCate()
 {
-    const select = event.target.closest("form").querySelector("select");
-    const value = select.value;
+    const form = event.target.closest("form");
+    const select = form.querySelector("select");
 
-    if (!value) { showToast("카테고리를 선택하세요."); return; }
+    if (select.selectedIndex === 0) { showToast("카테고리를 선택하세요."); return; }
 
-    showToast(`카테고리 삭제: ${value}`);
+    const categoryId = select.value;
+    const boardName = getBoardName();
+
+    if (!boardName) { showToast("게시판 정보를 불러오지 못했습니다."); return; }
+
+    fetchJson(`/api/board/${encodeURIComponent(boardName)}/category/${categoryId}`,
+    { method: "DELETE" },
+    {
+        defaultErrorMessage: "카테고리 삭제 중 오류가 발생했습니다.",
+        toastOnSuccess: "카테고리를 삭제했습니다.",
+        parseJson: false
+    })
+    .then((res) => { if (!res) return; location.reload(); });
 }
 
-/* 카테고리 편집 */
+// 카테고리 이름 변경
 function editCate()
 {
     const form = event.target.closest("form");
@@ -45,16 +73,29 @@ function editCate()
 
     if (select.selectedIndex === 0) { showToast("카테고리를 선택하세요."); return; }
 
-    const before = select.value;
+    const categoryId = select.value;
     const after = input.value.trim();
+    const boardName = getBoardName();
 
-    if (!after) 
+    if (!after)
     {
         showToast("변경할 이름을 입력하세요.");
         input.focus();
         return;
     }
+    if (!boardName) { showToast("게시판 정보를 불러오지 못했습니다."); return; }
 
-    showToast(`카테고리 변경: ${before} → ${after}`);
-    input.value = "";
+    fetchJson(`/api/board/${encodeURIComponent(boardName)}/category/${categoryId}`,
+    { method: "PUT", body: JSON.stringify({ name: after }) },
+    {
+        defaultErrorMessage: "카테고리 변경 중 오류가 발생했습니다.",
+        toastOnSuccess: "카테고리를 변경했습니다.",
+        parseJson: true
+    })
+    .then((data) =>
+    {
+        if (!data) return;
+        input.value = "";
+        location.reload();
+    });
 }

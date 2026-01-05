@@ -2,9 +2,9 @@ package kr.io.blankspace.service.account;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import kr.io.blankspace.entity.LoginLog;
-import kr.io.blankspace.entity.User;
-import kr.io.blankspace.repository.LoginLogRepository;
+import kr.io.blankspace.entity.account.LoginLog;
+import kr.io.blankspace.entity.account.User;
+import kr.io.blankspace.repository.account.LoginLogRepository;
 import kr.io.blankspace.setting.geoip.GeoIpService;
 import kr.io.blankspace.setting.loginLog.LoginLogKeys;
 import kr.io.blankspace.setting.security.TokenUtil;

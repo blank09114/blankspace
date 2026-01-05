@@ -1,7 +1,7 @@
 package kr.io.blankspace.setting.config;
 
-import kr.io.blankspace.entity.User;
-import kr.io.blankspace.repository.UserRepository;
+import kr.io.blankspace.entity.account.User;
+import kr.io.blankspace.repository.account.UserRepository;
 import kr.io.blankspace.setting.security.PasswordChangedLogoutFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
@@ -97,6 +97,9 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/user/list").hasRole("ADMIN")
             .requestMatchers(HttpMethod.GET, "/api/user/list").hasRole("ADMIN")
             .requestMatchers(HttpMethod.PATCH, "/api/user/*/block").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/api/board/*/category/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/api/board/*/category/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/board/*/category/**").hasRole("ADMIN")
 
             // 나머지는 전부 허용
             .anyRequest().permitAll()

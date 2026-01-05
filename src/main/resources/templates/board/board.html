@@ -17,14 +17,14 @@
     <header th:replace="fragments/commons :: header"></header>
 
     <section class="flex flex-column align-center gap-lg">
-        <p class="title1Text bold text-center boardName">게시판 이름</p>
+        <p class="title1Text bold text-center boardName" th:text="${boardName}"></p>
         <div class="categoryMenu">
             <div class="categories flex justify-end">
                 <button class="category now">· 전체 보기</button>
-                <button class="category">· 카테고리</button>
-                <button class="category" onclick="toggleForms()">· 카테고리 편집</button>
+                <button class="category" th:each="c : ${categories}" th:attr="data-category-id=${c.categoryId}" th:text="'· ' + ${c.name}"></button>
+                <button class="category" onclick="toggleForms()" sec:authorize="hasRole('ADMIN')">· 카테고리 편집</button>
             </div>
-            <div class="forms grid-row gap-sm">
+            <div class="forms grid-row gap-sm" sec:authorize="hasRole('ADMIN')">
                 <form name="categoryForm" class="flex flex-column gap-xs">
                     <input name="categoryInput" type="text" placeholder="추가할 카테고리 입력">
                     <button class="btn" type="button" onclick="addCate()">카테고리 추가</button>
@@ -32,21 +32,21 @@
                 <form name="categoryForm" class="flex flex-column gap-xs">
                     <select>
                         <option value="" disabled selected>제거할 카테고리 선택</option>
-                        <option>카테고리</option>
+                        <option th:each="c : ${categories}" th:value="${c.categoryId}" th:text="${c.name}"></option>
                     </select>
                     <button class="btn" type="button" onclick="deleteCate()">카테고리 제거</button>
                 </form>
                 <form name="categoryForm" class="grid gap-sm">
                     <select>
                         <option value="" disabled selected>변경할 카테고리 선택</option>
-                        <option>카테고리</option>
+                        <option th:each="c : ${categories}" th:value="${c.categoryId}" th:text="${c.name}"></option>
                     </select>
-                    <input name="categoryInput" type="text" placeholder="변경 후 카테고리 입력">
-                    <button class="btn" type="button" onclick="editCate()">카테고리 편집</button>
+                    <input name="categoryInput" type="text" placeholder="변경 후 이름 입력">
+                    <button class="btn" type="button" onclick="editCate()">카테고리 이름 변경</button>
                 </form>
             </div>
         </div>
-        <a class="btn" style="width: 100%;">글쓰기</a>
+        <a class="btn" style="width: 100%;" sec:authorize="hasRole('ADMIN')">글쓰기</a>
         <div class="ad"></div>
         <div class="postList grid gap-lg">
             <a class="card pd-md">

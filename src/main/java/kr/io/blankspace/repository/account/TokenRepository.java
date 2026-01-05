@@ -1,6 +1,6 @@
-package kr.io.blankspace.repository;
+package kr.io.blankspace.repository.account;
 
-import kr.io.blankspace.entity.Token;
+import kr.io.blankspace.entity.account.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

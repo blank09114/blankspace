@@ -1,8 +1,8 @@
 package kr.io.blankspace.service.account;
 
-import kr.io.blankspace.repository.LoginLogRepository;
-import kr.io.blankspace.entity.User;
-import kr.io.blankspace.repository.UserRepository;
+import kr.io.blankspace.repository.account.LoginLogRepository;
+import kr.io.blankspace.entity.account.User;
+import kr.io.blankspace.repository.account.UserRepository;
 import kr.io.blankspace.dto.account.user.LoginLogDTO;
 import kr.io.blankspace.dto.account.user.UserInfoDTO;
 import lombok.RequiredArgsConstructor;

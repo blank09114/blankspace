@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kr.io.blankspace.dto.ApiOk;
-import kr.io.blankspace.dto.account.auth.AuthRequests;
+import kr.io.blankspace.dto.account.auth.AuthReqs;
 import kr.io.blankspace.dto.account.auth.UserBasicDTO;
 import kr.io.blankspace.service.account.auth.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +26,14 @@ public class AuthAPI {
 
     // 회원가입 요청
     @PostMapping("/join/request")
-    public ResponseEntity<ApiOk> requestJoin(@RequestBody @Valid AuthRequests.Join dto) {
+    public ResponseEntity<ApiOk> requestJoin(@RequestBody @Valid AuthReqs.Join dto) {
         authService.requestJoin(dto);
         return ok();
     }
 
     // 토큰 재발급
     @PostMapping("/join/resend")
-    public ResponseEntity<ApiOk> resendJoin(@RequestBody @Valid AuthRequests.EmailRequest req) {
+    public ResponseEntity<ApiOk> resendJoin(@RequestBody @Valid AuthReqs.EmailReq req) {
         authService.resendJoinToken(req.getUserMail());
         return ok();
     }
@@ -54,7 +54,7 @@ public class AuthAPI {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<ApiOk> login(@RequestBody @Valid AuthRequests.Login dto, HttpServletRequest request) {
+    public ResponseEntity<ApiOk> login(@RequestBody @Valid AuthReqs.Login dto, HttpServletRequest request) {
         authService.login(dto, request);
         return ok();
     }
@@ -72,7 +72,7 @@ public class AuthAPI {
 
     // 비밀번호 재설정 요청
     @PostMapping("/password/reset/request")
-    public ResponseEntity<ApiOk> resetRequest(@RequestBody @Valid AuthRequests.EmailRequest dto) {
+    public ResponseEntity<ApiOk> resetRequest(@RequestBody @Valid AuthReqs.EmailReq dto) {
         authService.requestPasswordReset(dto.getUserMail());
         return ok();
     }
@@ -89,7 +89,7 @@ public class AuthAPI {
     // 비밀번호 변경
     @PostMapping("/password/change")
     public ResponseEntity<ApiOk> changePassword(
-        @RequestBody @Valid AuthRequests.ChangePassword dto,
+        @RequestBody @Valid AuthReqs.ChangePW dto,
         Authentication authentication, HttpServletRequest request
     ) {
         authService.changePassword(authentication.getName(), dto.getCurrentPw(), dto.getNewPw(), request);
@@ -99,7 +99,7 @@ public class AuthAPI {
     // 회원 탈퇴 요청
     @PostMapping("/withdraw/request")
     public ResponseEntity<ApiOk> withdrawRequest(
-        @RequestBody @Valid AuthRequests.WithdrawRequest dto, Authentication authentication
+            @RequestBody @Valid AuthReqs.WithdrawReq dto, Authentication authentication
     ) {
         authService.requestWithdraw(authentication.getName(), dto.getUserPw());
         return ok();

@@ -1,8 +1,8 @@
 package kr.io.blankspace.service.account.auth;
 
-import kr.io.blankspace.entity.Token;
-import kr.io.blankspace.repository.TokenRepository;
-import kr.io.blankspace.entity.User;
+import kr.io.blankspace.entity.account.Token;
+import kr.io.blankspace.repository.account.TokenRepository;
+import kr.io.blankspace.entity.account.User;
 import kr.io.blankspace.setting.security.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
