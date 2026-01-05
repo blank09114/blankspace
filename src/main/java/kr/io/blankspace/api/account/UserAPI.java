@@ -19,9 +19,9 @@ public class UserAPI {
     // 닉네임 변경
     @PatchMapping("/{userId}/name")
     public UserInfoDTO changeName(
-            @PathVariable String userId,
-            @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal,
-            @RequestBody @Valid UserRequests.ChangeName req
+        @PathVariable String userId,
+        @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal,
+        @RequestBody @Valid UserRequests.ChangeName req
     ) {
         String viewerId = principal.getUsername();
         return userService.changeMyName(viewerId, userId, req.getUserName());

@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>
 </head>
-<body th:attr="data-user-id=${userCard.userId}" class="flex flex-column">
+<body th:attr="data-user-id=${userInfo.user.userId}" class="flex flex-column">
     <nav th:replace="fragments/commons :: nav"></nav>
 
     <div th:replace="fragments/commons :: toast"></div>
@@ -18,15 +18,15 @@
     <section class="flex flex-column align-center gap-xl">
         <p class="title1Text bold text-center">회원 정보</p>
         <a class="card pd-md user flex flex-column gap-sm">
-            <button class="btn block" sec:authorize="hasRole('ADMIN')" th:if="${!userCard.blocked}" type="button" onclick="toggleBlock(this)">
+            <button class="btn block" sec:authorize="hasRole('ADMIN')" th:if="${!userInfo.blocked}" type="button" onclick="toggleBlock(this)">
                 차단
             </button>
-            <button class="btn block" sec:authorize="hasRole('ADMIN')" th:if="${userCard.blocked}" type="button" onclick="toggleBlock(this)">
+            <button class="btn block" sec:authorize="hasRole('ADMIN')" th:if="${userInfo.blocked}" type="button" onclick="toggleBlock(this)">
                 차단 해제
             </button>
             <div class="userInfo flex flex-column-mov gap-sm">
                 <p class="title3Text bold">닉네임</p>
-                <p class="title3Text" th:text="${userCard.userName}"></p>
+                <p class="title3Text" th:text="${userInfo.user.userName}"></p>
                 <form name="nameForm" class="flex flex-column-mov gap-sm" th:if="${isSelf}" sec:authorize="isAuthenticated()">
                     <input type="text" name="name">
                     <button class="btn" type="button" onclick="editName(this)">저장</button>
@@ -35,19 +35,19 @@
             </div>
             <div class="userInfo flex flex-column-mov gap-sm">
                 <p class="title3Text bold">ID</p>
-                <p class="title3Text" th:text="${userCard.userId}">ID</p>
+                <p class="title3Text" th:text="${userInfo.user.userId}">ID</p>
             </div>
             <div class="userInfo flex flex-column-mov gap-sm">
                 <p class="title3Text bold">MAIL</p>
-                <p class="title3Text" th:text="${userCard.userMail}"></p>
+                <p class="title3Text" th:text="${userInfo.user.userMail}"></p>
             </div>
             <div class="userInfo flex flex-column-mov gap-sm">
                 <p class="title3Text bold">가입일</p>
-                <p class="title3Text" th:text="${#temporals.format(userCard.userDate, 'yyyy.MM.dd.')}"></p>
+                <p class="title3Text" th:text="${#temporals.format(userInfo.userDate, 'yyyy.MM.dd.')}"></p>
             </div>
-            <div class="userInfo flex flex-column-mov gap-sm" th:if="${userCard.blocked}">
+            <div class="userInfo flex flex-column-mov gap-sm" th:if="${userInfo.blocked}">
                 <p class="title3Text bold">차단 사유</p>
-                <p class="title3Text" th:text="${userCard.blockedReason}"></p>
+                <p class="title3Text" th:text="${userInfo.blockedReason}"></p>
             </div>
         </a>
         <div class="activityMenu flex flex-column gap-sm" th:if="${isSelf} or ${#authorization.expression('hasRole(''ADMIN'')')}">

@@ -20,7 +20,7 @@ public class UserController {
     public String myInfo
     (@AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal, Model model) {
         String userId = principal.getUsername();
-        model.addAttribute("userCard", userService.getUserCard(userId));
+        model.addAttribute("userInfo", userService.getUserCard(userId));
         model.addAttribute("isSelf", true);
         return "account/user/userInfo";
     }
@@ -30,7 +30,7 @@ public class UserController {
     public String userInfo
     (@PathVariable String userId, @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal, Model model) {
         String viewerId = (principal != null) ? principal.getUsername() : null;
-        model.addAttribute("userCard", userService.getUserCard(userId));
+        model.addAttribute("userInfo", userService.getUserCard(userId));
         model.addAttribute("isSelf", viewerId != null && viewerId.equals(userId));
         return "account/user/userInfo";
     }
