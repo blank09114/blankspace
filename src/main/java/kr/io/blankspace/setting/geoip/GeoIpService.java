@@ -1,4 +1,4 @@
-package kr.io.blankspace.service;
+package kr.io.blankspace.setting.geoip;
 
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.model.CityResponse;

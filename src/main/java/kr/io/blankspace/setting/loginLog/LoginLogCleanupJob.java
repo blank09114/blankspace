@@ -1,6 +1,6 @@
 package kr.io.blankspace.setting.loginLog;
 
-import kr.io.blankspace.repository.LoginLogRepository;
+import kr.io.blankspace.service.account.LoginLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class LoginLogCleanupJob {
-    private final LoginLogRepository loginLogRepository;
+    private final LoginLogService loginLogService;
 
     @Scheduled(cron = "0 0 4 * * *")
     @Transactional
     public void cleanup() {
         LocalDateTime cutoff = LocalDateTime.now().minusDays(7);
-        loginLogRepository.deleteEndedBefore(cutoff);
+        loginLogService.cleanupOldLogs(cutoff);
     }
 }

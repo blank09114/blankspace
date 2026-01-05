@@ -1,6 +1,6 @@
 package kr.io.blankspace.setting.config;
 
-import kr.io.blankspace.setting.IpCooldownInterceptor;
+import kr.io.blankspace.setting.security.IpCooldownInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

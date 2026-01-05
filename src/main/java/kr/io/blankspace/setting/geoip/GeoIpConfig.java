@@ -1,4 +1,4 @@
-package kr.io.blankspace.setting.config;
+package kr.io.blankspace.setting.geoip;
 
 import com.maxmind.geoip2.DatabaseReader;
 import org.springframework.context.annotation.Bean;

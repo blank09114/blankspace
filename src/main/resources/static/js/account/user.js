@@ -1,3 +1,22 @@
+// UserInfoDTO 대응
+function normalizeUserInfo(dto)
+{
+    if (!dto) return null;
+    const u = dto.user ?? dto;
+
+    const blocked =
+    dto.blocked ?? dto.isBlocked ?? u.blocked ?? u.isBlocked ?? false;
+
+    return {
+        userId: u.userId,
+        userName: u.userName,
+        userMail: u.userMail,
+        userDate: dto.userDate ?? u.userDate,
+        blocked: Boolean(blocked),
+        blockedReason: dto.blockedReason ?? u.blockedReason
+    };
+}
+
 // 회원 목록 불러오기
 async function loadUserList(page = 0)
 {
@@ -35,15 +54,18 @@ function renderUserList(users)
         return;
     }
 
-    users.forEach(u =>
+    users.forEach(raw =>
     {
+        const u = normalizeUserInfo(raw);
+        if (!u) return;
+
         const a = document.createElement("a");
         a.className = "card pd-md user flex flex-column gap-sm";
         a.href = `/user/${encodeURIComponent(u.userId)}`;
         a.dataset.userId = u.userId;
 
-        const blockText = u.isBlocked ? "차단됨" : "정상";
-        const reasonText = u.isBlocked ? (u.blockedReason || "-") : "-";
+        const blockText = u.blocked ? "차단됨" : "정상";
+        const reasonText = u.blocked ? (u.blockedReason || "-") : "-";
         const joinDateText = u.userDate ? formatDate(u.userDate) : "-";
 
         a.innerHTML =
@@ -78,7 +100,7 @@ function renderUserList(users)
     });
 }
 
-// XSS 방지용(메일/닉네임/사유 문자열 안전 처리)
+// XSS 방지
 function escapeHtml(str)
 {
     return String(str ?? "")
@@ -147,7 +169,8 @@ async function editName(btn)
 
     // 화면 갱신
     const nameText = userInfo.querySelectorAll(".title3Text")[1];
-    nameText.textContent = data.userName;
+    const normalized = normalizeUserInfo(data);
+    nameText.textContent = normalized?.userName ?? newName;
     form.style.display = "none";
     nameText.style.display = "block";
 

@@ -22,15 +22,6 @@ public interface LoginLogRepository extends JpaRepository<LoginLog, Long> {
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
-        update LoginLog l
-            set l.logoutDate = :logoutAt
-        where l.loginHash = :loginHash
-            and l.logoutDate is null
-    """)
-    int markLogoutIfNotExists(@Param("loginHash") String loginHash, @Param("logoutAt") LocalDateTime logoutAt);
-
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("""
         delete from LoginLog l
             where l.logoutDate is not null
                 and l.logoutDate < :cutoff
@@ -40,9 +31,9 @@ public interface LoginLogRepository extends JpaRepository<LoginLog, Long> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
     update LoginLog l
-       set l.logoutDate = :now
-     where l.logoutDate is null
-""")
+        set l.logoutDate = :now
+            where l.logoutDate is null
+    """)
     int markAllActiveAsRestarted(@Param("now") LocalDateTime now);
 
     Page<LoginLog> findByUser_UserIdOrderByLoginDateDesc(String userId, Pageable pageable);
