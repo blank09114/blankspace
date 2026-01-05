@@ -7,33 +7,37 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
-        select p
-        from Post p
+        select p from Post p
         join fetch p.category c
         join fetch c.board b
-        where p.id = :postId
+        where b.name = :boardName and p.id = :postId
     """)
-    Optional<Post> findDetailById(@Param("postId") Long postId);
-
-    Page<Post> findByCategory_Id(Long categoryId, Pageable pageable);
+    Optional<Post> findDetailByBoardNameAndId(@Param("boardName") String boardName, @Param("postId") Long postId);
 
     @Query("""
-        select p
-        from Post p
+        select p from Post p
         join p.category c
         join c.board b
-        where b.name = :boardName
-        and (:categoryId is null or c.id = :categoryId)
+        where b.name = :boardName and p.id < :postId
+        order by p.id desc
     """)
-    Page<Post> findListByBoardName(
-        @Param("boardName") String boardName,
-        @Param("categoryId") Integer categoryId,
-        Pageable pageable
-    );
+    List<Post> findPrev
+    (@Param("boardName") String boardName, @Param("postId") Long postId, org.springframework.data.domain.Pageable pageable);
+
+    @Query("""
+        select p from Post p
+        join p.category c
+        join c.board b
+        where b.name = :boardName and p.id > :postId
+        order by p.id asc
+    """)
+    List<Post> findNext
+    (@Param("boardName") String boardName, @Param("postId") Long postId, org.springframework.data.domain.Pageable pageable);
 
     boolean existsByCategory_Id(Integer categoryId);
 }

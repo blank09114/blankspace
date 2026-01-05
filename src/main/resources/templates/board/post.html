@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLANKSPACE - 게시글 제목</title>
+    <title th:text="'BLANKSPACE - ' + ${post.title}"></title>
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>
@@ -20,26 +20,40 @@
         <div class="ad"></div>
         <div class="postConetentWarp pd-md">
             <div class="postInfo">
-                <p class="text1">카테고리</p>
-                <p class="title2Text bold">제목</p>
-                <p class="text1">부제목</p>
-                <p class="text1 black2">GIT - <a class="black2" target="_blank">https://github.com/사용자/저장소</a></p>
-                <p class="text1 black2">YYYY.MM.DD. HH:MM</p>
+                <p class="text1" th:text="${post.category.name}"></p>
+                <p class="title2Text bold" th:text="${post.title}"></p>
+                <p class="text1" th:if="${post.subTitle != null and !#strings.isEmpty(post.subTitle)}" th:text="${post.subTitle}"></p>
+                <p class="text1 black2" th:if="${post.detailLink != null and !#strings.isEmpty(post.detailLink)}">
+                    GIT -<a class="black2" target="_blank" th:href="${post.detailLink}" th:text="${post.detailLink}"></a>
+                </p>
+                <p class="text1 black2" th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd. HH:mm')}"></p>
             </div>
-            <div class="postConetent"> 내용 </div>
-            <div class="btnsWrap">
-                <a class="btn">수정</a>
-                <button class="btn">삭제</button>
+            <div class="postConetent" th:utext="${post.content}"></div>
+            <div class="btnsWrap" sec:authorize="hasRole('ADMIN')">
+                <a class="btn" th:href="@{/board/{boardName}/post/{postId}/edit(boardName=${boardName}, postId=${post.id})}">
+                    수정
+                </a>
+                <form th:action="@{/board/{boardName}/post/{postId}/delete(boardName=${boardName}, postId=${post.id})}"
+                method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline">
+                    <button type="submit" class="btn">삭제</button>
+                </form>
             </div>
         </div>
         <div class="btnsWrap post">
-            <a class="btn">이전 글</a>
-            <a class="btn">목록으로</a>
-            <a class="btn">다음 글</a>
+            <a class="btn" th:if="${prevPost != null}"
+            th:href="@{/board/{boardName}/post/{postId}(boardName=${boardName}, postId=${prevPost.id})}">
+                이전 글
+            </a>
+            <span class="btn disabled" th:if="${prevPost == null}">첫 글</span>
+            <a class="btn" th:href="@{/board/{boardName}(boardName=${boardName})}">목록으로</a>
+            <a class="btn" th:if="${nextPost != null}"
+            th:href="@{/board/{boardName}/post/{postId}(boardName=${boardName}, postId=${nextPost.id})}">
+                다음 글
+            </a>
+            <span class="btn disabled" th:if="${nextPost == null}">마지막 글</span>
         </div>
         <div class="ad"></div>
-        <div id="commentMenu"></div>
-        <div th:replace="fragments/comment :: commentMenu"></div>
+        <th:block th:if="${boardName == 'BLOG'}"> <div th:replace="fragments/comment :: commentMenu"></div> </th:block>
     </section>
 
     <footer th:replace="fragments/commons :: footer"></footer>

@@ -46,12 +46,12 @@ public class Post {
     void onCreate() { if (createdAt == null) createdAt = LocalDateTime.now(); }
 
     public static Post create(
-            Category category,
-            String title,
-            String subTitle,
-            String thumbnailUrl,
-            String detailLink,
-            String content
+        Category category,
+        String title,
+        String subTitle,
+        String thumbnailUrl,
+        String detailLink,
+        String content
     ) {
         Post p = new Post();
         p.category = category;
@@ -70,4 +70,6 @@ public class Post {
         this.detailLink = detailLink;
         this.content = content;
     }
+
+    public void changeCategory(Category category) { this.category = category; }
 }

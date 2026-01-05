@@ -100,6 +100,11 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/board/*/category/**").hasRole("ADMIN")
             .requestMatchers(HttpMethod.PUT, "/api/board/*/category/**").hasRole("ADMIN")
             .requestMatchers(HttpMethod.DELETE, "/api/board/*/category/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET,  "/board/*/write").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/board/*/write").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET,  "/board/*/post/*/edit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/board/*/post/*/edit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/board/*/post/*/delete").hasRole("ADMIN")
 
             // 나머지는 전부 허용
             .anyRequest().permitAll()

@@ -26,11 +26,23 @@ public class BoardController
     }
 
     // 게시글
+    @GetMapping("/{boardName}/post/{postId}")
+    public String postDetail(@PathVariable String boardName, @PathVariable Long postId, Model model) {
+        String normalized = boardName.trim().toUpperCase();
+
+        model.addAttribute("boardName", normalized);
+        model.addAttribute("post", boardService.getPostDetail(normalized, postId));
+        model.addAttribute("prevPost", boardService.getPrevPost(normalized, postId).orElse(null));
+        model.addAttribute("nextPost", boardService.getNextPost(normalized, postId).orElse(null));
+
+        return "board/post";
+    }
 
     // 게시글 작성 페이지
     @GetMapping("/{boardName}/write")
     public String write(@PathVariable String boardName, Model model) {
         String normalized = boardName.trim().toUpperCase();
+        model.addAttribute("editMode", false);
         model.addAttribute("boardName", normalized);
         model.addAttribute("categories", categoryService.list(normalized));
         return "board/postForm";
@@ -38,32 +50,42 @@ public class BoardController
 
     // 게시글 작성
     @PostMapping("/{boardName}/write")
-    public String writePost(
-        @PathVariable String boardName,
-
-        @RequestParam Integer categoryId,
-        @RequestParam String postTitle,
-        @RequestParam(required = false) String postSubTitle,
-        @RequestParam(required = false) String postDtlLink,
-        @RequestParam(required = false) String thumbnailUrl,
-        @RequestParam String postContent
-    ) {
-        PostDTO.CreateReq req = new PostDTO.CreateReq();
-        req.setCategoryId(categoryId);
-        req.setTitle(postTitle);
-        req.setSubTitle(postSubTitle);
-        req.setDetailLink(postDtlLink);
-        req.setThumbnailUrl(thumbnailUrl);
-        req.setContent(postContent);
-
+    public String writePost(@PathVariable String boardName, @ModelAttribute PostDTO.UpsertReq req) {
         Long postId = boardService.createPost(boardName, req);
+        String normalized = boardName.trim().toUpperCase();
+        return "redirect:/board/" + normalized + "/post/" + postId;
+    }
 
-        return "redirect:/board/" + boardName.trim().toUpperCase();
-        // 상세 페이지 만들면:
-        // return "redirect:/board/" + boardName.trim().toUpperCase() + "/post/" + postId;
+    // 게시글 수정 페이지
+    @GetMapping("/{boardName}/post/{postId}/edit")
+    public String editForm(@PathVariable String boardName, @PathVariable Long postId, Model model) {
+        String normalized = boardName.trim().toUpperCase();
+
+        model.addAttribute("boardName", normalized);
+        model.addAttribute("categories", categoryService.list(normalized));
+
+        model.addAttribute("editMode", true);
+        model.addAttribute("postId", postId);
+
+        model.addAttribute("post", boardService.getPostDetail(normalized, postId));
+
+        return "board/postForm";
     }
 
     // 게시글 수정
+    @PostMapping("/{boardName}/post/{postId}/edit")
+    public String editPost(@PathVariable String boardName, @PathVariable Long postId, @ModelAttribute PostDTO.UpsertReq req) {
+        boardService.updatePost(boardName, postId, req);
+
+        String normalized = boardName.trim().toUpperCase();
+        return "redirect:/board/" + normalized + "/post/" + postId;
+    }
 
     // 게시글 삭제
+    @PostMapping("/{boardName}/post/{postId}/delete")
+    public String deletePost(@PathVariable String boardName, @PathVariable Long postId) {
+        boardService.deletePost(boardName, postId);
+        String normalized = boardName.trim().toUpperCase();
+        return "redirect:/board/" + normalized;
+    }
 }
