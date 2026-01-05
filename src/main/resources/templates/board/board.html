@@ -46,7 +46,10 @@
                 </form>
             </div>
         </div>
-        <a class="btn" style="width: 100%;" sec:authorize="hasRole('ADMIN')">글쓰기</a>
+        <a class="btn" style="width: 100%;" sec:authorize="hasRole('ADMIN')"
+        th:href="@{/board/{boardName}/write(boardName=${boardName})}">
+            글쓰기
+        </a>
         <div class="ad"></div>
         <div class="postList grid gap-lg">
             <a class="card pd-md">

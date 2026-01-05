@@ -37,7 +37,7 @@
                 <p class="title3Text bold">ID</p>
                 <p class="title3Text" th:text="${userInfo.user.userId}">ID</p>
             </div>
-            <div class="userInfo flex flex-column-mov gap-sm">
+            <div class="userInfo flex flex-column-mov gap-sm" th:if="${isSelf} or ${#authorization.expression('hasRole(''ADMIN'')')}">
                 <p class="title3Text bold">MAIL</p>
                 <p class="title3Text" th:text="${userInfo.user.userMail}"></p>
             </div>

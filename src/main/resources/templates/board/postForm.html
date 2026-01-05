@@ -6,6 +6,7 @@
     <title>BLANKSPACE - 게시글 작성</title>
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/vendor/tinymce/tinymce.min.js}"></script>
     <script th:src="@{/js/global/commons.js}"></script>
     <script th:src="@{/js/global/form.js}"></script>
     <script th:src="@{/js/board/postForm.js}"></script>
@@ -18,25 +19,24 @@
     <header th:replace="fragments/commons :: header"></header>
 
     <section class="flex flex-column justify-center align-center">
-        <form id="postForm" class="pd-md flex flex-column gap-sm">
+        <form id="postForm" class="pd-md flex flex-column gap-sm" th:action="@{/board/{boardName}/write(boardName=${boardName})}" method="post">
             <div class="postInfo flex flex-column gap-xs">
                 <div class="inputs flex flex-column-mov gap-xs">
-                    <select class="select">
-                        <option>카테고리</option>
-                        <option>카테고리</option>
-                        <option>카테고리</option>
+                    <select class="select" name="categoryId">
+                        <option th:each="c : ${categories}" th:value="${c.categoryId}" th:text="${c.name}" name="categoryId"></option>
                     </select>
-                    <input type="text" id="titleInput" placeholder="제목">
+                    <input type="text" name="postTitle" placeholder="제목">
                 </div>
-                <input type="text" id="subTitleInput" placeholder="부제목">
-                <input type="text" id="gitInput" placeholder="GIT 링크">
+                <input type="text" name="postSubTitle" placeholder="부제목">
+                <input type="text" name="postDtlLink" placeholder="GIT 링크" th:if="${boardName == 'PORTFOLIO'}"/>
                 <div class="inputs flex flex-column-mov gap-xs">
-                    <input type="text" id="imgNameInput" placeholder="썸네일" readonly>
+                    <input type="text" name="imgNameInput" placeholder="썸네일" readonly>
                     <button class="btn select" type="button" onclick="imgInputControll()">썸네일 업로드</button>
-                    <input type="file" id="imglInput" accept="image/*" hidden>
+                    <input type="hidden" name="postThumbUrl">
+                    <input type="file" name="imglInput" accept="image/*" hidden>
                 </div>
             </div>
-            <textarea id="postContentInput" placeholder="내용"></textarea>
+            <textarea name="postContent" data-tinymce></textarea>
             <div class="btnsWrap"> <button type="button" class="btn" onclick="subPost()">등록</button> </div>
         </form>
     </section>

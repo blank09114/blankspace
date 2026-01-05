@@ -67,13 +67,195 @@ function checkMaxLengthEl(inputEl, inputName, max)
 // 썸네일 업로드 컨트롤
 function imgInputControll()
 {
-    const imglInput = document.getElementById("thumbnailInput");
-    imglInput.click();
+    const fileInput = document.querySelector(`[name="imglInput"]`);
+    const nameInput = document.querySelector(`[name="imgNameInput"]`);
+    const urlInput  = document.querySelector(`[name="postThumbUrl"]`);
 
-    imglInput.onchange = () =>
+    if (!fileInput) return;
+
+    // 같은 파일을 다시 선택해도 onchange가 뜨게 초기화
+    fileInput.value = "";
+    fileInput.click();
+
+    fileInput.onchange = async () =>
     {
-        const file = imglInput.files[0];
+        const file = fileInput.files?.[0];
         if (!file) return;
-        document.getElementById("imgNameInput").value = file.name;
+
+        // 파일명 표시
+        if (nameInput) nameInput.value = file.name;
+
+        // 클라이언트 선검증
+        const allowedExt = [".png", ".jpg", ".jpeg", ".gif"];
+        const lowerName = (file.name || "").toLowerCase();
+        const okExt = allowedExt.some(ext => lowerName.endsWith(ext));
+        if (!okExt)
+        {
+            showToast("썸네일은 png/jpg/jpeg/gif만 업로드 가능합니다.");
+            fileInput.value = "";
+            if (urlInput) urlInput.value = "";
+            return;
+        }
+
+        const max = 10 * 1024 * 1024;
+        if (file.size > max)
+        {
+            showToast("썸네일은 최대 10MB까지 업로드 가능합니다.");
+            fileInput.value = "";
+            if (urlInput) urlInput.value = "";
+            return;
+        }
+
+        // 업로드
+        try
+        {
+            showToast("썸네일 업로드 중...");
+
+            const formData = new FormData();
+            formData.append("file", file, file.name);
+
+            const res = await fetch("/api/upload?dir=thumb", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!res.ok)
+            {
+                const msg = await res.text().catch(() => "");
+                throw new Error(msg || `Upload failed (HTTP ${res.status})`);
+            }
+
+            const data = await res.json();
+            const url = data?.url;
+
+            if (!url) throw new Error("No url in response");
+            if (urlInput) urlInput.value = url;
+
+            showToast("썸네일 업로드 완료!");
+        }
+        catch (e)
+        {
+            console.error(e);
+            showToast("썸네일 업로드 실패");
+            if (urlInput) urlInput.value = "";
+        }
     };
 }
+
+// TinyMCE 공통 에디터
+window.RichEditor = (() =>
+{
+    function isReady() { return !!window.tinymce; }
+
+    function ensureId(el)
+    {
+        if (el.id && el.id.trim() !== "") return el.id;
+        const id = `editor_${Math.random().toString(36).slice(2, 10)}`;
+        el.id = id;
+        return id;
+    }
+
+    function getSelector(textarea)
+    {
+        const id = ensureId(textarea);
+        return `#${CSS.escape(id)}`;
+    }
+
+    function initOne(textarea)
+    {
+        if (!textarea) return;
+        if (textarea.dataset.editorInited === "1") return;
+        if (!isReady()) return;
+
+        const selector = getSelector(textarea);
+        const height = parseInt(textarea.dataset.editorHeight || "600", 10);
+
+        tinymce.init({
+            selector: `#${textarea.id}`,
+            height: 600,
+
+            menubar: false,
+            branding: false,
+            promotion: false,
+            license_key: "gpl",
+
+            skin: "oxide",
+            content_css: "default",
+
+            plugins: "lists link image table code",
+            toolbar:
+            [
+                "undo redo | fontsize | bold italic underline | forecolor | alignleft aligncenter alignright alignjustify",
+                "bullist numlist | table | link image | removeformat | code"
+            ].join(" | "),
+
+            font_size_formats: "24px 20px 18px 16px 14px 12px",
+            fontsize_default: "16px",
+
+            content_style: "body { font-size: 16px; }",
+
+            images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) =>
+            {
+                const xhr = new XMLHttpRequest();
+
+                xhr.open("POST", "/api/upload?dir=editor");
+                xhr.responseType = "json";
+
+                xhr.upload.onprogress = (e) => { if (e.lengthComputable) progress((e.loaded / e.total) * 100); };
+
+                xhr.onload = () =>
+                {
+                    if (xhr.status !== 200) return reject("Upload failed");
+
+                    const url = xhr.response?.url;
+                    if (!url) return reject("No url in response");
+
+                    resolve(url);
+                };
+
+                xhr.onerror = () => reject("Network error");
+
+                const formData = new FormData();
+                formData.append("file", blobInfo.blob(), blobInfo.filename());
+                xhr.send(formData);
+            }),
+        });
+
+        textarea.dataset.editorInited = "1";
+    }
+
+    function initAll(root = document)
+    {
+        if (!isReady()) return;
+        const list = root.querySelectorAll("textarea[data-tinymce]");
+        list.forEach(initOne);
+    }
+
+    function sync()
+    {
+        if (!isReady()) return;
+        tinymce.triggerSave();
+    }
+
+    function bindAutoSync()
+    {
+        document.addEventListener("submit", (e) =>
+        {
+            const formEl = e.target;
+            if (!(formEl instanceof HTMLFormElement)) return;
+
+            const hasEditor = !!formEl.querySelector("textarea[data-tinymce]");
+            if (!hasEditor) return;
+
+            sync();
+        }, true);
+    }
+
+    return { initAll, sync, bindAutoSync };
+})();
+
+document.addEventListener("DOMContentLoaded", () =>
+{
+    window.RichEditor.initAll();
+    window.RichEditor.bindAutoSync();
+});
