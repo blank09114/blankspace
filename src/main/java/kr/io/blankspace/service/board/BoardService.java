@@ -10,6 +10,7 @@ import kr.io.blankspace.repository.board.CategoryRepository;
 import kr.io.blankspace.repository.board.PostRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,22 @@ public class BoardService {
         if (s == null) return null;
         String t = s.trim();
         return t.isEmpty() ? null : t;
+    }
+
+    // 게시글 목록 조회
+    @Transactional(readOnly = true)
+    public Page<PostDTO.ListItem> getPostList(String boardNameRaw, Integer categoryId, int page) {
+        String boardName = norm(boardNameRaw);
+        Board board = getBoardOrThrow(boardName);
+        PageRequest pageable = PageRequest.of(Math.max(page, 0), 10);
+
+        if (categoryId != null) {
+            Category category = getCategoryOrThrow(categoryId);
+            assertCategoryBelongsToBoard(board, category);
+            return postRepository.findPageByBoardNameAndCategoryId(boardName, categoryId, pageable);
+        }
+
+        return postRepository.findPageByBoardName(boardName, pageable);
     }
 
     // 게시글 상세 조회

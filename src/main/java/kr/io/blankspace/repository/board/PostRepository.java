@@ -1,5 +1,6 @@
 package kr.io.blankspace.repository.board;
 
+import kr.io.blankspace.dto.board.PostDTO;
 import kr.io.blankspace.entity.board.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,43 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
+
+
+    @Query("""
+        select new kr.io.blankspace.dto.board.PostDTO$ListItem(
+            p.id, c.id, c.name,
+            p.title, p.subTitle,
+            p.thumbnailUrl, p.detailLink,
+            p.createdAt
+        )
+        from Post p
+        join p.category c
+        join c.board b
+        where b.name = :boardName
+        order by p.id desc
+    """)
+    Page<PostDTO.ListItem> findPageByBoardName(@Param("boardName") String boardName, Pageable pageable);
+
+    @Query("""
+        select new kr.io.blankspace.dto.board.PostDTO$ListItem(
+            p.id, c.id, c.name,
+            p.title, p.subTitle,
+            p.thumbnailUrl, p.detailLink,
+            p.createdAt
+        )
+        from Post p
+        join p.category c
+        join c.board b
+        where b.name = :boardName
+          and c.id = :categoryId
+        order by p.id desc
+    """)
+    Page<PostDTO.ListItem> findPageByBoardNameAndCategoryId(
+            @Param("boardName") String boardName,
+            @Param("categoryId") Integer categoryId,
+            Pageable pageable
+    );
+
     @Query("""
         select p from Post p
         join fetch p.category c

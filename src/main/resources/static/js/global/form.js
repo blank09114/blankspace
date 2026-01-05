@@ -69,7 +69,7 @@ function imgInputControll()
 {
     const fileInput = document.querySelector(`[name="imglInput"]`);
     const nameInput = document.querySelector(`[name="imgNameInput"]`);
-    const urlInput  = document.querySelector(`[name="postThumbUrl"]`);
+    const urlInput  = document.querySelector(`[name="thumbnailUrl"]`);
 
     if (!fileInput) return;
 
