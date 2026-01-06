@@ -8,19 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class CommentDTO {
-    // 작성
-    @Getter
-    @NoArgsConstructor
-    public static class CreateReq {
-        @NotBlank
-        @Size(max = 500)
-        private String content;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class CreateRes { private Long commentId; }
-
     // 원댓글 아이템
     @Getter
     @Builder
@@ -59,5 +46,35 @@ public class CommentDTO {
     public static class ThreadItem {
         private CommentItem comment;
         private List<RecommentItem> recomments;
+    }
+
+
+    // 작성
+    @Getter
+    @NoArgsConstructor
+    public static class CreateReq {
+        @NotBlank
+        @Size(max = 500)
+        private String content;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class CreateRes { private Long commentId; }
+
+    // 대댓글 작성
+    @Getter
+    @NoArgsConstructor
+    public static class RecommentCreateReq {
+        @NotBlank
+        @Size(max = 500)
+        private String content;
+        private String mentionUserId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class RecommentCreateRes {
+        private Long recommentId;
     }
 }

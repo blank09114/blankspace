@@ -134,4 +134,7 @@ form[name="answerForm"] { display: none; }
 
     /* 게시글 작성 폼 */
     .select { width: 100%; }
+
+    /* 댓글 */
+    .recommentLine { width: 20px; }
 }

@@ -72,6 +72,34 @@ public class CommentService {
         return saved.getId();
     }
 
+    // 대댓글 작성
+    @Transactional
+    public Long createPostRecomment
+    (Long postId, Long commentId, String content, String mentionUserId, String loginUserId) {
+        Comment parent = commentRepository.findById(commentId)
+        .orElseThrow(() -> new IllegalArgumentException("원댓글이 존재하지 않습니다."));
+
+        if (parent.getPost() == null || !Objects.equals(parent.getPost().getId(), postId))
+        { throw new IllegalArgumentException("해당 게시글의 댓글이 아닙니다."); }
+
+        validatePostPolicy(parent.getPost());
+
+        User author = userRepository.findById(loginUserId)
+        .orElseThrow(() -> new IllegalStateException("사용자 정보를 찾을 수 없습니다."));
+
+        User mentionUser = null;
+        if (mentionUserId != null && !mentionUserId.trim().isEmpty()) {
+            mentionUser = userRepository.findById(mentionUserId.trim())
+            .orElseThrow(() -> new IllegalArgumentException("언급 대상 사용자를 찾을 수 없습니다."));
+        }
+
+        validateContent(content);
+
+        Recomment saved = recommentRepository.save(Recomment.of(parent, author, mentionUser, content.trim()));
+
+        return saved.getId();
+    }
+
     // page == -1 이면 마지막 페이지
     private int resolvePageForLast(Long postId, int page, int size) {
         if (page >= 0) return page;

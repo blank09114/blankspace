@@ -43,4 +43,22 @@ public class PostCommentAPI {
         Long commentId = commentService.createPostComment(postId, req.getContent(), loginUserId);
         return new CommentDTO.CreateRes(commentId);
     }
+
+    // 대댓글 작성
+    // 대댓글 작성
+    @PostMapping("/{commentId}/recomment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentDTO.RecommentCreateRes createPostRecomment(
+        @PathVariable Long postId, @PathVariable Long commentId,
+        @Valid @RequestBody CommentDTO.RecommentCreateReq req, Authentication authentication
+    ) {
+        String loginUserId = authentication.getName();
+        Long recommentId = commentService.createPostRecomment(
+                postId, commentId,
+                req.getContent(),
+                req.getMentionUserId(),
+                loginUserId
+        );
+        return new CommentDTO.RecommentCreateRes(recommentId);
+    }
 }

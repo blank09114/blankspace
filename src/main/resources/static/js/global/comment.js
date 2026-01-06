@@ -21,6 +21,17 @@ function getCreateCommentUrl()
     showToast("지원하지 않는 댓글 대상입니다.");
     return null;
 }
+function getCreateRecommentUrl(commentId)
+{
+    const t = getCommentTarget();
+    if (!t) return null;
+
+    if (t.type === "post") return `/api/post/${t.id}/comment/${commentId}/recomment`;
+    if (t.type === "episode") return `/api/episode/${t.id}/comment/${commentId}/recomment`;
+
+    showToast("지원하지 않는 댓글 대상입니다.");
+    return null;
+}
 
 // 관리자 여부 확인
 function isAdminUser()
@@ -28,10 +39,6 @@ function isAdminUser()
     const root = document.querySelector(".commentMenu");
     return root?.dataset.isAdmin === "true";
 }
-
-// 본인 여부 확인
-function isAdminUser()
-{ return document.querySelector(".commentMenu")?.dataset.isAdmin === "true"; }
 
 // 로그인 여부 확인
 function isAuthUser()
@@ -96,8 +103,9 @@ function renderComment(c) {
     const time = formatDateTime(c.createdAt);
     const writerHref = `/user/${encodeURIComponent(c.writerId)}`;
 
-    const deleteBtn = c.isMine || isAdminUser()
-    ? `<button class="btn" onclick="deleteComment(${c.commentId})">삭제</button>`: "";
+    const mine = (c.isMine === true) || (c.mine === true);
+    const deleteBtn = mine || isAdminUser()
+      ? `<button class="btn" onclick="deleteComment(${c.commentId})">삭제</button>` : "";
 
     return `
     <div class="comment pd-sm flex flex-column gap-sm" data-comment-id="${c.commentId}">
@@ -112,7 +120,7 @@ function renderComment(c) {
         <p class="commentContent text1 pd-xs">${content}</p>
 
         ${isAuthUser() ? `
-        <form class="commentForm flex flex-column gap-xs" name="recommentForm">
+        <form class="commentForm flex flex-column gap-xs" name="recommentForm" data-mention-user-id="${escapeHtml(c.writerId)}">
             <p class="title3Text bold">대댓글 작성하기</p>
             <textarea class="commentInput" name="recommentInput"
                 placeholder="500자 이내, 등록 후 수정이 불가합니다."></textarea>
@@ -131,8 +139,9 @@ function renderRecomment(r)
     const mention = r.mentionUserName
     ? `<span class="navy1">@${escapeHtml(r.mentionUserName)}</span> `: "";
 
-    const deleteBtn = r.isMine || isAdminUser()
-    ? `<button class="btn" onclick="deleteRecomment(${r.recommentId})">삭제</button>`: "";
+    const mine = (r.isMine === true) || (r.mine === true);
+    const deleteBtn = mine || isAdminUser()
+      ? `<button class="btn" onclick="deleteRecomment(${r.recommentId})">삭제</button>` : "";
 
     return `
     <div class="recomment flex gap-xs" data-recomment-id="${r.recommentId}">
@@ -149,7 +158,7 @@ function renderRecomment(r)
             <p class="commentContent text1 pd-xs">${mention}${content}</p>
 
             ${isAuthUser() ? `
-            <form class="commentForm flex flex-column gap-xs" name="recommentForm">
+            <form class="commentForm flex flex-column gap-xs" name="recommentForm" data-mention-user-id="${escapeHtml(r.authorId)}">
                 <p class="title3Text bold">대댓글 작성하기</p>
                 <textarea class="commentInput" name="recommentInput"
                     placeholder="500자 이내, 등록 후 수정이 불가합니다."></textarea>
@@ -214,7 +223,7 @@ function toggleRecommentForm(btn)
 }
 
 // 대댓글 등록
-function subRecomment(btn)
+function subRecomment(btn, commentId)
 {
     const form = btn.closest('form[name="recommentForm"]');
     const input = form?.querySelector('textarea[name="recommentInput"]');
@@ -223,11 +232,29 @@ function subRecomment(btn)
     if (!checkEl(input, "내용")) return;
     if (!checkMaxLengthEl(input, "댓글", 500)) return;
 
-    const value = getValueEl(input);
+    const content = getValueEl(input);
+    const mentionUserId = form?.dataset.mentionUserId || null;
 
-    showToast("대댓글 등록 완료!");
-    input.value = "";
-    form.style.display = "none";
+    const url = getCreateRecommentUrl(commentId);
+    if (!url) return;
+
+    const payload = { content, mentionUserId };
+
+    postJson(url, payload,
+    {
+        defaultErrorMessage: "대댓글 등록 중 오류가 발생했습니다.",
+        toastOnSuccess: "대댓글을 등록했습니다.",
+        parseJson: true
+    })
+    .then((data) =>
+    {
+        if (!data) return;
+
+        loadComments(-1);
+
+        input.value = "";
+        form.style.display = "none";
+    });
 }
 
 // 이벤트 리스너
