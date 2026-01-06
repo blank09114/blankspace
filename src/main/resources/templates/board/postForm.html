@@ -38,7 +38,7 @@
                     th:value="${(editMode == true) and (post != null) and (post.thumbnailUrl != null)} ? ${post.thumbnailUrl} : ''">
                     <button class="btn select" type="button" onclick="imgInputControll()">썸네일 업로드</button>
                     <input type="hidden" name="thumbnailUrl" th:value="${editMode} ? ${post.thumbnailUrl} : ''">
-                    <input type="file" name="imglInput" accept="image/*" hidden>
+                    <input type="file" name="imgInput" accept="image/*" hidden>
                 </div>
             </div>
             <textarea name="content" data-tinymce th:utext="${editMode} ? ${post.content} : ''"></textarea>

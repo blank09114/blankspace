@@ -16,7 +16,7 @@
     <header th:replace="fragments/commons :: header"></header>
 
     <section class="flex flex-column align-center gap-lg">
-        <div id="novelIntro"></div>
+        <div th:replace="fragments/novelIntro :: novelIntro(${novelCard})"></div>
         <a class="btn" style="width: 100%;">회차 보기</a>
         <div class="categories flex justify-end">
             <button class="category now">· 전체 보기</button>

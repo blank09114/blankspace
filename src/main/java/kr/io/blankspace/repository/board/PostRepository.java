@@ -42,9 +42,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         order by p.id desc
     """)
     Page<PostDTO.ListItem> findPageByBoardNameAndCategoryId(
-            @Param("boardName") String boardName,
-            @Param("categoryId") Integer categoryId,
-            Pageable pageable
+        @Param("boardName") String boardName, @Param("categoryId") Integer categoryId,
+        Pageable pageable
     );
 
     @Query("""

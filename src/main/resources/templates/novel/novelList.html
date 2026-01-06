@@ -22,7 +22,7 @@
             <button class="category">· 1차</button>
             <button class="category">· 2차</button>
         </div>
-        <a class="btn" style="width: 100%;">소설 등록</a>
+        <a class="btn" style="width: 100%;" th:href="@{/novel/form}" sec:authorize="hasRole('ADMIN')">소설 등록</a>
         <div class="novelList flex flex-column gap-lg">
             <a class="card pd-md flex gap-md">
                 <img class="cover">

@@ -1,4 +1,4 @@
-package kr.io.blankspace.api.global;
+package kr.io.blankspace.api;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

@@ -18,24 +18,26 @@
     <header th:replace="fragments/commons :: header"></header>
 
     <section class="flex justify-center align-center">
-        <form id="postForm" class="pd-md flex flex-column gap-sm">
+        <form id="postForm" class="pd-md flex flex-column gap-sm" th:object="${form}" th:action="${editMode}
+        ? @{/novel/{novelId}/edit/submit(novelId=${novelId})} : @{/novel/submit}" method="post">
             <div class="postInfo flex flex-column gap-xs">
                 <div class="inputs flex flex-column-mov gap-xs">
-                    <select name="typeSelect" class="select" onchange="onTypeChange(this)">
-                        <option>1차</option>
-                        <option>2차</option>
+                    <select class="select" name="type" th:field="*{type}" onchange="onTypeChange(this)">
+                        <option value="1차">1차</option>
+                        <option value="2차">2차</option>
                     </select>
-                    <input type="text" name="originInput" placeholder="원작" readonly>
+                    <input type="text" name="origin" placeholder="원작" th:field="*{origin}">
                 </div>
-                <input type="text" name="titleInput" placeholder="제목">
+                <input type="text" name="name" placeholder="제목" th:field="*{name}">
                 <div class="inputs flex flex-column-mov gap-xs">
                     <input type="text" name="imgNameInput" placeholder="표지" readonly>
-                    <button class="btn select" type="button" onclick="imgInputControll()">표지 업로드</button>
-                    <input type="file" name="imglInput" accept="image/*" hidden>
+                    <button class="btn select" type="button" onclick="imgInputControll('cover','coverUrl')">표지 업로드</button>
+                    <input type="hidden" name="coverUrl" th:field="*{coverUrl}">
+                    <input type="file" name="imgInput" accept="image/*" hidden>
                 </div>
             </div>
-            <textarea name="introInput" placeholder="소개글"></textarea>
-            <div class="btnsWrap"> <button type="button" class="btn" onclick="subNovel()">등록</button> </div>
+            <textarea name="intro" placeholder="소개글" th:field="*{intro}"></textarea>
+            <div class="btnsWrap"> <button type="submit" class="btn" th:text="${editMode} ? '수정' : '등록'"></button></div>
         </form>
     </section>
 

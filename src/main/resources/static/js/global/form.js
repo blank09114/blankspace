@@ -65,15 +65,15 @@ function checkMaxLengthEl(inputEl, inputName, max)
 }
 
 // 썸네일 업로드 컨트롤
-function imgInputControll()
+function imgInputControll(dir = "thumb", urlInputName = "thumbnailUrl")
 {
-    const fileInput = document.querySelector(`[name="imglInput"]`);
+    const fileInput = document.querySelector(`[name="imgInput"]`);
     const nameInput = document.querySelector(`[name="imgNameInput"]`);
-    const urlInput  = document.querySelector(`[name="thumbnailUrl"]`);
+    const urlInput  = document.querySelector(`[name="${urlInputName}"]`)
+    || document.querySelector(`[name="thumbnailUrl"]`);
 
     if (!fileInput) return;
 
-    // 같은 파일을 다시 선택해도 onchange가 뜨게 초기화
     fileInput.value = "";
     fileInput.click();
 
@@ -114,10 +114,7 @@ function imgInputControll()
             const formData = new FormData();
             formData.append("file", file, file.name);
 
-            const res = await fetch("/api/upload?dir=thumb", {
-                method: "POST",
-                body: formData
-            });
+            const res = await fetch("/api/upload?dir=thumb", { method: "POST", body: formData });
 
             if (!res.ok)
             {
