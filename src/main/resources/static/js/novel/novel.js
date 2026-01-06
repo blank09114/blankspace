@@ -35,13 +35,23 @@ function subNovel()
 // 회차 등록
 function subEpisode()
 {
-    const contentEl = document.querySelector('[name="contentInput"]');
+    const formEl = document.getElementById("postForm");
 
+    window.RichEditor?.sync?.();
+
+    const nameEl = document.querySelector('[name="name"]');
+    const contentEl = document.querySelector('[name="content"]');
+
+    if (!checkEl(nameEl, "소제목")) return;
     if (!checkEl(contentEl, "회차 내용")) return;
 
-    const content = getValueEl(contentEl);
+    if (getValueEl(nameEl).length > 20) {
+        showToast("소제목은 20자 이내로 작성하세요.");
+        nameEl.focus();
+        return;
+    }
 
-    // 등록은 추후 구현
+    HTMLFormElement.prototype.submit.call(formEl);
 }
 
 // 설정 등록
@@ -55,6 +65,8 @@ function subWorld()
 
     const title   = getValueEl(titleEl);
     const content = getValueEl(contentEl);
+
+    window.RichEditor?.sync?.();
 
     // 등록은 추후 구현
 }

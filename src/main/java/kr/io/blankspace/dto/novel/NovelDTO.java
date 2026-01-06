@@ -1,6 +1,7 @@
 package kr.io.blankspace.dto.novel;
 
 import kr.io.blankspace.entity.novel.Novel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,10 +22,8 @@ public class NovelDTO {
 
     // 등록 결과
     @Getter
-    public static class Created {
-        private final Integer novelId;
-        public Created(Integer novelId) { this.novelId = novelId; }
-    }
+    @AllArgsConstructor
+    public static class Created { private final Integer novelId; }
 
     // 소설 카드
     @Getter

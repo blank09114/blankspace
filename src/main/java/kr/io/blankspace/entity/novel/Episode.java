@@ -34,19 +34,25 @@ public class Episode {
     @Column(name = "episode_content")
     private String content;
 
+    @Lob
+    @Column(name = "episode_writer_comment")
+    private String writerComment;
+
     @PrePersist
     void onCreate() { if (createdAt == null) createdAt = LocalDateTime.now(); }
 
-    public static Episode create(Novel novel, String name, String content) {
+    public static Episode create(Novel novel, String name, String content, String writerComment) {
         Episode e = new Episode();
         e.novel = novel;
         e.name = name;
         e.content = content;
+        e.writerComment = writerComment;
         return e;
     }
 
-    public void update(String name, String content) {
+    public void update(String name, String content, String writerComment) {
         this.name = name;
         this.content = content;
+        this.writerComment = writerComment;
     }
 }

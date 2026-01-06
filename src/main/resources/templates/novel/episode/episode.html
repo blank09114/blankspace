@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLANKSPACE - 소설 제목 - 회차 제목</title>
+    <title th:text="'BLANKSPACE - ' + ${novelCard.name} + ' - ' + ${episode.displayNo} + '화'"></title>
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>
@@ -20,20 +20,38 @@
     <section class="flex flex-column align-center gap-lg">
         <div class="postConetentWarp pd-md">
             <div class="postInfo">
-                <p class="text1">1화</p>
-                <p class="title2Text bold">챕터명</p>
-                <p class="text1 black2">YYYY.MM.DD.</p>
+                <p class="text1" th:text="${episode.displayNo} + '화'"></p>
+                <p class="title2Text bold" th:text="${episode.name}"></p>
+                <p class="text1 black2" th:text="${#temporals.format(episode.createdAt, 'yyyy.MM.dd.')}"></p>
             </div>
-            <div class="postConetent"> 내용 </div>
-            <div class="btnsWrap">
-                <a class="btn">수정</a>
-                <button class="btn">삭제</button>
+            <div class="postConetent" th:utext="${episode.content}"></div>
+            <p class="title3Text bold" th:if="${episode.writerComment != null and !#strings.isEmpty(episode.writerComment)}">작가의 말</p>
+            <div class="postConetent" style="min-height: 100px;"
+            th:if="${episode.writerComment != null and !#strings.isEmpty(episode.writerComment)}"
+            th:utext="${episode.writerComment}">
+            </div>
+            <div class="btnsWrap" sec:authorize="hasRole('ADMIN')">
+                <a class="btn" th:href="@{/novel/{novelId}/episode/{episodeId}/edit(novelId=${novelId}, episodeId=${episode.id})}">
+                    수정
+                </a>
+                <form th:action="@{/novel/{novelId}/episode/{episodeId}/delete(novelId=${novelId}, episodeId=${episode.id})}"
+                method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline">
+                    <button type="submit" class="btn">삭제</button>
+                </form>
             </div>
         </div>
         <div class="btnsWrap post">
-            <a class="btn">이전화</a>
-            <a class="btn">목록으로</a>
-            <a class="btn">다음화</a>
+            <a class="btn" th:if="${prevEpisode != null}"
+            th:href="@{/novel/{novelId}/episode/{episodeId}(novelId=${novelId}, episodeId=${prevEpisode.id})}">
+                이전화
+            </a>
+            <span class="btn disabled" th:if="${prevEpisode == null}">첫 화</span>
+            <a class="btn" th:href="@{/novel/{novelId}(novelId=${novelId})}">목록으로</a>
+            <a class="btn" th:if="${nextEpisode != null}"
+            th:href="@{/novel/{novelId}/episode/{episodeId}(novelId=${novelId}, episodeId=${nextEpisode.id})}">
+                다음화
+            </a>
+            <span class="btn disabled" th:if="${nextEpisode == null}">마지막 화</span>
         </div>
         <div th:replace="fragments/comment :: commentMenu('episode', ${episode.id})"></div>
     </section>

@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLANKSPACE - 소설 제목 - 회차 등록</title>
+    <title th:text="${mode == 'EDIT' ? 'BLANKSPACE - 회차 수정' : 'BLANKSPACE - 회차 등록'}"></title>
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/vendor/tinymce/tinymce.min.js}"></script>
     <script th:src="@{/js/global/commons.js}"></script>
     <script th:src="@{/js/global/form.js}"></script>
     <script th:src="@{/js/novel/novel.js}"></script>
@@ -18,10 +19,10 @@
     <header th:replace="fragments/commons :: header"></header>
     
     <section class="flex justify-center align-center">
-        <form id="postForm" class="pd-md flex flex-column gap-sm">
-            <input type="text" name="titleInput" placeholder="소제목">
-            <textarea name="contentInput" placeholder="본문"></textarea>
-            <textarea name="writerCommentInput" placeholder="작가의 말" style="height: 100px;"></textarea>
+        <form id="postForm" class="pd-md flex flex-column gap-sm" th:action="${formAction}" method="post">
+            <input type="text" name="name" placeholder="소제목" th:value="${form.name}">
+            <textarea name="content" placeholder="본문" data-tinymce th:text="${form.content}"></textarea>
+            <textarea name="writerComment" placeholder="작가의 말" style="height: 100px;" data-tinymce th:text="${form.writerComment}"></textarea>
             <div class="btnsWrap"> <button type="button" class="btn" onclick="subEpisode()">등록</button> </div>
         </form>
     </section>
