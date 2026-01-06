@@ -7,6 +7,7 @@
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/global/form.js}"></script>
     <script th:src="@{/js/global/comment.js}"></script>
 </head>
 <body class="flex flex-column">
@@ -53,7 +54,7 @@
             <span class="btn disabled" th:if="${nextPost == null}">마지막 글</span>
         </div>
         <div class="ad"></div>
-        <th:block th:if="${boardName == 'BLOG'}"> <div th:replace="fragments/comment :: commentMenu"></div> </th:block>
+        <th:block th:if="${boardName == 'BLOG'}"> <div th:replace="fragments/comment :: commentMenu('post', ${post.id})"></div> </th:block>
     </section>
 
     <footer th:replace="fragments/commons :: footer"></footer>

@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-
-
     @Query("""
         select new kr.io.blankspace.dto.board.PostDTO$ListItem(
             p.id, c.id, c.name,

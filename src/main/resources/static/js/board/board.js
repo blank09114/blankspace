@@ -87,17 +87,6 @@ function renderPostList(items, boardName)
     }).join("");
 }
 
-// XSS 방지
-function escapeHtml(str)
-{
-    return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
 // 카테고리 편집 폼 토글
 function toggleForms()
 {

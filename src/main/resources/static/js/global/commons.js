@@ -217,6 +217,17 @@ function formatDateTime(dateStr)
     return `${yyyy}.${mm}.${dd}. ${hh}:${mi}`;
 }
 
+// XSS 방지
+function escapeHtml(str)
+{
+    return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 // 공통 페이지 유틸
 function renderPagination(container, currentPage, totalPages, onPageClick)
 {

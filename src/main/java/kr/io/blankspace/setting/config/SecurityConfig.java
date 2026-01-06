@@ -92,6 +92,10 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/user/me").authenticated()
             .requestMatchers(HttpMethod.GET, "/api/user/*/login-logs").authenticated()
             .requestMatchers(HttpMethod.PATCH, "/api/user/*/name").authenticated()
+            .requestMatchers(HttpMethod.POST, "/api/post/*/comment").authenticated()
+            .requestMatchers(HttpMethod.DELETE, "/api/post/*/comment/*").authenticated()
+            .requestMatchers(HttpMethod.POST, "/api/episode/*/comment").authenticated()
+            .requestMatchers(HttpMethod.DELETE, "/api/episode/*/comment/*").authenticated()
 
             // 관리자만 허용
             .requestMatchers(HttpMethod.GET, "/user/list").hasRole("ADMIN")
