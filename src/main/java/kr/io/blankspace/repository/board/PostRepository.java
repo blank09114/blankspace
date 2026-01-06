@@ -75,4 +75,18 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     (@Param("boardName") String boardName, @Param("postId") Long postId, org.springframework.data.domain.Pageable pageable);
 
     boolean existsByCategory_Id(Integer categoryId);
+
+    @Query("""
+        select new kr.io.blankspace.dto.board.PostDTO$ListItem
+        (p.id, c.id, c.name, p.title, p.subTitle, p.thumbnailUrl, p.detailLink, p.createdAt)
+        from Post p
+        join p.category c
+        join c.board b
+        where b.name = :boardName and p.createdAt >= :since
+        order by p.id desc
+    """)
+    List<PostDTO.ListItem> findRecentListByBoardNameSince(
+        @Param("boardName") String boardName, @Param("since") java.time.LocalDateTime since,
+        org.springframework.data.domain.Pageable pageable
+    );
 }

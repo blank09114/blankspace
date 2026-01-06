@@ -8,5 +8,5 @@ import java.util.List;
 public interface NovelRepository extends JpaRepository<Novel, Integer> {
     List<Novel> findAllByOrderByIdDesc();
     List<Novel> findByTypeOrderByIdDesc(String type);
-
+    List<Novel> findByIdIn(List<Integer> ids);
 }

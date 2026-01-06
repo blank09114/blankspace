@@ -92,10 +92,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/user/me").authenticated()
             .requestMatchers(HttpMethod.GET, "/api/user/*/login-logs").authenticated()
             .requestMatchers(HttpMethod.PATCH, "/api/user/*/name").authenticated()
-            .requestMatchers(HttpMethod.POST, "/api/post/*/comment").authenticated()
-            .requestMatchers(HttpMethod.DELETE, "/api/post/*/comment/*").authenticated()
-            .requestMatchers(HttpMethod.POST, "/api/episode/*/comment").authenticated()
-            .requestMatchers(HttpMethod.DELETE, "/api/episode/*/comment/*").authenticated()
+            .requestMatchers(HttpMethod.POST,"/api/*/*/comment/**").authenticated()
+            .requestMatchers(HttpMethod.DELETE, "/api/*/*/comment/**").authenticated()
 
             // 관리자만 허용
             .requestMatchers(HttpMethod.GET, "/user/list").hasRole("ADMIN")
@@ -115,7 +113,18 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/novel/*/edit").hasRole("ADMIN")
             .requestMatchers(HttpMethod.POST, "/novel/*/delete").hasRole("ADMIN")
             .requestMatchers(HttpMethod.POST, "/novel/*/end").hasRole("ADMIN")
-                
+            .requestMatchers(HttpMethod.GET, "/novel/*/episode/form").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/novel/*/episode/*/edit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/novel/*/world/form").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/novel/*/world/*/edit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/*/end/toggle").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/*/episode/submit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/*/episode/*/edit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/*/episode/*/delete").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/*/world/submit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/*/world/*/edit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/*/world/*/delete").hasRole("ADMIN")
+
             // 나머지는 전부 허용
             .anyRequest().permitAll()
         );

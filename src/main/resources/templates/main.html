@@ -75,37 +75,36 @@
         <div class="banner flex flex-column align-center gap-lg">
             <p class="title1Text bold text-center">최근 업데이트된 소설</p>
             <div class="newNovelList flex gap-lg">
-                <a class="newNovel rv r">
+                <div th:if="${recentUpdatedNovels == null or #lists.isEmpty(recentUpdatedNovels)}"
+                class="text1 text-center">
+                    최근 1주일 내 업데이트된 소설이 없습니다.
+                </div>
+                <a class="newNovel rv r" th:each="n : ${recentUpdatedNovels}"
+                th:href="@{/novel/{novelId}(novelId=${n.novelId})}">
                     <div class="up text3 text-center">UP</div>
-                    <img class="cover">
-                    <p class="text1">제목</p>
-                </a>
-                <a class="newNovel rv r">
-                    <div class="up text3 text-center">UP</div>
-                    <img class="cover">
-                    <p class="text1">제목</p>
-                </a>
-                <a class="newNovel rv r">
-                    <div class="up text3 text-center">UP</div>
-                    <img class="cover">
-                    <p class="text1">제목</p>
-                </a>
-                <a class="newNovel rv r">
-                    <div class="up text3 text-center">UP</div>
-                    <img class="cover">
-                    <p class="text1">제목</p>
-                </a>
-                <a class="newNovel rv r">
-                    <div class="up text3 text-center">UP</div>
-                    <img class="cover">
-                    <p class="text1">제목</p>
+                    <img class="cover" th:if="${n.coverUrl != null and !#strings.isEmpty(n.coverUrl)}"
+                    th:src="${n.coverUrl}" th:alt="${n.name}" />
+                    <p class="text1" th:text="${n.name}">제목</p>
                 </a>
             </div>
-            <div class="btnsWrap"> <a class="mainBtn text-center rv b">전체 소설 보기 →</a> </div>
+            <div class="btnsWrap"> <a class="mainBtn text-center rv b" th:href="@{/novel}">전체 소설 보기 →</a> </div>
         </div>
         <div class="banner flex flex-column align-center gap-lg">
             <p class="title1Text bold text-center">블로그 최신글</p>
-            <div class="btnsWrap"> <a class="mainBtn text-center rv b">전체 게시글 보기 →</a> </div>
+            <div class="postList grid gap-lg">
+                <div th:if="${recentBlogPosts == null or #lists.isEmpty(recentBlogPosts)}"
+                class="text1 text-center" style="grid-column: 1 / -1;">
+                    최근 1주일 내 블로그 글이 없습니다.
+                </div>
+                <a class="card pd-md rv t" th:each="post : ${recentBlogPosts}" th:href="${post.detailLink}">
+                    <img class="thumbnail"
+                    th:src="${post.thumbnailUrl != null ? post.thumbnailUrl : '/img/thumbnail_default.png'}"
+                    th:alt="${post.title}"/>
+                    <p class="title2Text text-center bold" th:text="${post.title}"></p>
+                    <p class="text1 text-center" th:text="${post.subTitle}"></p>
+                </a>
+            </div>
+            <div class="btnsWrap"> <a class="mainBtn text-center rv b" th:href="@{/blog}">전체 게시글 보기 →</a> </div>
         </div>
     </section>
 
