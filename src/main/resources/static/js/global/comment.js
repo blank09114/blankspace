@@ -298,4 +298,14 @@ function deleteRecomment(recommentId)
 }
 
 // 이벤트 리스너
-document.addEventListener("DOMContentLoaded", () => { loadComments(-1); });
+document.addEventListener("DOMContentLoaded", () =>
+{
+    const root = document.querySelector(".commentMenu");
+    if (!root) return;
+
+    const type = root.dataset.targetType;
+    const id   = root.dataset.targetId;
+    if (!type || !id) return;
+
+    loadComments(-1);
+});
