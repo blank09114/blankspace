@@ -62,7 +62,7 @@ function renderPostList(items, boardName)
 
     if (!items || items.length === 0)
     {
-        list.innerHTML = `<p class="text1 text-center">게시글이 없습니다.</p>`;
+        list.innerHTML = `<p class="noPostText text1 text-center">게시글이 없습니다.</p>`;
         return;
     }
 

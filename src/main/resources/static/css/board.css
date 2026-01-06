@@ -21,6 +21,7 @@ form[name="categoryForm"] { width: 100%; }
     margin-bottom: 5px;
     object-fit: cover;
 }
+.noPostText { grid-column: 1 / -1; }
 
 /* 게시글 */
 .postConetentWarp
@@ -32,6 +33,7 @@ form[name="categoryForm"] { width: 100%; }
 }
 .postInfo { padding-bottom: 5px; border-bottom: 1px solid var(--gray-2); }
 .postConetent { min-height: 300px; margin-top: 10px; }
+.postConetent * { line-height: 1.5; }
 .btnsWrap.post { justify-content: space-between; }
 .btnsWrap.post .btn { width: 100px !important; }
 .btn.disabled { pointer-events: none; opacity: 0.5; }

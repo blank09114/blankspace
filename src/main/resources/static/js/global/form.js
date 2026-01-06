@@ -182,11 +182,11 @@ window.RichEditor = (() =>
             skin: "oxide",
             content_css: "default",
 
-            plugins: "lists link image table code",
+            plugins: "lists link image table code codesample",
             toolbar:
             [
-                "undo redo | fontsize | bold italic underline | forecolor | alignleft aligncenter alignright alignjustify",
-                "bullist numlist | table | link image | removeformat | code"
+                "undo redo | fontsize | bold italic underline strikethrough | superscript subscript | forecolor backcolor | alignleft aligncenter alignright alignjustify",
+                "bullist numlist | hr | table | link image | codesample | removeformat | code"
             ].join(" | "),
 
             font_size_formats: "24px 20px 18px 16px 14px 12px",
