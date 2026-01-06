@@ -7,6 +7,16 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 public class WorldDTO {
+    // 목록 조회
+    @Getter
+    @AllArgsConstructor
+    public static class ListItem {
+        private final Long id;
+        private final String category;
+        private final String name;
+        private final LocalDateTime createdAt;
+    }
+
     // 상세 조회
     @Getter
     @Setter

@@ -7,6 +7,7 @@
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/novel/worldList.js}"></script>
 </head>
 <body class="flex flex-column">
     <nav th:replace="fragments/commons :: nav"></nav>
@@ -15,29 +16,18 @@
 
     <header th:replace="fragments/commons :: header"></header>
 
-    <section class="flex flex-column align-center gap-lg">
+    <section id="worldListPage" class="flex flex-column align-center gap-lg" th:attr="data-novel-id=${novelId}">
         <div th:replace="fragments/novelIntro :: novelIntro(${novelCard})"></div>
-        <a class="btn" style="width: 100%;">회차 보기</a>
-        <div class="categories flex justify-end">
-            <button class="category now">· 전체 보기</button>
-            <button class="category">· 세계관</button>
-            <button class="category">· 캐릭터</button>
-            <button class="category">· 기타</button>
+        <a class="btn" style="width: 100%;" th:href="@{/novel/{novelId}(novelId=${novelId})}">
+            회차 보기
+        </a>
+        <div class="categories flex justify-end" id="worldCategories">
+            <button type="button" class="category now" data-category="">· 전체 보기</button>
+            <button type="button" class="category" data-category="세계관">· 세계관</button>
+            <button type="button" class="category" data-category="캐릭터">· 캐릭터</button>
+            <button type="button" class="category" data-category="기타">· 기타</button>
         </div>
-        <div class="list world">
-            <a class="episode">
-                <p class="text1 black2">세계관</p>
-                <p class="text1">제목</p>
-            </a>
-            <a class="episode">
-                <p class="text1 black2">캐릭터</p>
-                <p class="text1">제목</p>
-            </a>
-            <a class="episode">
-                <p class="text1 black2">기타</p>
-                <p class="text1">제목</p>
-            </a>
-        </div>
+        <div class="list world" id="worldList"></div>
     </section>
 
     <footer th:replace="fragments/commons :: footer"></footer>

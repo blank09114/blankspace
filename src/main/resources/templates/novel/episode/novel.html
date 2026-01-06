@@ -17,7 +17,9 @@
 
     <section class="flex flex-column align-center gap-lg">
         <div th:replace="fragments/novelIntro :: novelIntro(${novelCard})"></div>
-        <a class="btn" style="width: 100%;">설정 보기</a>
+        <a class="btn" style="width: 100%;" th:href="@{/novel/{novelId}/world(novelId=${novelId})}">
+            설정 보기
+        </a>
         <div class="list">
             <div class="chapter" th:each="ch : ${chapterGroups}">
                 <div class="chapterTitle text1 text-center white1" th:text="${ch.chapterTitle}"></div>

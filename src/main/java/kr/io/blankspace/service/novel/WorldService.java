@@ -9,11 +9,30 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WorldService {
     private final WorldRepository worldRepository;
     private final NovelRepository novelRepository;
+
+    // 목록 조회
+    @Transactional(readOnly = true)
+    public List<WorldDTO.ListItem> getWorldList(Integer novelId, String category) {
+        String c = normalize(category);
+
+        List<World> worlds;
+        if (c == null) { worlds = worldRepository.findByNovelIdOrderByIdDesc(novelId); } else {
+            if (!isValidCategory(c))
+            { throw new IllegalArgumentException("카테고리가 올바르지 않습니다."); }
+            worlds = worldRepository.findByNovelIdAndCategoryOrderByIdDesc(novelId, c);
+        }
+
+        return worlds.stream()
+        .map(w -> new WorldDTO.ListItem
+        (w.getId(), w.getCategory(), w.getName(), w.getCreatedAt())).toList();
+    }
 
     // 상세 조회
     @Transactional(readOnly = true)
@@ -114,6 +133,8 @@ public class WorldService {
 
         worldRepository.delete(world);
     }
+
+    private boolean isValidCategory(String c) { return c.equals("세계관") || c.equals("캐릭터") || c.equals("기타"); }
 
     private String normalize(String s) {
         if (s == null) return null;

@@ -2,13 +2,10 @@ package kr.io.blankspace.controller.novel;
 
 import kr.io.blankspace.dto.novel.EpisodeDTO;
 import kr.io.blankspace.dto.novel.NovelDTO;
-import kr.io.blankspace.entity.novel.Episode;
-import kr.io.blankspace.repository.novel.EpisodeRepository;
 import kr.io.blankspace.service.novel.EpisodeService;
 import kr.io.blankspace.service.novel.NovelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 

@@ -17,6 +17,15 @@ public class WorlController {
     private final WorldService worldService;
 
     // 목록
+    @GetMapping("/{novelId}/world")
+    public String worldList(@PathVariable Integer novelId, Model model) {
+        NovelDTO.Card novelCard = novelService.getCard(novelId);
+
+        model.addAttribute("novelId", novelId);
+        model.addAttribute("novelCard", novelCard);
+
+        return "novel/world/worldList";
+    }
 
     // 상세
     @GetMapping("/{novelId}/world/{worldId}")
