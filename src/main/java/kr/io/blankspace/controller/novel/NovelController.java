@@ -11,14 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/novel")
 @RequiredArgsConstructor
 public class NovelController {
-
     private final NovelService novelService;
 
     // 소설 목록
     @GetMapping
-    public String novelList() {
-        return "novel/novelList";
-    }
+    public String novelList() { return "novel/novelList"; }
 
     // 소설 등록 페이지
     @GetMapping("/form")
@@ -57,5 +54,17 @@ public class NovelController {
         return "redirect:/novel/" + novelId;
     }
 
-    // 소설 삭제는 나중에 추가
+    // 완결 상태 토글
+    @PostMapping("/{novelId}/end/toggle")
+    public String toggleEnd(@PathVariable Integer novelId) {
+        novelService.toggleEnd(novelId);
+        return "redirect:/novel/" + novelId;
+    }
+
+    // 소설 삭제
+    @PostMapping("/{novelId}/delete")
+    public String delete(@PathVariable Integer novelId) {
+        novelService.delete(novelId);
+        return "redirect:/novel";
+    }
 }

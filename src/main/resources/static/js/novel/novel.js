@@ -26,7 +26,6 @@ function subNovel()
     if (!checkEl(nameEl, "제목")) return;
     if (!checkEl(introEl, "소개글")) return;
 
-    // 길이 제한
     if (getValueEl(nameEl).length > 20) { showToast("제목은 20자 이내로 작성하세요."); nameEl.focus(); return; }
     if (type === "2차" && getValueEl(originEl).length > 20) { showToast("원작은 20자 이내로 작성하세요."); originEl.focus(); return; }
 

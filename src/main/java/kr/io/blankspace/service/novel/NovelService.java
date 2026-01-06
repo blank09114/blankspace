@@ -8,11 +8,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class NovelService {
     private final NovelRepository novelRepository;
     private final EpisodeRepository episodeRepository;
+
+    // 소설 목록 조회
+    public List<NovelDTO.Card> getNovelList(String type) {
+        List<Novel> novels;
+
+        if (type == null || type.isBlank()) { novels = novelRepository.findAllByOrderByIdDesc(); }
+        else { novels = novelRepository.findByTypeOrderByIdDesc(type); }
+
+        return novels.stream()
+        .map(novel -> new NovelDTO.Card
+        (novel, episodeRepository.countByNovelId(novel.getId()))).toList();
+    }
 
     // 소설 카드 조회
     @Transactional(readOnly = true)
@@ -69,6 +83,23 @@ public class NovelService {
             form.getType(), origin, form.getName(),
             form.getCoverUrl(), form.getIntro(), form.isEnd()
         );
+    }
+
+    // 완결 상태 토글
+    @Transactional
+    public void toggleEnd(Integer novelId) {
+        Novel novel = novelRepository.findById(novelId)
+        .orElseThrow(() -> new IllegalArgumentException("소설을 찾을 수 없습니다. id=" + novelId));
+
+        novel.toggleEnd();
+    }
+
+    // 소설 삭제
+    @Transactional
+    public void delete(Integer novelId) {
+        if (!novelRepository.existsById(novelId))
+        { throw new IllegalArgumentException("소설을 찾을 수 없습니다. id=" + novelId); }
+        novelRepository.deleteById(novelId);
     }
 
     // 1차면 origin은 null로 통일

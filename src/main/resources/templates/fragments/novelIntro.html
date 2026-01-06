@@ -16,11 +16,20 @@
         <p class="text1 intro" th:text="${novelCard.intro}">소개글</p>
     </div>
     <div class="btnsWrap" sec:authorize="hasRole('ADMIN')">
-        <a class="btn">완결로 전환</a>
+        <form th:action="@{/novel/{novelId}/end/toggle(novelId=${novelCard.novelId})}"
+        method="post" style="display: inline;">
+            <button type="submit" class="btn"
+            th:text="${novelCard.end ? '연재로 전환' : '완결로 전환'}">
+                완결로 전환
+            </button>
+        </form>
         <a class="btn" th:href="@{/novel/{novelId}/edit(novelId=${novelCard.novelId})}">정보 수정</a>
         <a class="btn">신규 회차 등록</a>
         <a class="btn">신규 설정 등록</a>
-        <a class="btn">삭제</a>
+        <form th:action="@{/novel/{novelId}/delete(novelId=${novelCard.novelId})}" method="post" style="display:inline;"
+        onsubmit="return confirm('정말 삭제할까요?\\n회차/설정/댓글까지 모두 삭제됩니다.');">
+            <button type="submit" class="btn">삭제</button>
+        </form>
     </div>
 </div>
 </html>

@@ -55,5 +55,5 @@ public class Novel {
         this.end = end;
     }
 
-    public void setEnd(boolean end) { this.end = end; }
+    public void toggleEnd() { this.end = !this.end; }
 }

@@ -1,6 +1,8 @@
 /* 소설 목록 */
 .novelList, .novelInfo { width: 100%; }
 .cover { width: 140px; height: 200px; flex-shrink: 0; }
+.novelCard .intro { max-height: 135px; }
+@media(max-width: 768px) { .novelCard .intro { max-height: 65px; } }
 
 /* 소설 상세 */
 .coverWrap { width: 100%; height: 200px; }
