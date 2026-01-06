@@ -22,6 +22,7 @@ addEventListener("DOMContentLoaded", () =>
 {
     // 애니메이션 적용
     seq(".newNovelList .newNovel.rv", 120, 0); bindRv(".rv", { off: 80 });
+    seq(".postList .card.rv", 120, 0); bindRv(".rv", { off: 80 });
 
     // 인증 알림
     const params = new URLSearchParams(window.location.search);
