@@ -19,11 +19,11 @@ public class Recomment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", nullable = false)
-    private Comment comment; // 부모 원댓글
+    private Comment comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mention_user_id")
-    private User mentionUser; // nullable
+    private User mentionUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_user_id", nullable = false)

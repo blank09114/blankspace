@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLANKSPACE - 소설 제목 - 설정 등록</title>
+    <title th:text="${mode == 'EDIT'? 'BLANKSPACE - 설정 수정': 'BLANKSPACE - 설정 등록'}"></title>
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/vendor/tinymce/tinymce.min.js}"></script>
     <script th:src="@{/js/global/commons.js}"></script>
     <script th:src="@{/js/global/form.js}"></script>
-    <script th:src="@{/js/novel/novelForm.js}"></script>
+    <script th:src="@{/js/novel/novel.js}"></script>
 </head>
 <body class="flex flex-column">
     <nav th:replace="fragments/commons :: nav"></nav>
@@ -18,17 +19,25 @@
     <header th:replace="fragments/commons :: header"></header>
 
     <section class="flex justify-center align-center">
-        <form id="postForm" class="pd-md flex flex-column gap-sm">
+        <form id="postForm" class="pd-md flex flex-column gap-sm" th:action="${formAction}" method="post">
             <div class="inputs flex flex-column-mov gap-xs">
-                <select class="select" name="worldCategory">
-                    <option>세계관</option>
-                    <option>캐릭터</option>
-                    <option>기타</option>
+                <select class="select" name="category">
+                    <option value="세계관"th:selected="${form.category == '세계관'}">
+                        세계관
+                    </option>
+                    <option value="캐릭터" th:selected="${form.category == '캐릭터'}">
+                        캐릭터
+                    </option>
+                    <option value="기타" th:selected="${form.category == '기타'}">
+                        기타
+                    </option>
                 </select>
-                <input type="text" name="titleInput" placeholder="제목">
+                <input type="text" name="name" placeholder="제목" maxlength="20" th:value="${form.name}">
             </div>
-            <textarea name="contentInput" placeholder="본문"></textarea>
-            <div class="subBtnWrap"> <button type="button" class="btn" onclick="subWorld()">등록</button> </div>
+            <textarea name="content" placeholder="본문" data-tinymce th:text="${form.content}"></textarea>
+            <div class="subBtnWrap flex justify-end">
+                <button type="button" class="btn" onclick="subWorld()" th:text="${submitText}">등록</button>
+            </div>
         </form>
     </section>
 

@@ -1,6 +1,6 @@
 package kr.io.blankspace.service.comment;
 
-import kr.io.blankspace.dto.comment.CommentDTO;
+import kr.io.blankspace.dto.CommentDTO;
 import kr.io.blankspace.entity.account.User;
 import kr.io.blankspace.entity.board.Post;
 import kr.io.blankspace.entity.comment.Comment;

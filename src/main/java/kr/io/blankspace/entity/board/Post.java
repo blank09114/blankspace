@@ -45,14 +45,7 @@ public class Post {
     @PrePersist
     void onCreate() { if (createdAt == null) createdAt = LocalDateTime.now(); }
 
-    public static Post create(
-        Category category,
-        String title,
-        String subTitle,
-        String thumbnailUrl,
-        String detailLink,
-        String content
-    ) {
+    public static Post create(Category category, String title, String subTitle, String thumbnailUrl, String detailLink, String content) {
         Post p = new Post();
         p.category = category;
         p.title = title;

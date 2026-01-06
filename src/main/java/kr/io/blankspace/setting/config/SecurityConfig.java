@@ -109,7 +109,13 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET,  "/board/*/post/*/edit").hasRole("ADMIN")
             .requestMatchers(HttpMethod.POST, "/board/*/post/*/edit").hasRole("ADMIN")
             .requestMatchers(HttpMethod.POST, "/board/*/post/*/delete").hasRole("ADMIN")
-
+            .requestMatchers(HttpMethod.GET,  "/novel/form").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/submit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET,  "/novel/*/edit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/*/edit").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/*/delete").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/novel/*/end").hasRole("ADMIN")
+                
             // 나머지는 전부 허용
             .anyRequest().permitAll()
         );

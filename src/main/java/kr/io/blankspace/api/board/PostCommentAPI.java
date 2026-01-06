@@ -1,7 +1,7 @@
 package kr.io.blankspace.api.board;
 
 import jakarta.validation.Valid;
-import kr.io.blankspace.dto.comment.CommentDTO;
+import kr.io.blankspace.dto.CommentDTO;
 import kr.io.blankspace.service.comment.PostCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/post/{postId}/comment")
 public class PostCommentAPI {
-
     private final PostCommentService postCommentService;
 
     // 댓글 조회

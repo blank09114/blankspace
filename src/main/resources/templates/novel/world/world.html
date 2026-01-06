@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLANKSPACE - 소설 제목 - 설정 제목</title>
+    <title th:text="|BLANKSPACE - ${novelCard.name} - ${world.name}|"></title>
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>
@@ -15,23 +15,38 @@
 
     <header th:replace="fragments/commons :: header"></header>
 
-    <section class="flex flex-column align-center gap-lg">
+    <section class="flex flex-column justify-center gap-lg">
         <div class="postConetentWarp pd-md">
             <div class="postInfo">
-                <p class="text1">세계관</p>
-                <p class="title2Text bold">제목</p>
-                <p class="text1 black2">YYYY.MM.DD.</p>
+                <p class="text1" th:text="${world.category}"></p>
+                <p class="title2Text bold" th:text="${world.name}"></p>
+                <p class="text1 black2" th:text="${#temporals.format(world.createdAt, 'yyyy.MM.dd')}"></p>
             </div>
-            <div class="postConetent"> 내용 </div>
-            <div class="btnsWrap">
-                <a class="btn">수정</a>
-                <button class="btn">삭제</button>
+            <div class="postConetent" th:utext="${world.content}"></div>
+            <div class="btnsWrap" sec:authorize="hasRole('ADMIN')">
+                <a class="btn" th:href="@{/novel/{novelId}/world/{worldId}/edit(novelId=${world.novelId}, worldId=${world.worldId})}">
+                    수정
+                </a>
+                <form th:action="@{/novel/{novelId}/world/{worldId}/delete(novelId=${novelId}, worldId=${world.worldId})}"
+                method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline;">
+                    <button type="submit" class="btn">삭제</button>
+                </form>
             </div>
         </div>
         <div class="btnsWrap post">
-            <a class="btn">이전 글</a>
-            <a class="btn">목록으로</a>
-            <a class="btn">다음 글</a>
+            <a class="btn" th:if="${prevWorld != null}"
+            th:href="@{/novel/{novelId}/world/{worldId}(novelId=${novelId}, worldId=${prevWorld.id})}">
+                이전 글
+            </a>
+            <span class="btn disabled" th:if="${prevWorld == null}">첫 글</span>
+            <a class="btn" th:href="@{/novel/{novelId}/world(novelId=${novelId})}">
+                목록으로
+            </a>
+            <a class="btn" th:if="${nextWorld != null}"
+            th:href="@{/novel/{novelId}/world/{worldId}(novelId=${novelId}, worldId=${nextWorld.id})}">
+                다음 글
+            </a>
+            <span class="btn disabled" th:if="${nextWorld == null}">마지막 글</span>
         </div>
     </section>
 

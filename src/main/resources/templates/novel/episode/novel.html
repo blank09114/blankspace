@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLANKSPACE - 소설 제목 - 설정</title>
+    <title th:text="'BLANKSPACE - ' + ${novelCard.name}"></title>
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>
@@ -16,25 +16,17 @@
     <header th:replace="fragments/commons :: header"></header>
 
     <section class="flex flex-column align-center gap-lg">
-        <div id="novelIntro"></div>
-        <a class="btn" style="width: 100%;">설정 보기</a>
+        <div th:replace="fragments/novelIntro :: novelIntro(${novelCard})"></div>
+        <a class="btn" style="width: 100%;" th:href="@{/novel/{novelId}/world(novelId=${novelId})}">
+            설정 보기
+        </a>
         <div class="list">
-            <div class="chapter">
-                <div class="chapterTitle text1 text-center white1">챕터명</div>
-                <a class="episode">
-                    <p class="text1">3화</p>
-                    <p class="text1 black2">YYYY.MM.DD. · 5000자</p>
-                </a>
-                <a class="episode">
-                    <p class="text1">2화</p>
-                    <p class="text1 black2">YYYY.MM.DD. · 5000자</p>
-                </a>
-            </div>
-            <div class="chapter">
-                <div class="chapterTitle text1 text-center white1">챕터명</div>
-                <a class="episode">
-                    <p class="text1">1화</p>
-                    <p class="text1 black2">YYYY.MM.DD. · 5000자</p>
+            <div class="chapter" th:each="ch : ${chapterGroups}">
+                <div class="chapterTitle text1 text-center white1" th:text="${ch.chapterTitle}"></div>
+                <a class="episode" th:each="ep : ${ch.episodes}"
+                th:href="@{/novel/{novelId}/episode/{episodeId}(novelId=${novelId}, episodeId=${ep.id})}">
+                    <p class="text1" th:text="${ep.displayNo} + '화'"></p>
+                    <p class="text1 black2" th:text="${#temporals.format(ep.createdAt, 'yyyy.MM.dd.')}"></p>
                 </a>
             </div>
         </div>

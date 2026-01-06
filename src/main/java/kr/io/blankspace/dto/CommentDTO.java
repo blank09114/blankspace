@@ -1,4 +1,4 @@
-package kr.io.blankspace.dto.comment;
+package kr.io.blankspace.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -64,7 +64,7 @@ public class CommentDTO {
     public static class CreateRes { private Long commentId; }
 
     // 대댓글 작성
-    @Getter
+    @Getter @Setter
     @NoArgsConstructor
     public static class RecommentCreateReq {
         @NotBlank

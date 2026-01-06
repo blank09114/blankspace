@@ -7,6 +7,7 @@
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>
+    <script th:src="@{/js/novel/novelList.js}"></script>
 </head>
 <body class="flex flex-column">
     <nav th:replace="fragments/commons :: nav"></nav>
@@ -18,21 +19,12 @@
     <section class="flex flex-column align-center gap-lg">
         <p class="title1Text bold text-center boardName">NOVEL</p>
         <div class="categories flex justify-end">
-            <button class="category now">· 전체 보기</button>
-            <button class="category">· 1차</button>
-            <button class="category">· 2차</button>
+            <button class="category now" type="button" data-type="">· 전체 보기</button>
+            <button class="category" type="button" data-type="1차">· 1차</button>
+            <button class="category" type="button" data-type="2차">· 2차</button>
         </div>
-        <a class="btn" style="width: 100%;">소설 등록</a>
-        <div class="novelList flex flex-column gap-lg">
-            <a class="card pd-md flex gap-md">
-                <img class="cover">
-                <div class="novelInfo">
-                    <p class="text1 black2">2차 · 나루토 · 100화 · 연재 중</p>
-                    <p class="title3Text bold">제목</p>
-                    <p class="text1">소개글</p>
-                </div>
-            </a>
-        </div>
+        <a class="btn" style="width: 100%;" th:href="@{/novel/form}" sec:authorize="hasRole('ADMIN')">소설 등록</a>
+        <div id="novelList" class="novelList flex flex-column gap-lg"></div>
     </section>
 
     <footer th:replace="fragments/commons :: footer"></footer>
