@@ -87,4 +87,9 @@ public class WorlController {
     }
 
     // 삭제
+    @PostMapping("/{novelId}/world/{worldId}/delete")
+    public String deleteWorld(@PathVariable Integer novelId, @PathVariable Long worldId) {
+        worldService.delete(novelId, worldId);
+        return "redirect:/novel/" + novelId + "/world";
+    }
 }

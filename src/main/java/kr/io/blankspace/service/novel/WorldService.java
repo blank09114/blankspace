@@ -105,6 +105,16 @@ public class WorldService {
         world.update(category, name, content);
     }
 
+    // 삭제
+    @Transactional
+    public void delete(Integer novelId, Long worldId) {
+        World world = worldRepository.findByIdAndNovelId(worldId, novelId)
+        .orElseThrow(() -> new IllegalArgumentException
+        ("설정을 찾을 수 없습니다. novelId=" + novelId + ", worldId=" + worldId));
+
+        worldRepository.delete(world);
+    }
+
     private String normalize(String s) {
         if (s == null) return null;
         String t = s.trim();
