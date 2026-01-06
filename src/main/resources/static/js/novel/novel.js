@@ -32,7 +32,7 @@ function subNovel()
     HTMLFormElement.prototype.submit.call(formEl);
 }
 
-// 회차 등록
+// 회차 등록/수정
 function subEpisode()
 {
     const formEl = document.getElementById("postForm");
@@ -54,19 +54,26 @@ function subEpisode()
     HTMLFormElement.prototype.submit.call(formEl);
 }
 
-// 설정 등록
+// 설정 등록/수정
 function subWorld()
 {
-    const titleEl   = document.querySelector('[name="titleInput"]');
-    const contentEl = document.querySelector('[name="contentInput"]');
+    const formEl = document.getElementById("postForm");
 
-    if (!checkEl(titleEl, "제목")) return;
-    if (!checkEl(contentEl, "본문")) return;
-
-    const title   = getValueEl(titleEl);
-    const content = getValueEl(contentEl);
+    const categoryEl = document.querySelector('[name="category"]');
+    const nameEl     = document.querySelector('[name="name"]');
+    const contentEl  = document.querySelector('[name="content"]');
 
     window.RichEditor?.sync?.();
 
-    // 등록은 추후 구현
+    if (!checkEl(categoryEl, "카테고리")) return;
+    if (!checkEl(nameEl, "제목")) return;
+    if (!checkEl(contentEl, "본문")) return;
+
+    if (getValueEl(nameEl).length > 20) {
+        showToast("제목은 20자 이내로 작성하세요.");
+        nameEl.focus();
+        return;
+    }
+
+    HTMLFormElement.prototype.submit.call(formEl);
 }

@@ -9,16 +9,15 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-        name = "world_tbl",
-        indexes = {
-                @Index(name = "ix_world_list", columnList = "novel_id, world_id"),
-                @Index(name = "ix_world_list_category", columnList = "novel_id, world_category, world_id")
-        }
+    name = "world_tbl",
+    indexes = {
+        @Index(name = "ix_world_list", columnList = "novel_id, world_id"),
+        @Index(name = "ix_world_list_category", columnList = "novel_id, world_category, world_id")
+    }
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class World {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "world_id")

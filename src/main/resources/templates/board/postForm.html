@@ -42,8 +42,7 @@
                 </div>
             </div>
             <textarea name="content" data-tinymce th:utext="${editMode} ? ${post.content} : ''"></textarea>
-            <button type="button" class="btn" onclick="subPost()" th:text="${editMode} ? '수정' : '등록'"></button>
-            </div>
+            <div class="subBtnWrap flex justify-end"> <button type="button" class="btn" onclick="subPost()" th:text="${editMode} ? '수정' : '등록'"></button></div>
         </form>
     </section>
 
