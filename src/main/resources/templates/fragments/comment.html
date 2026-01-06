@@ -1,49 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<div class="commentMenu flex flex-column gap-lg" th:fragment="commentMenu">
+<div class="commentMenu flex flex-column gap-lg"
+th:fragment="commentMenu(targetType, targetId)"
+th:attr="data-target-type=${targetType}, data-target-id=${targetId}"
+th:data-is-auth="${#authorization.expression('isAuthenticated()')}"
+th:data-is-admin="${#authorization.expression('hasRole(''ADMIN'')')}">
     <p class="title2Text bold">댓글 <span class="navy1">00</span></p>
-    <form class="commentForm flex flex-column gap-xs" id="commentForm">
+    <form class="commentForm flex flex-column gap-xs" id="commentForm" sec:authorize="isAuthenticated()">
         <p class="title3Text bold">댓글 작성하기</p>
         <textarea class="commentInput" id="commentInput" placeholder="500자 이내, 등록 후 수정이 불가합니다."></textarea>
         <button type="button" class="btn" onclick="subComment()">등록</button>
     </form>
-    <div class="commentList">
-        <div class="comment pd-sm flex flex-column gap-sm">
-            <p class="title3Text">
-                <a class="bold">작성자</a> 
-                <span class="black2">· YYYY.MM.DD. HH:MM</span>
-            </p>
-            <div class="manualBtns flex gap-sm">
-                <button class="btn" onclick="toggleRecommentForm(this)">답글</button>
-                <button class="btn" onclick="deleteComment()">삭제</button>
-            </div>
-            <p class="commentContent text1 pd-xs">내용</p>
-            <form class="commentForm flex flex-column gap-xs" name="recommentForm">
-                <p class="title3Text bold">대댓글 작성하기</p>
-                <textarea class="commentInput" name="recommentInput" placeholder="500자 이내, 등록 후 수정이 불가합니다."></textarea>
-                <button type="button" class="btn" onclick="subRecomment(this)">등록</button>
-            </form>
-        </div>
-        <div class="recomment flex gap-xs">
-            <div class="recommentLine"><div class="recommentRing"></div></div>
-            <div class="comment pd-sm flex flex-column gap-sm">
-                <p class="title3Text">
-                    <a class="bold">작성자</a> 
-                    <span class="black2">· YYYY.MM.DD. HH:MM</span>
-                </p>
-                <div class="manualBtns flex gap-sm">
-                    <button class="btn" onclick="toggleRecommentForm(this)">언급</button>
-                    <button class="btn" onclick="deleteComment()">삭제</button>
-                </div>
-                <p class="commentContent text1 pd-xs"><span class="navy1">@작성자</span> 내용</p>
-                <form class="commentForm flex flex-column gap-xs" name="recommentForm">
-                    <p class="title3Text bold">대댓글 작성하기</p>
-                    <textarea class="commentInput" name="recommentInput" placeholder="500자 이내, 등록 후 수정이 불가합니다."></textarea>
-                    <button type="button" class="btn" onclick="subRecomment(this)">등록</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <div class="commentList"></div>
     <div class="pages flex justify-center gap-sm" data-pagination></div>
 </div>
 </html>

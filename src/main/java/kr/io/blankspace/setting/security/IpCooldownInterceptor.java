@@ -3,6 +3,9 @@ package kr.io.blankspace.setting.security;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -16,9 +19,11 @@ public class IpCooldownInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-        String ip = extractClientIp(request);
-        String key = ip + "|" + request.getMethod() + "|" + request.getRequestURI();
+        if (!"POST".equalsIgnoreCase(request.getMethod())) return true;
+        String uri = request.getRequestURI();
+        if (!uri.matches("^/api/post/\\d+/comment$")) return true;
+        String subject = extractSubject(request);
+        String key = subject + "|POST|" + uri;
 
         long now = System.currentTimeMillis();
         Long prev = lastHit.putIfAbsent(key, now);
@@ -26,7 +31,10 @@ public class IpCooldownInterceptor implements HandlerInterceptor {
         if (prev != null) {
             long delta = now - prev;
             if (delta < WINDOW_MS) {
+                long retryAfterSec = (WINDOW_MS - delta + 999) / 1000;
+
                 response.setStatus(429);
+                response.setHeader("Retry-After", String.valueOf(retryAfterSec));
                 response.setCharacterEncoding(StandardCharsets.UTF_8.name());
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -35,14 +43,22 @@ public class IpCooldownInterceptor implements HandlerInterceptor {
             } else { lastHit.put(key, now); }
         }
 
-        if ((now & 0xFF) == 0) { cleanupOld(now); }
+        if ((now & 0xFF) == 0) cleanupOld(now);
 
         return true;
     }
 
     private void cleanupOld(long now) {
-        long threshold = now - (WINDOW_MS * 6); // 60초 이상 안 쓰인 키 제거
+        long threshold = now - (WINDOW_MS * 6);
         for (var e : lastHit.entrySet()) { if (e.getValue() < threshold) lastHit.remove(e.getKey(), e.getValue()); }
+    }
+
+    private String extractSubject(HttpServletRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+            return "user:" + auth.getName();
+        }
+        return "ip:" + extractClientIp(request);
     }
 
     private String extractClientIp(HttpServletRequest request) {

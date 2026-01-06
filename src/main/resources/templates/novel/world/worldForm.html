@@ -20,14 +20,14 @@
     <section class="flex justify-center align-center">
         <form id="postForm" class="pd-md flex flex-column gap-sm">
             <div class="inputs flex flex-column-mov gap-xs">
-                <select class="select">
+                <select class="select" name="worldCategory">
                     <option>세계관</option>
                     <option>캐릭터</option>
                     <option>기타</option>
                 </select>
-                <input type="text" id="titleInput" placeholder="제목">
+                <input type="text" name="titleInput" placeholder="제목">
             </div>
-            <textarea id="contentInput" placeholder="본문"></textarea>
+            <textarea name="contentInput" placeholder="본문"></textarea>
             <div class="subBtnWrap"> <button type="button" class="btn" onclick="subWorld()">등록</button> </div>
         </form>
     </section>

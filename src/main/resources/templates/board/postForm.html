@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLANKSPACE - 게시글 작성</title>
+    <title th:text="'BLANKSPACE - ' + (${editMode} ? '게시글 수정' : '게시글 작성')"></title>
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/vendor/tinymce/tinymce.min.js}"></script>
     <script th:src="@{/js/global/commons.js}"></script>
     <script th:src="@{/js/global/form.js}"></script>
-    <script th:src="@{/js/board/postForm.js}"></script>
+    <script th:src="@{/js/board/board.js}"></script>
 </head>
 <body class="flex flex-column">
     <nav th:replace="fragments/commons :: nav"></nav>
@@ -18,26 +19,31 @@
     <header th:replace="fragments/commons :: header"></header>
 
     <section class="flex flex-column justify-center align-center">
-        <form id="postForm" class="pd-md flex flex-column gap-sm">
+        <form id="postForm" class="pd-md flex flex-column gap-sm" th:action="${editMode}
+        ? @{/board/{boardName}/post/{postId}/edit(boardName=${boardName}, postId=${postId})}
+        : @{/board/{boardName}/write(boardName=${boardName})}" method="post">
             <div class="postInfo flex flex-column gap-xs">
                 <div class="inputs flex flex-column-mov gap-xs">
-                    <select class="select">
-                        <option>카테고리</option>
-                        <option>카테고리</option>
-                        <option>카테고리</option>
+                    <select class="select" name="categoryId">
+                        <option th:each="c : ${categories}" th:value="${c.categoryId}" th:text="${c.name}"
+                            th:selected="${editMode} ? (${post.category.id} == ${c.categoryId}) : false">
+                        </option>
                     </select>
-                    <input type="text" id="titleInput" placeholder="제목">
+                    <input type="text" name="title" placeholder="제목" th:value="${editMode} ? ${post.title} : ''">
                 </div>
-                <input type="text" id="subTitleInput" placeholder="부제목">
-                <input type="text" id="gitInput" placeholder="GIT 링크">
+                <input type="text" name="subTitle" placeholder="부제목" th:value="${editMode} ? ${post.subTitle} : ''">
+                <input type="text" name="detailLink" placeholder="GIT 링크" th:if="${boardName == 'PORTFOLIO'}" th:value="${editMode} ? ${post.detailLink} : ''">
                 <div class="inputs flex flex-column-mov gap-xs">
-                    <input type="text" id="imgNameInput" placeholder="썸네일" readonly>
+                    <input type="text" name="imgNameInput" placeholder="썸네일" readonly
+                    th:value="${(editMode == true) and (post != null) and (post.thumbnailUrl != null)} ? ${post.thumbnailUrl} : ''">
                     <button class="btn select" type="button" onclick="imgInputControll()">썸네일 업로드</button>
-                    <input type="file" id="imglInput" accept="image/*" hidden>
+                    <input type="hidden" name="thumbnailUrl" th:value="${editMode} ? ${post.thumbnailUrl} : ''">
+                    <input type="file" name="imglInput" accept="image/*" hidden>
                 </div>
             </div>
-            <textarea id="postContentInput" placeholder="내용"></textarea>
-            <div class="btnsWrap"> <button type="button" class="btn" onclick="subPost()">등록</button> </div>
+            <textarea name="content" data-tinymce th:utext="${editMode} ? ${post.content} : ''"></textarea>
+            <button type="button" class="btn" onclick="subPost()" th:text="${editMode} ? '수정' : '등록'"></button>
+            </div>
         </form>
     </section>
 

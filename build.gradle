@@ -45,6 +45,11 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+	implementation platform("software.amazon.awssdk:bom:2.25.62")
+	implementation "software.amazon.awssdk:s3"
+	implementation "software.amazon.awssdk:sts"
+	implementation "software.amazon.awssdk:auth"
+	implementation "software.amazon.awssdk:url-connection-client"
 }
 
 tasks.named('test') {

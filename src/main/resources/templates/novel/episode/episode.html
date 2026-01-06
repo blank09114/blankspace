@@ -9,7 +9,7 @@
     <script th:src="@{/js/global/commons.js}"></script>
     <script th:src="@{/js/global/form.js}"></script>
     <script th:src="@{/js/novel/novelForm.js}"></script>
-    <script th:src="@{/js/board/comment.js}"></script>
+    <script th:src="@{/js/global/comment.js}"></script>
 </head>
 <body class="flex flex-column">
     <nav th:replace="fragments/commons :: nav"></nav>
@@ -36,7 +36,7 @@
             <a class="btn">목록으로</a>
             <a class="btn">다음화</a>
         </div>
-        <div th:replace="fragments/comment :: commentMenu"></div>
+        <div th:replace="fragments/comment :: commentMenu('episode', ${episode.id})"></div>
     </section>
 
     <footer th:replace="fragments/commons :: footer"></footer>

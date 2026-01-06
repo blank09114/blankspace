@@ -33,10 +33,14 @@ form[name="categoryForm"] { width: 100%; }
 .postInfo { padding-bottom: 5px; border-bottom: 1px solid var(--gray-2); }
 .postConetent { min-height: 300px; margin-top: 10px; }
 .btnsWrap.post { justify-content: space-between; }
+.btnsWrap.post .btn { width: 100px !important; }
+.btn.disabled { pointer-events: none; opacity: 0.5; }
 
 /* 댓글 */
 .commentMenu, .commentForm { width: 100%; }
 .commentInput { height: 100px; }
+.postConetentWarp img { max-width: 90%; height: auto; }
+.postConetentWarp ul, .postConetentWarp ol { padding-left: 40px; }
 
 /* 댓글 */
 .comment
@@ -130,4 +134,7 @@ form[name="answerForm"] { display: none; }
 
     /* 게시글 작성 폼 */
     .select { width: 100%; }
+
+    /* 댓글 */
+    .recommentLine { width: 20px; }
 }

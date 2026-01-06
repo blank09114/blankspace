@@ -45,6 +45,24 @@ public class Post {
     @PrePersist
     void onCreate() { if (createdAt == null) createdAt = LocalDateTime.now(); }
 
+    public static Post create(
+        Category category,
+        String title,
+        String subTitle,
+        String thumbnailUrl,
+        String detailLink,
+        String content
+    ) {
+        Post p = new Post();
+        p.category = category;
+        p.title = title;
+        p.subTitle = subTitle;
+        p.thumbnailUrl = thumbnailUrl;
+        p.detailLink = detailLink;
+        p.content = content;
+        return p;
+    }
+
     public void update(String title, String subTitle, String thumbnailUrl, String detailLink, String content) {
         this.title = title;
         this.subTitle = subTitle;
@@ -52,4 +70,6 @@ public class Post {
         this.detailLink = detailLink;
         this.content = content;
     }
+
+    public void changeCategory(Category category) { this.category = category; }
 }
