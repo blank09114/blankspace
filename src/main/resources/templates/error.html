@@ -11,9 +11,9 @@
 <body class="flex align-center justify-center errorBody">
     <div class="errorBox pd-md">
         <p class="title1Text text-center bold">· ERROR ·</p>
-        <p class="code text-center bold">000</p>
-        <p class="title2Text text-center bold">응답 내용</p>
-        <button class="btn">이전 페이지로 가기</button>
+        <p class="code text-center bold" th:text="${code}"></p>
+        <p class="title2Text text-center bold" th:text="${message}"></p>
+        <a class="btn" th:href="@{/}">메인 페이지로 가기</a>
     </div>
 </body>
 </html>
