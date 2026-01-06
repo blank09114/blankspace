@@ -20,6 +20,8 @@ public class CommentDTO {
 
         private boolean isMine;
         private LocalDateTime createdAt;
+
+        boolean deleted;
     }
 
     // 대댓글 아이템
@@ -47,7 +49,6 @@ public class CommentDTO {
         private CommentItem comment;
         private List<RecommentItem> recomments;
     }
-
 
     // 작성
     @Getter

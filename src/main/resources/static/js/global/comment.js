@@ -114,12 +114,12 @@ function renderComment(c) {
             <span class="black2">· ${time}</span>
         </p>
         <div class="manualBtns flex gap-sm">
-            ${isAuthUser() ? `<button class="btn" onclick="toggleRecommentForm(this)">답글</button>` : ``}
+            ${isAuthUser() && !c.deleted? `<button class="btn" onclick="toggleRecommentForm(this)">답글</button>`: ``}
             ${deleteBtn}
         </div>
         <p class="commentContent text1 pd-xs">${content}</p>
 
-        ${isAuthUser() ? `
+        ${isAuthUser() && !c.deleted ? `
         <form class="commentForm flex flex-column gap-xs" name="recommentForm" data-mention-user-id="${escapeHtml(c.writerId)}">
             <p class="title3Text bold">대댓글 작성하기</p>
             <textarea class="commentInput" name="recommentInput"
@@ -144,7 +144,7 @@ function renderRecomment(r)
       ? `<button class="btn" onclick="deleteRecomment(${r.recommentId})">삭제</button>` : "";
 
     return `
-    <div class="recomment flex gap-xs" data-recomment-id="${r.recommentId}">
+    <div class="recomment flex gap-xs" data-recomment-id="${r.recommentId}" data-comment-id="${r.commentId}">
         <div class="recommentLine"><div class="recommentRing"></div></div>
         <div class="comment pd-sm flex flex-column gap-sm">
             <p class="title3Text">
@@ -201,10 +201,6 @@ function subComment()
     });
 }
 
-/* 댓글 삭제(추후 구현)
-function deleteComment() {  }
-*/
-
 // 대댓글 등록 폼 토글
 function toggleRecommentForm(btn)
 {
@@ -255,6 +251,50 @@ function subRecomment(btn, commentId)
         input.value = "";
         form.style.display = "none";
     });
+}
+
+// 댓글 삭제
+function deleteComment(commentId)
+{
+    if (!confirm("댓글을 삭제하시겠습니까?")) return;
+
+    const t = getCommentTarget();
+    if (!t) return;
+
+    const force = isAdminUser() ? "?force=true" : "";
+    const url =
+        t.type === "post"
+        ? `/api/post/${t.id}/comment/${commentId}${force}`
+        : `/api/episode/${t.id}/comment/${commentId}${force}`;
+
+    fetchJson(url, { method: "DELETE" },
+    {
+        defaultErrorMessage: "댓글 삭제 중 오류가 발생했습니다.",
+        toastOnSuccess: "댓글을 삭제했습니다."
+    }).then(() => { loadComments(-1); });
+}
+
+// 대댓글 삭제
+function deleteRecomment(recommentId)
+{
+    if (!confirm("대댓글을 삭제하시겠습니까?")) return;
+
+    const t = getCommentTarget();
+    if (!t) return;
+
+    const commentEl = document.querySelector(`[data-recomment-id="${recommentId}"]`);
+    const commentId = commentEl?.dataset.commentId;
+    if (!commentId) { showToast("댓글 정보를 찾을 수 없습니다."); return; }
+
+    const url = t.type === "post"
+        ? `/api/post/${t.id}/comment/${commentId}/recomment/${recommentId}`
+        : `/api/episode/${t.id}/comment/${commentId}/recomment/${recommentId}`;
+
+    fetchJson(url, { method: "DELETE" },
+    {
+        defaultErrorMessage: "대댓글 삭제 중 오류가 발생했습니다.",
+        toastOnSuccess: "대댓글을 삭제했습니다."
+    }).then(() => { loadComments(-1); });
 }
 
 // 이벤트 리스너

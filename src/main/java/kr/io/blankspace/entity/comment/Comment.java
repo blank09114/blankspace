@@ -35,8 +35,23 @@ public class Comment {
     @Column(name = "comment_content", nullable = false, length = 500)
     private String content;
 
+    @Column(name = "comment_deleted", nullable = false)
+    private boolean deleted;
+
+    @Column(name = "comment_deleted_at")
+    private LocalDateTime deletedAt;
+
     @PrePersist
     private void prePersist() { if (createdAt == null) createdAt = LocalDateTime.now(); }
+
+    public void softDelete() {
+        if (this.deleted) return;
+        this.deleted = true;
+        this.deletedAt = LocalDateTime.now();
+        this.content = "삭제된 댓글입니다";
+    }
+
+    public boolean isDeleted() { return deleted; }
 
     public static Comment forPost(Post post, User user, String content) {
         Comment c = new Comment();
