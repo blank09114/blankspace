@@ -18,6 +18,20 @@ public class WorlController {
 
     // 설정 목록
 
+    // 설정 상세
+    @GetMapping("/{novelId}/world/{worldId}")
+    public String worldDetail
+    (@PathVariable Integer novelId, @PathVariable Long worldId, Model model) {
+        model.addAttribute("novelId", novelId);
+        model.addAttribute("novelCard", novelService.getCard(novelId));
+        model.addAttribute("world", worldService.getDetail(novelId, worldId));
+
+        model.addAttribute("prevWorld", worldService.getPrevWorld(novelId, worldId));
+        model.addAttribute("nextWorld", worldService.getNextWorld(novelId, worldId));
+
+        return "novel/world/world";
+    }
+
     // 설정 등록 페이지
     @GetMapping("/{novelId}/world/form")
     public String worldForm(@PathVariable Integer novelId, Model model) {
@@ -42,8 +56,6 @@ public class WorlController {
         WorldDTO.Created created = worldService.create(novelId, form);
         return "redirect:/novel/" + novelId + "/world/" + created.getWorldId();
     }
-
-    // 설정 상세
 
     // 설정 수정 페이지
 

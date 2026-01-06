@@ -15,7 +15,38 @@ public class WorldService {
     private final WorldRepository worldRepository;
     private final NovelRepository novelRepository;
 
-    // 설정 등록
+    // 상세 조회
+    @Transactional(readOnly = true)
+    public WorldDTO.Detail getDetail(Integer novelId, Long worldId) {
+        World world = worldRepository.findByIdAndNovelId(worldId, novelId)
+        .orElseThrow(() -> new IllegalArgumentException("설정이 존재하지 않습니다."));
+
+        WorldDTO.Detail dto = new WorldDTO.Detail();
+        dto.setWorldId(world.getId());
+        dto.setNovelId(novelId);
+        dto.setCategory(world.getCategory());
+        dto.setName(world.getName());
+        dto.setContent(world.getContent());
+        dto.setCreatedAt(world.getCreatedAt());
+
+        return dto;
+    }
+
+    // 이전 설정
+    @Transactional(readOnly = true)
+    public World getPrevWorld(Integer novelId, Long worldId) {
+        return worldRepository
+        .findTopByNovelIdAndIdLessThanOrderByIdDesc(novelId, worldId).orElse(null);
+    }
+
+    // 다음 설정
+    @Transactional(readOnly = true)
+    public World getNextWorld(Integer novelId, Long worldId) {
+        return worldRepository
+        .findTopByNovelIdAndIdGreaterThanOrderByIdAsc(novelId, worldId).orElse(null);
+    }
+
+    // 등록
     @Transactional
     public WorldDTO.Created create(Integer novelId, WorldDTO.Form form) {
         Novel novel = novelRepository.findById(novelId)

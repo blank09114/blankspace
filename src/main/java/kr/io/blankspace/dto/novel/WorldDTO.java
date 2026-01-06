@@ -4,7 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 public class WorldDTO {
+    // 상세 조회
+    @Getter
+    @Setter
+    public static class Detail {
+        private Long worldId;
+        private Integer novelId;
+        private String category;
+        private String name;
+        private String content;
+        private LocalDateTime createdAt;
+    }
+
     // 등록/수정 공통 폼
     @Getter
     @Setter

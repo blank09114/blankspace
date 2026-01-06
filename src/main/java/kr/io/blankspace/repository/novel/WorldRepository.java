@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface WorldRepository extends JpaRepository<World, Long> {
     Optional<World> findByIdAndNovelId(Long worldId, Integer novelId);
+    Optional<World> findTopByNovelIdAndIdLessThanOrderByIdDesc(Integer novelId, Long worldId);
+    Optional<World> findTopByNovelIdAndIdGreaterThanOrderByIdAsc(Integer novelId, Long worldId);
 }
