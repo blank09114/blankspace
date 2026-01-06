@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -21,18 +20,22 @@ public class EpisodeService {
     // 회차 목록 조회
     @Transactional(readOnly = true)
     public List<EpisodeDTO.ChapterGroup> getGroupedEpisodeList(Integer novelId) {
-        List<Episode> episodes = episodeRepository.findByNovelIdOrderByIdDesc(novelId);
+        List<Episode> episodesAsc = episodeRepository.findByNovelIdOrderByIdAsc(novelId);
+        Map<Long, Integer> noMap = new HashMap<>();
+        for (int i = 0; i < episodesAsc.size(); i++)
+        { noMap.put(episodesAsc.get(i).getId(), i + 1); }
+
+        List<Episode> episodesDesc = new ArrayList<>(episodesAsc);
+        Collections.reverse(episodesDesc);
 
         List<EpisodeDTO.ChapterGroup> groups = new ArrayList<>();
         List<EpisodeDTO.ListItem> current = new ArrayList<>();
         String currentTitle = null;
 
-        for (int i = 0; i < episodes.size(); i++) {
-            Episode e = episodes.get(i);
-
-            int displayNo = i + 1;
-
-            String chapterTitle = normalizeTitle(e.getName());
+        for (Episode e : episodesDesc)
+        {
+            String chapterTitle = e.getName();
+            int displayNo = noMap.get(e.getId());
 
             EpisodeDTO.ListItem item = new EpisodeDTO.ListItem
             (e.getId(), displayNo, chapterTitle, e.getCreatedAt());
@@ -43,10 +46,8 @@ public class EpisodeService {
                 continue;
             }
 
-            // 그룹핑
             if (currentTitle.equals(chapterTitle))
-            { current.add(item); }
-            else {
+            { current.add(item); } else {
                 groups.add(new EpisodeDTO.ChapterGroup(currentTitle, current));
                 currentTitle = chapterTitle;
                 current = new ArrayList<>();
@@ -54,7 +55,8 @@ public class EpisodeService {
             }
         }
 
-        if (currentTitle != null) { groups.add(new EpisodeDTO.ChapterGroup(currentTitle, current)); }
+        if (currentTitle != null)
+        { groups.add(new EpisodeDTO.ChapterGroup(currentTitle, current)); }
 
         return groups;
     }
@@ -146,12 +148,6 @@ public class EpisodeService {
         .orElseThrow(() -> new IllegalArgumentException("회차를 찾을 수 없습니다. novelId=" + novelId + ", episodeId=" + episodeId));
 
         episodeRepository.delete(episode);
-    }
-
-    private String normalizeTitle(String s) {
-        if (s == null) return "무제";
-        String t = s.trim();
-        return t.isEmpty() ? "무제" : t;
     }
 
     private String normalize(String s) {

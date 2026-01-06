@@ -13,5 +13,5 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long> {
     Optional<Episode> findTopByNovelIdAndIdGreaterThanOrderByIdAsc(Integer novelId, Long episodeId);
     long countByNovelId(Integer novelId);
     Optional<Episode> findTopByNovelIdOrderByIdDesc(Integer novelId);
-    List<Episode> findByNovelIdOrderByIdDesc(Integer novelId);
+    List<Episode> findByNovelIdOrderByIdAsc(Integer novelId);
 }
