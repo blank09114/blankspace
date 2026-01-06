@@ -70,6 +70,41 @@ public class WorldService {
         return new WorldDTO.Created(saved.getId());
     }
 
+    // 수정 폼 불러오기
+    @Transactional(readOnly = true)
+    public WorldDTO.Form getFormForEdit(Integer novelId, Long worldId) {
+        World world = worldRepository.findByIdAndNovelId(worldId, novelId)
+        .orElseThrow(() -> new IllegalArgumentException("설정을 찾을 수 없습니다. novelId=" + novelId + ", worldId=" + worldId));
+
+        WorldDTO.Form form = new WorldDTO.Form();
+        form.setCategory(world.getCategory());
+        form.setName(world.getName());
+        form.setContent(world.getContent());
+        return form;
+    }
+
+    // 수정 처리
+    @Transactional
+    public void update(Integer novelId, Long worldId, WorldDTO.Form form) {
+        World world = worldRepository.findByIdAndNovelId(worldId, novelId)
+        .orElseThrow(() -> new IllegalArgumentException
+        ("설정을 찾을 수 없습니다. novelId=" + novelId + ", worldId=" + worldId));
+
+        String category = normalize(form.getCategory());
+        if (category == null) throw new IllegalArgumentException("카테고리는 필수입니다.");
+        if (!(category.equals("세계관") || category.equals("캐릭터") || category.equals("기타")))
+            throw new IllegalArgumentException("카테고리가 올바르지 않습니다.");
+
+        String name = normalize(form.getName());
+        if (name == null) throw new IllegalArgumentException("제목은 필수입니다.");
+        if (name.length() > 20) throw new IllegalArgumentException("제목은 20자 이하여야 합니다.");
+
+        String content = normalize(form.getContent());
+        if (content == null) throw new IllegalArgumentException("본문은 필수입니다.");
+
+        world.update(category, name, content);
+    }
+
     private String normalize(String s) {
         if (s == null) return null;
         String t = s.trim();

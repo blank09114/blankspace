@@ -71,7 +71,6 @@ public class EpisodeController {
     @PostMapping("/{novelId}/episode/submit")
     public String submitEpisode
     (@PathVariable Integer novelId, @ModelAttribute("form") EpisodeDTO.Form form) {
-        episodeService.create(novelId, form);
         EpisodeDTO.Created created = episodeService.create(novelId, form);
         return "redirect:/novel/" + novelId + "/episode/" + created.getEpisodeId();
     }

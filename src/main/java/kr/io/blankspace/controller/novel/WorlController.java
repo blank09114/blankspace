@@ -16,9 +16,9 @@ public class WorlController {
     private final NovelService novelService;
     private final WorldService worldService;
 
-    // 설정 목록
+    // 목록
 
-    // 설정 상세
+    // 상세
     @GetMapping("/{novelId}/world/{worldId}")
     public String worldDetail
     (@PathVariable Integer novelId, @PathVariable Long worldId, Model model) {
@@ -32,7 +32,7 @@ public class WorlController {
         return "novel/world/world";
     }
 
-    // 설정 등록 페이지
+    // 등록 페이지
     @GetMapping("/{novelId}/world/form")
     public String worldForm(@PathVariable Integer novelId, Model model) {
         NovelDTO.Card novelCard = novelService.getCard(novelId);
@@ -49,7 +49,7 @@ public class WorlController {
         return "novel/world/worldForm";
     }
 
-    // 설정 등록
+    // 등록
     @PostMapping("/{novelId}/world/submit")
     public String submitWorld
     (@PathVariable Integer novelId, @ModelAttribute("form") WorldDTO.Form form) {
@@ -57,9 +57,34 @@ public class WorlController {
         return "redirect:/novel/" + novelId + "/world/" + created.getWorldId();
     }
 
-    // 설정 수정 페이지
+    // 수정 페이지
+    @GetMapping("/{novelId}/world/{worldId}/edit")
+    public String worldEditForm
+    (@PathVariable Integer novelId, @PathVariable Long worldId, Model model) {
+        NovelDTO.Card novelCard = novelService.getCard(novelId);
+        WorldDTO.Form form = worldService.getFormForEdit(novelId, worldId);
 
-    // 설정 수정 요청
+        model.addAttribute("novelId", novelId);
+        model.addAttribute("novelCard", novelCard);
+        model.addAttribute("worldId", worldId);
 
-    // 설정 삭제
+        model.addAttribute("mode", "EDIT");
+        model.addAttribute("formAction", "/novel/" + novelId + "/world/" + worldId + "/edit");
+        model.addAttribute("submitText", "수정");
+        model.addAttribute("form", form);
+
+        return "novel/world/worldForm";
+    }
+
+    // 수정
+    @PostMapping("/{novelId}/world/{worldId}/edit")
+    public String submitWorldEdit(
+        @PathVariable Integer novelId, @PathVariable Long worldId,
+        @ModelAttribute("form") WorldDTO.Form form
+    ) {
+        worldService.update(novelId, worldId, form);
+        return "redirect:/novel/" + novelId + "/world/" + worldId;
+    }
+
+    // 삭제
 }
