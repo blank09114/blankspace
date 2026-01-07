@@ -97,7 +97,7 @@
                 class="text1 text-center" style="grid-column: 1 / -1;">
                     최근 1주일 내 블로그 글이 없습니다.
                 </div>
-                <a class="card pd-md rv t" th:each="post : ${recentBlogPosts}" th:href="${post.detailLink}">
+                <a class="card pd-md rv t" th:each="post : ${recentBlogPosts}" th:href="@{/board/blog/post/{postId}(postId=${post.postId})}">
                     <img class="thumbnail"
                     th:src="${post.thumbnailUrl != null ? post.thumbnailUrl : '/img/thumbnail_default.png'}"
                     th:alt="${post.title}"/>
