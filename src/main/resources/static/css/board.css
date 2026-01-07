@@ -109,13 +109,13 @@ form[name="recommentForm"] { display: none; }
 .guestbook
 {
     width: 90%;
-    white-space: pre-line;
 
     border: 1px solid var(--gray-2);
     background-color: var(--white-1);
 
     position: relative;
 }
+.guestbook .text1:last-child { white-space: pre-line; }
 .guestbook:last-child { border-radius: 8px 8px 0 8px; align-self: flex-end; }
 .guestbook:first-child { border-radius: 8px 8px 8px 0; align-self: flex-start; }
 
