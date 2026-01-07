@@ -10,7 +10,28 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 public class GuestbookDTO {
-    // 등록
+    @Getter
+    @AllArgsConstructor
+    public static class ListItem {
+        private Long guestbookId;
+
+        private String userId;
+        private String userName;
+
+        private boolean secret;
+        private String content;
+
+        private LocalDateTime createdAt;
+
+        private LocalDateTime answerAt;
+        private String answerContent;
+
+        private boolean mine;
+        private boolean canDeleteGuestbook;
+        private boolean canAnswer;
+        private boolean canDeleteAnswer;
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -22,7 +43,6 @@ public class GuestbookDTO {
         private String content;
     }
 
-    // 응답
     @Getter
     @AllArgsConstructor
     public static class CreateRes {

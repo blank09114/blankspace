@@ -34,36 +34,7 @@
         </div>
         <p class="title3Text text-center bold">◆　◆　◆</p>
         <div class="guestbookListWrap flex flex-column gap-lg">
-            <div class="guestbookList flex flex-column gap-lg">
-                <div class="guestbookItem flex flex-column gap-sm">
-                    <div class="guestbook flex flex-column gap-sm pd-md">
-                        <div class="guestbookInfo">
-                            <a class="title3Text bold">닉네임(ID)</a>
-                            <div class="manualBtns flex gap-sm justify-end">
-                                <button class="btn" onclick="toggleForm(this)">답변</button>
-                                <button class="btn" onclick="deleteGuestbook()">삭제</button>
-                            </div>
-                            <p class="text1 black2">YYYY.MM.DD. HH:MM</p>
-                        </div>
-                        <p class="text1">내용</p>
-                    </div>
-                    <form class="guestbookForm" name="answerForm">
-                        <div class="guestFormHeader flex justify-between">
-                            <p class="title3Text bold">방명록 답변하기</p>
-                            <button type="button" class="btn" onclick="subAnswer(this)">등록</button>
-                        </div>
-                        <textarea class="guestbookContent" name="answerForm"></textarea>
-                    </form>
-                    <div class="guestbook flex flex-column gap-sm pd-md">
-                        <div class="guestbookInfo">
-                            <a class="title3Text bold">공백</a>
-                            <div class="manualBtns flex gap-sm justify-end"> <button class="btn">삭제</button> </div>
-                            <p class="text1 black2">YYYY.MM.DD. HH:MM</p>
-                        </div>
-                        <p class="text1">내용</p>
-                    </div>
-                </div>
-            </div>
+            <div class="guestbookList flex flex-column gap-lg"></div>
             <div class="pages flex justify-center gap-sm" data-pagination></div>
         </div>
     </section>
