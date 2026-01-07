@@ -20,8 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/upload")
-public class UploadAPI
-{
+public class UploadAPI  {
     private final S3Client s3;
 
     @Value("${app.aws.s3.bucket}")
