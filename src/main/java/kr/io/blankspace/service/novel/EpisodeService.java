@@ -97,7 +97,7 @@ public class EpisodeService {
 
         String name = normalize(form.getName());
         if (name == null) throw new IllegalArgumentException("회차 제목은 필수입니다.");
-        if (name.length() > 20) throw new IllegalArgumentException("회차 제목은 20자 이하여야 합니다.");
+        if (name.length() > 100) throw new IllegalArgumentException("회차 제목은 100자 이하여야 합니다.");
 
         String content = normalize(form.getContent());
         if (content == null) throw new IllegalArgumentException("본문은 필수입니다.");
@@ -131,7 +131,7 @@ public class EpisodeService {
 
         String name = normalize(form.getName());
         if (name == null) throw new IllegalArgumentException("회차 제목은 필수입니다.");
-        if (name.length() > 20) throw new IllegalArgumentException("회차 제목은 20자 이하여야 합니다.");
+        if (name.length() > 100) throw new IllegalArgumentException("회차 제목은 100자 이하여야 합니다.");
 
         String content = normalize(form.getContent());
         if (content == null) throw new IllegalArgumentException("본문은 필수입니다.");

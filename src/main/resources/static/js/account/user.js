@@ -189,7 +189,7 @@ async function toggleBlock(btn)
 
     if (!isUnblock)
     {
-        const reason = prompt("차단 사유를 입력해주세요. (20자 이내)");
+        const reason = prompt("차단 사유를 입력해주세요. (100자 이내)");
         if (reason === null) return;
         body = { reason: reason.trim() };
     }

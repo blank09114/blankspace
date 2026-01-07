@@ -26,8 +26,8 @@ function subNovel()
     if (!checkEl(nameEl, "제목")) return;
     if (!checkEl(introEl, "소개글")) return;
 
-    if (getValueEl(nameEl).length > 20) { showToast("제목은 20자 이내로 작성하세요."); nameEl.focus(); return; }
-    if (type === "2차" && getValueEl(originEl).length > 20) { showToast("원작은 20자 이내로 작성하세요."); originEl.focus(); return; }
+    if (getValueEl(nameEl).length > 100) { showToast("제목은 100자 이내로 작성하세요."); nameEl.focus(); return; }
+    if (type === "2차" && getValueEl(originEl).length > 100) { showToast("원작은 100자 이내로 작성하세요."); originEl.focus(); return; }
 
     HTMLFormElement.prototype.submit.call(formEl);
 }
@@ -46,7 +46,7 @@ function subEpisode()
     if (!checkEl(contentEl, "회차 내용")) return;
 
     if (getValueEl(nameEl).length > 20) {
-        showToast("소제목은 20자 이내로 작성하세요.");
+        showToast("소제목은 100자 이내로 작성하세요.");
         nameEl.focus();
         return;
     }
@@ -69,8 +69,8 @@ function subWorld()
     if (!checkEl(nameEl, "제목")) return;
     if (!checkEl(contentEl, "본문")) return;
 
-    if (getValueEl(nameEl).length > 20) {
-        showToast("제목은 20자 이내로 작성하세요.");
+    if (getValueEl(nameEl).length > 100) {
+        showToast("제목은 100자 이내로 작성하세요.");
         nameEl.focus();
         return;
     }

@@ -64,7 +64,7 @@ public class UserService {
         if (user.isBlocked()) { user.unblock(); return UserInfoDTO.from(user); }
         String reason = (reasonOrNull == null) ? "" : reasonOrNull.trim();
         if (reason.isBlank()) throw new IllegalArgumentException("차단 사유를 입력해주세요.");
-        if (reason.length() > 20) throw new IllegalArgumentException("차단 사유는 20자 이하여야 합니다.");
+        if (reason.length() > 100) throw new IllegalArgumentException("차단 사유는 100자 이하여야 합니다.");
 
         user.block(reason);
         return UserInfoDTO.from(user);
