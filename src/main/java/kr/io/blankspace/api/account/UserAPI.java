@@ -2,6 +2,7 @@ package kr.io.blankspace.api.account;
 
 import jakarta.validation.Valid;
 import kr.io.blankspace.dto.account.user.LoginLogDTO;
+import kr.io.blankspace.dto.account.user.UserActivityDTO;
 import kr.io.blankspace.dto.account.user.UserInfoDTO;
 import kr.io.blankspace.dto.account.user.UserReqs;
 import kr.io.blankspace.service.account.UserService;
@@ -41,6 +42,14 @@ public class UserAPI {
         @PathVariable String userId, @RequestParam(defaultValue = "0") int page,
         @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal
     ) { return userService.getLoginLogs(principal, userId, page); }
+
+    // 활동 기록 조회
+    @GetMapping("/{userId}/activities")
+    public org.springframework.data.domain.Page<UserActivityDTO.Item> getActivities(
+        @PathVariable String userId, @RequestParam(defaultValue = "ALL") String type,
+        @RequestParam(defaultValue = "0") int page,
+        @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails principal
+    ) { return userService.getActivities(principal, userId, type, page); }
 
     // 회원 목록 조회
     @GetMapping("/list")

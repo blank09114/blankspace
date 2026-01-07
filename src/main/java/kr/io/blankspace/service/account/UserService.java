@@ -1,7 +1,9 @@
 package kr.io.blankspace.service.account;
 
+import kr.io.blankspace.dto.account.user.UserActivityDTO;
 import kr.io.blankspace.repository.account.LoginLogRepository;
 import kr.io.blankspace.entity.account.User;
+import kr.io.blankspace.repository.account.UserActivityRepository;
 import kr.io.blankspace.repository.account.UserRepository;
 import kr.io.blankspace.dto.account.user.LoginLogDTO;
 import kr.io.blankspace.dto.account.user.UserInfoDTO;
@@ -10,15 +12,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final LoginLogRepository loginLogRepository;
+    private final UserActivityRepository userActivityRepository;
 
     // 회원 정보 조회
     @Transactional(readOnly = true)
@@ -80,6 +87,48 @@ public class UserService {
 
         return loginLogRepository
         .findByUser_UserIdOrderByLoginDateDesc(targetUserId, pageable).map(LoginLogDTO::from);
+    }
+
+    // 활동 기록 조회
+    @Transactional(readOnly = true)
+    public Page<UserActivityDTO.Item> getActivities(UserDetails principal, String targetUserId, String type, int page) {
+        userRepository.findById(targetUserId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."));
+
+        String viewerId = (principal == null) ? null : principal.getUsername();
+        boolean isAdmin = principal != null && principal.getAuthorities().stream()
+        .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+
+        boolean isSelf = viewerId != null && viewerId.equals(targetUserId);
+
+        String t = (type == null || type.isBlank()) ? "ALL" : type.trim().toUpperCase();
+        if (!t.equals("ALL") && !t.equals("GUESTBOOK") && !t.equals("EPISODE_COMMENT") && !t.equals("POST_COMMENT"))
+        { throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "type 값이 올바르지 않습니다."); }
+
+        Pageable pageable = PageRequest.of(Math.max(0, page), 10);
+        Page<UserActivityRepository.Row> rows = userActivityRepository.findActivities(targetUserId, t, pageable);
+
+        return rows.map(r -> {
+            String activityType = r.getActivityType();
+            Long id = r.getActivityId();
+
+            LocalDateTime createdAt = r.getActivityAt();
+
+            String content = r.getContent() == null ? "" : r.getContent();
+
+            boolean isSecret = r.getIsSecret() != null && r.getIsSecret() == 1;
+            if ("GUESTBOOK".equals(activityType) && isSecret && !(isSelf || isAdmin))
+            { content = "비밀글입니다."; }
+
+            String targetUrl = r.getTargetUrl();
+            Long postId = r.getPostId();
+            Long episodeId = r.getEpisodeId();
+            Integer novelId = r.getNovelId();
+
+            return new UserActivityDTO.Item(
+                activityType, id, content, createdAt, targetUrl, postId, episodeId, novelId
+            );
+        });
     }
 
     // 회원 목록 조회

@@ -268,11 +268,141 @@ function renderLoginLogs(logs)
     });
 }
 
+// 활동 기록
+let currentActivityType = "ALL";
+let currentActivityPage = 0;
+
+function getActivityMenuRoot()
+{
+    const categories = document.querySelector(".activityMenu .categories");
+    return categories ? categories.closest(".activityMenu") : null;
+}
+
+function getActivityTypeByIndex(idx)
+{
+    if (idx === 0) return "ALL";
+    if (idx === 1) return "GUESTBOOK";
+    if (idx === 2) return "EPISODE_COMMENT";
+    if (idx === 3) return "POST_COMMENT";
+    return "ALL";
+}
+
+function getActivityLabel(type)
+{
+    if (type === "GUESTBOOK") return "방명록";
+    if (type === "EPISODE_COMMENT") return "소설 댓글";
+    if (type === "POST_COMMENT") return "블로그 댓글";
+    return "활동";
+}
+
+async function loadActivities(page = 0)
+{
+    const root = getActivityMenuRoot();
+    if (!root) return;
+
+    const list = root.querySelector(".activities");
+    if (!list) return;
+
+    const userId = document.body.dataset.userId;
+    if (!userId) return;
+
+    currentActivityPage = page;
+
+    const url = `/api/user/${encodeURIComponent(userId)}/activities?type=${encodeURIComponent(currentActivityType)}&page=${page}`;
+
+    const data = await fetchJson(
+        url,
+        { method: "GET" },
+        { defaultErrorMessage: "활동 기록을 불러오지 못했습니다." }
+    );
+
+    if (!data) return;
+
+    renderActivities(data.content || []);
+
+    const pagination = root.querySelector("[data-pagination]");
+    if (pagination) renderPagination(pagination, data.number, data.totalPages, loadActivities);
+}
+
+// 렌더링
+function renderActivities(items)
+{
+    const root = getActivityMenuRoot();
+    if (!root) return;
+
+    const list = root.querySelector(".activities");
+    if (!list) return;
+
+    list.querySelectorAll(".activity:not(.head)").forEach(e => e.remove());
+
+    if (!items || items.length === 0)
+    {
+        const empty = document.createElement("div");
+        empty.className = "activity flex flex-column align-center";
+        empty.innerHTML = `<span class="text3 black2">활동 기록이 없습니다.</span>`;
+        list.appendChild(empty);
+        return;
+    }
+
+    items.forEach(a =>
+    {
+        const type = a.type ?? a.activityType;
+        const label = getActivityLabel(type);
+
+        const content = escapeHtml(a.content ?? "");
+        const dateText = a.createdAt ? formatDate(a.createdAt) : "-";
+
+        let href = a.targetUrl ?? "javascript:void(0)";
+        const id = a.id ?? a.activityId;
+
+        if ((type === "POST_COMMENT" || type === "EPISODE_COMMENT") && href && id != null)
+        { href = `${href}#comment-${encodeURIComponent(id)}`; }
+
+        const el = document.createElement("a");
+        el.className = "activity flex flex-column align-center";
+        el.href = href;
+
+        el.innerHTML =
+        `
+            <span class="text3 black2">${label}</span>
+            <div class="activityBottom flex align-center">
+                <span class="text1">${content || "-"}</span>
+                <span class="text2 date">${dateText}</span>
+            </div>
+        `;
+
+        list.appendChild(el);
+    });
+}
+
+function initActivityCategories()
+{
+    const root = getActivityMenuRoot();
+    if (!root) return;
+
+    const buttons = Array.from(root.querySelectorAll(".categories .category"));
+    if (buttons.length === 0) return;
+
+    buttons.forEach((btn, idx) =>
+    {
+        btn.addEventListener("click", () =>
+        {
+            buttons.forEach(b => b.classList.remove("now"));
+            btn.classList.add("now");
+
+            currentActivityType = getActivityTypeByIndex(idx);
+            loadActivities(0);
+        });
+    });
+}
+
 // 이벤트 리스너
 window.addEventListener("load", () =>
 {
     // 로그인 기록 불러오기
     if (document.getElementById("loginLogList")) { loadLoginLogs(0); }
+
+    if (getActivityMenuRoot()) { initActivityCategories(); loadActivities(0); }
 
     // 회원 목록 불러오기
     if (document.querySelector(".userList")) { loadUserList(0); }
