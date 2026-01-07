@@ -56,4 +56,21 @@ public class GuestbookDTO {
 
         private LocalDateTime createdAt;
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class AnswerReq {
+        @NotBlank
+        @Size(max = 500)
+        private String content;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class AnswerRes {
+        private Long guestbookId;
+        private LocalDateTime answerAt;
+        private String answerContent;
+    }
 }

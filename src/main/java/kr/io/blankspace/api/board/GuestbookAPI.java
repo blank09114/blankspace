@@ -24,10 +24,26 @@ public class GuestbookAPI {
 
     // 등록
     @PostMapping
-    public GuestbookDTO.CreateRes createGuestbook(
-        Principal principal, @Valid @RequestBody GuestbookDTO.CreateReq req
-    ) {
+    public GuestbookDTO.CreateRes createGuestbook
+    (Principal principal, @Valid @RequestBody GuestbookDTO.CreateReq req) {
         String userId = principal.getName();
         return guestbookService.create(userId, req);
     }
+
+    // 삭제
+    @DeleteMapping("/{guestbookId}")
+    public void deleteGuestbook
+    (@PathVariable Long guestbookId, Authentication authentication)
+    { guestbookService.deleteGuestbook(guestbookId, authentication); }
+
+    // 답변 등록
+    @PostMapping("/{guestbookId}/answer")
+    public GuestbookDTO.AnswerRes upsertAnswer
+    (@PathVariable Long guestbookId, @Valid @RequestBody GuestbookDTO.AnswerReq req)
+    { return guestbookService.upsertAnswer(guestbookId, req); }
+
+    // 답변 삭제
+    @DeleteMapping("/{guestbookId}/answer")
+    public void deleteAnswer(@PathVariable Long guestbookId)
+    { guestbookService.deleteAnswer(guestbookId); }
 }

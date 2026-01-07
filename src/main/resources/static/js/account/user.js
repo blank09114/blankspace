@@ -162,7 +162,7 @@ async function editName(btn)
     },
     {
         defaultErrorMessage: "닉네임 변경에 실패했습니다.",
-        toastOnSuccess: "닉네임이 변경되었습니다."
+        toastOnSuccess: "닉네임이 변경됐습니다."
     });
 
     if (!data) return;
@@ -200,7 +200,7 @@ async function toggleBlock(btn)
         { method: "PATCH", body: body ? JSON.stringify(body) : null },
         {
             defaultErrorMessage: "처리에 실패했습니다.",
-            toastOnSuccess: isUnblock ? "차단이 해제되었습니다." : "사용자를 차단했습니다."
+            toastOnSuccess: isUnblock ? "차단이 해제됐습니다." : "사용자를 차단했습니다."
         }
     );
 

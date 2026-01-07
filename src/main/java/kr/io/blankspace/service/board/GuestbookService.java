@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class GuestbookService {
@@ -22,7 +24,6 @@ public class GuestbookService {
     private final UserRepository userRepository;
 
     // 페이징 처리
-    @Transactional(readOnly = true)
     public Page<GuestbookDTO.ListItem> getGuestbookPage(int page, Authentication auth) {
         PageRequest pageable = PageRequest.of(Math.max(page, 0), 5);
 
@@ -30,25 +31,7 @@ public class GuestbookService {
         boolean isAdmin = hasAdminRole(auth);
 
         return guestbookRepository.findAllByOrderByCreatedAtDesc(pageable)
-        .map(g -> {
-            String authorId = g.getUser() != null ? g.getUser().getUserId() : null;
-            String authorName = g.getUser() != null ? g.getUser().getUserName() : null;
-
-            boolean mine = requesterId != null && requesterId.equals(authorId);
-
-            boolean canViewSecret = !g.isSecret() || isAdmin || mine;
-            String content = canViewSecret ? g.getContent() : "비밀글입니다.";
-
-            boolean canDeleteGuestbook = isAdmin || mine;
-            boolean canAnswer = isAdmin;
-            boolean canDeleteAnswer = isAdmin;
-
-            return new GuestbookDTO.ListItem(
-                g.getId(), authorId, authorName, g.isSecret(), content,
-                g.getCreatedAt(), g.getAnswerAt(), g.getAnswerContent(), mine,
-                canDeleteGuestbook, canAnswer, canDeleteAnswer
-            );
-        });
+        .map(g -> toListItem(g, requesterId, isAdmin));
     }
 
     // 조회
@@ -59,17 +42,19 @@ public class GuestbookService {
         boolean mine = (requesterId != null && requesterId.equals(authorId));
 
         boolean canViewSecret = !g.isSecret() || isAdmin || mine;
+
         String content = canViewSecret ? g.getContent() : "비밀글입니다.";
+        String answerContent = g.getAnswerContent();
+        if (!canViewSecret && answerContent != null && !answerContent.isBlank())
+        { answerContent = "비밀글입니다."; }
 
         boolean canDeleteGuestbook = isAdmin || mine;
-
         boolean canAnswer = isAdmin;
         boolean canDeleteAnswer = isAdmin;
 
         return new GuestbookDTO.ListItem(
-            g.getId(), authorId, authorName, g.isSecret(), content,
-            g.getCreatedAt(), g.getAnswerAt(), g.getAnswerContent(), mine,
-            canDeleteGuestbook, canAnswer, canDeleteAnswer
+            g.getId(), authorId, authorName, g.isSecret(), content, g.getCreatedAt(),
+            g.getAnswerAt(), answerContent, mine, canDeleteGuestbook, canAnswer, canDeleteAnswer
         );
     }
 
@@ -90,6 +75,43 @@ public class GuestbookService {
         );
     }
 
+    // 삭제
+    @Transactional
+    public void deleteGuestbook(Long guestbookId, Authentication auth) {
+        Guestbook guestbook = guestbookRepository.findById(guestbookId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "방명록을 찾을 수 없습니다."));
+
+        String requesterId = getRequesterId(auth);
+        boolean isAdmin = hasAdminRole(auth);
+
+        String authorId = guestbook.getUser().getUserId();
+        boolean mine = requesterId != null && requesterId.equals(authorId);
+
+        if (!isAdmin && !mine)
+        { throw new ResponseStatusException(HttpStatus.FORBIDDEN, "삭제 권한이 없습니다."); }
+
+        guestbookRepository.delete(guestbook);
+    }
+
+    // 답변 등록
+    @Transactional
+    public GuestbookDTO.AnswerRes upsertAnswer(Long guestbookId, GuestbookDTO.AnswerReq req) {
+        LocalDateTime now = LocalDateTime.now();
+
+        int updated = guestbookRepository.updateAnswer(guestbookId, now, req.getContent().trim());
+        if (updated == 0)
+        { throw new ResponseStatusException(HttpStatus.NOT_FOUND, "방명록을 찾을 수 없습니다."); }
+
+        return new GuestbookDTO.AnswerRes(guestbookId, now, req.getContent().trim());
+    }
+
+    // 답변 삭제
+    @Transactional
+    public void deleteAnswer(Long guestbookId) {
+        int updated = guestbookRepository.clearAnswer(guestbookId);
+        if (updated == 0)
+        { throw new ResponseStatusException(HttpStatus.NOT_FOUND, "방명록을 찾을 수 없습니다."); }
+    }
 
     private String getRequesterId(Authentication auth) {
         if (auth == null || !auth.isAuthenticated()) return null;

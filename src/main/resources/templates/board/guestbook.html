@@ -21,7 +21,7 @@
     <section class="flex flex-column align-center gap-xl">
         <div class="guestbookHeader flex flex-column gap-lg">
             <p class="title1Text text-center bold">GUESTBOOK</p>
-            <form class="guestbookForm" id="guestbookForm">
+            <form class="guestbookForm" id="guestbookForm" sec:authorize="isAuthenticated()">
                 <div class="guestFormHeader flex justify-between">
                     <p class="title3Text bold">방명록 작성하기</p>
                     <div class="flex align-center gap-sm">    
