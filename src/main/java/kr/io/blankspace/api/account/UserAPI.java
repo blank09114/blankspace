@@ -29,9 +29,8 @@ public class UserAPI {
 
     // 차단/차단 해제
     @PatchMapping("/{userId}/block")
-    public UserInfoDTO toggleBlock(
-        @PathVariable String userId, @RequestBody(required = false) @Valid UserReqs.BlockToggle req
-    ) {
+    public UserInfoDTO toggleBlock
+    (@PathVariable String userId, @RequestBody(required = false) @Valid UserReqs.BlockToggle req) {
         String reason = (req == null) ? null : req.getReason();
         return userService.toggleBlock(userId, reason);
     }

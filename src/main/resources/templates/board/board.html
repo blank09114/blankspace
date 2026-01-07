@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLANKSPACE - 게시판</title>
+    <th:block th:with="suffix=${boardName == 'BLOG' ? '블로그' : boardName == 'PORTFOLIO' ? '포트폴리오' : '게시판'}">
+        <title th:text="|BLANKSPACE - ${suffix}|">BLANKSPACE</title>
+    </th:block>
     <link rel="icon" th:href="@{/img/logo/icon.png}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/global/commons.js}"></script>

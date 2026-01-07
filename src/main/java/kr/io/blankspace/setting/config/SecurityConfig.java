@@ -94,6 +94,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.PATCH, "/api/user/*/name").authenticated()
             .requestMatchers(HttpMethod.POST,"/api/*/*/comment/**").authenticated()
             .requestMatchers(HttpMethod.DELETE, "/api/*/*/comment/**").authenticated()
+            .requestMatchers(HttpMethod.POST, "/api/guestbook").authenticated()
+            .requestMatchers(HttpMethod.DELETE, "/api/guestbook/*").authenticated()
 
             // 관리자만 허용
             .requestMatchers(HttpMethod.GET, "/user/list").hasRole("ADMIN")
@@ -124,6 +126,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/novel/*/world/submit").hasRole("ADMIN")
             .requestMatchers(HttpMethod.POST, "/novel/*/world/*/edit").hasRole("ADMIN")
             .requestMatchers(HttpMethod.POST, "/novel/*/world/*/delete").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/api/guestbook/*/answer").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/guestbook/*/answer").hasRole("ADMIN")
 
             // 나머지는 전부 허용
             .anyRequest().permitAll()

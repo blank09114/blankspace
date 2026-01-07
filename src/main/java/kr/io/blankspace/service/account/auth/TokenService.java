@@ -32,7 +32,7 @@ public class TokenService {
     public Token getValidTokenWithUser(String rawToken, Token.TokenType type) {
         String hash = TokenUtil.sha256Hex(rawToken);
         return tokenRepository.findValidWithUser(hash, type, LocalDateTime.now())
-        .orElseThrow(() -> new IllegalArgumentException("토큰이 유효하지 않거나 만료되었습니다."));
+        .orElseThrow(() -> new IllegalArgumentException("토큰이 유효하지 않거나 만료됐습니다."));
     }
 
     // 사용 처리
