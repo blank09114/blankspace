@@ -9,10 +9,25 @@ function subGuestbook()
 
     const content = getValueEl(textarea);
 
-    // 실제 등록 로직은 추후 구현
+    const secretCheckbox = document.getElementById("guestbookSecret");
+    const secret = secretCheckbox ? secretCheckbox.checked : false;
 
-    showToast("방명록이 등록됐습니다.");
-    textarea.value = "";
+    const payload = { content, secret };
+
+    postJson("/api/guestbook", payload,
+    {
+        defaultErrorMessage: "방명록 등록 중 오류가 발생했습니다.",
+        toastOnSuccess: "방명록이 등록됐습니다.",
+        parseJson: true
+    })
+    .then((data) =>
+    {
+        if (!data) return;
+
+        textarea.value = "";
+
+        if (typeof loadGuestbooks === "function") { loadGuestbooks(-1); }
+    });
 }
 
 // 답변 폼 토글
