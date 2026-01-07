@@ -12,8 +12,8 @@
             <span> · </span>
             <span th:text="${novelCard.end ? '완결' : '연재 중'}"></span>
         </p>
-        <p class="title3Text bold" th:text="${novelCard.name}">제목</p>
-        <p class="text1 intro" th:text="${novelCard.intro}">소개글</p>
+        <p class="title3Text bold" th:text="${novelCard.name}"></p>
+        <p class="text1 intro" th:text="${novelCard.intro}"></p>
     </div>
     <div class="btnsWrap" sec:authorize="hasRole('ADMIN')">
         <form th:action="@{/novel/{novelId}/end/toggle(novelId=${novelCard.novelId})}"

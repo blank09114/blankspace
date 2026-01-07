@@ -109,6 +109,7 @@ form[name="recommentForm"] { display: none; }
 .guestbook
 {
     width: 90%;
+    white-space: pre-line;
 
     border: 1px solid var(--gray-2);
     background-color: var(--white-1);

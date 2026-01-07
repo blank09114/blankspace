@@ -21,6 +21,7 @@
     <section class="flex justify-center align-center">
         <form id="postForm" class="pd-md flex flex-column gap-sm" th:object="${form}" th:action="${editMode}
         ? @{/novel/{novelId}/edit/submit(novelId=${novelId})} : @{/novel/submit}" method="post">
+            <input type="hidden" name="id" th:value="${novelId}">
             <div class="postInfo flex flex-column gap-xs">
                 <div class="inputs flex flex-column-mov gap-xs">
                     <select class="select" name="type" th:field="*{type}" onchange="onTypeChange(this)">

@@ -12,6 +12,7 @@
     .cover { width: 84px; height: 120px; }
 }
 .intro { max-height: 150px; overflow-y: auto; }
+.novelIntro .intro { white-space: pre-line; }
 .novelIntro .btnsWrap { justify-content: center; }
 
 /* 설정/회차 리스트 */

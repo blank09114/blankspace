@@ -12,6 +12,7 @@ public class NovelDTO {
     @Getter
     @Setter
     public static class Form {
+        private Long id;
         private String type;
         private String origin;
         private String name;
