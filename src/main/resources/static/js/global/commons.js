@@ -179,9 +179,9 @@ async function fetchJson(url, options = {}, {
         if (!parseJson) return { ok: true };
 
         const ct = (res.headers.get("content-type") || "").toLowerCase();
-        if (!ct.includes("application/json")) return null;
+        if (!ct.includes("application/json")) return { ok: true };
 
-        return await res.json();
+        try { return await res.json(); } catch (_) { return { ok: true }; }
     }
     catch (_) { showToast("네트워크 오류가 발생했습니다."); return null; }
 }
