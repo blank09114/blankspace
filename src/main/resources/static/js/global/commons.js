@@ -275,4 +275,20 @@ function renderPagination(container, currentPage, totalPages, onPageClick)
     container.appendChild(createBtn(">", Math.min(totalPages - 1, currentPage + 1), { disabled: nextDisabled }));
 }
 
-addEventListener("DOMContentLoaded", () => { applyAuthGreeting(); });
+// 콘솔 이스터에그
+function consoleEasterEgg()
+{
+    console.group("%c🐛 Debugging Log", "color: #34495E;");
+    console.log("이 글을 발견한 개발자는 오늘도 알 수 없는 빌드 에러를 만나고,");
+    console.log("개발한 기능은 예상치 못한 방향으로 동작할 것이며,");
+    console.log("디버깅을 하고 나면 잘 작동하던 다른 기능이 오작동하게 되고,");
+    console.log("해당 기능을 디버깅하면 최초 수정한 기능이 다시 오작동할 것입니다.");
+    console.log("%c(제가 자주 그럽니다.)", "color: #C2C8D0; font-style: italic;");
+    console.groupEnd();
+}
+
+addEventListener("DOMContentLoaded", () =>
+{
+    applyAuthGreeting();
+    consoleEasterEgg();
+});
