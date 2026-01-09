@@ -38,4 +38,4 @@
     padding: 5px 10px;
     border-bottom: 1px solid #8A93A0;
 }
-.worldList .install:last-child { border: none; }
+#worldList .episode:last-child { border: none; }
