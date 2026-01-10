@@ -56,6 +56,7 @@ form[name="categoryForm"] { width: 100%; }
     position: relative;
 }
 .comment:first-child { margin-top: 0; }
+.comment .manualBtns { top: 10px; bottom: 10px; }
 
 /* 대댓글 */
 .recomment
