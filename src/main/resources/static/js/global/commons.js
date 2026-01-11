@@ -263,8 +263,18 @@ function renderPagination(container, currentPage, totalPages, onPageClick)
     { container.appendChild(createBtn("1", 0, { isNow: true, disabled: true })); }
     else
     {
-        const start = Math.max(0, currentPage - 2);
-        const end = Math.min(totalPages - 1, currentPage + 2);
+        const maxVisible = 5;
+
+        let start = currentPage - 2;
+        let end   = currentPage + 2;
+
+        // 1차 보정
+        if (start < 0) { end += -start; start = 0; }
+
+        if (end > totalPages - 1) { start -= (end - (totalPages - 1)); end = totalPages - 1; }
+
+        // 2차 보정 (음수 방지)
+        start = Math.max(0, start);
 
         for (let i = start; i <= end; i++)
         { container.appendChild(createBtn(String(i + 1), i, { isNow: i === currentPage })); }
