@@ -86,7 +86,7 @@ infected-requiem/
 │   │   ├── entity/ # JPA Entity
 │   │   ├── dto/ # 계층 간 데이터 전달용 DTO
 │   │   ├── setting/ # JPA, Security, S3, Web, GeoIP, 로그인 기록 관련 설정
-│   │   └── RequiemApplication.java # 실행 파일 
+│   │   └── BlankspaceAppApplication.java # 실행 파일 
 │   └── resources/
 │       ├── templates/ # Thymeleaf 템플릿
 │       └── static/ # 정적 리소스
