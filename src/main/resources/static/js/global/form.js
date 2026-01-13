@@ -216,6 +216,10 @@ window.RichEditor = (() =>
                 formData.append("file", blobInfo.blob(), blobInfo.filename());
                 xhr.send(formData);
             }),
+            
+            convert_urls: false,
+            relative_urls: false,
+            remove_script_host: false,
         });
 
         textarea.dataset.editorInited = "1";
