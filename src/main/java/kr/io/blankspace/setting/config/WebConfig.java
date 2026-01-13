@@ -24,6 +24,9 @@ public class WebConfig implements WebMvcConfigurer {
             "/api/auth/withdraw/request",
             "/api/user/*/name",
             "/api/post/*/comment",
+            "/api/post/*/comment/*/recomment",
+            "/api/episode/*/comment",
+            "/api/episode/*/comment/*/recomment",
             "/api/post/*/guestbook"
         );
     }

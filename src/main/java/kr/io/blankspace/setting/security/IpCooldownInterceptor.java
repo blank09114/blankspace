@@ -21,7 +21,15 @@ public class IpCooldownInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!"POST".equalsIgnoreCase(request.getMethod())) return true;
         String uri = request.getRequestURI();
-        if (!uri.matches("^/api/post/\\d+/comment$")) return true;
+
+        boolean match =
+        uri.matches("^/api/post/\\d+/comment$") ||
+        uri.matches("^/api/post/\\d+/comment/\\d+/recomment$") ||
+        uri.matches("^/api/episode/\\d+/comment$") ||
+        uri.matches("^/api/episode/\\d+/comment/\\d+/recomment$");
+
+        if (!match) return true;
+
         String subject = extractSubject(request);
         String key = subject + "|POST|" + uri;
 

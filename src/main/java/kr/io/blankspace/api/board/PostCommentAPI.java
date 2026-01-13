@@ -17,7 +17,7 @@ public class PostCommentAPI {
 
     // 댓글 조회
     @GetMapping
-    public Page<CommentDTO.ThreadItem> getPostComments(
+    public CommentDTO.ThreadPageRes getPostComments(
         @PathVariable Long postId, @RequestParam(defaultValue = "0") int page,
         Authentication authentication
     ) {

@@ -26,7 +26,5 @@ public class NovelAPI {
     public List<WorldDTO.ListItem> worldList(
             @PathVariable Integer novelId,
             @RequestParam(required = false) String category
-    ) {
-        return worldService.getWorldList(novelId, category);
-    }
+    ) { return worldService.getWorldList(novelId, category); }
 }

@@ -17,7 +17,7 @@ public class EpisodeCommentAPI {
 
     // 댓글 조회
     @GetMapping
-    public Page<CommentDTO.ThreadItem> getEpisodeComments(
+    public CommentDTO.ThreadPageRes getEpisodeComments(
         @PathVariable Long episodeId, @RequestParam(defaultValue = "0") int page,
         Authentication authentication
     ) {

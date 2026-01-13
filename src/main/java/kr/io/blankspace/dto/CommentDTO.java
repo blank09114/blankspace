@@ -50,6 +50,17 @@ public class CommentDTO {
         private List<RecommentItem> recomments;
     }
 
+    // 댓글 갯수
+    @Getter
+    @AllArgsConstructor
+    public static class ThreadPageRes {
+        private List<ThreadItem> content;
+        private int number;
+        private int totalPages;
+        private long totalElements;
+        private long totalCount;
+    }
+
     // 작성
     @Getter
     @NoArgsConstructor

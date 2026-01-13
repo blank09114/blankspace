@@ -30,7 +30,7 @@ public class EpisodeCommentService {
 
     // 조회
     @Transactional(readOnly = true)
-    public Page<CommentDTO.ThreadItem> getEpisodeComments(Long episodeId, int page, String loginUserId) {
+    public CommentDTO.ThreadPageRes getEpisodeComments(Long episodeId, int page, String loginUserId) {
         final int size = 10;
 
         if (!episodeRepository.existsById(episodeId))
@@ -39,13 +39,9 @@ public class EpisodeCommentService {
         int resolvedPage = resolvePageForLast(episodeId, page, size);
         Pageable pageable = PageRequest.of(resolvedPage, size);
 
-        Page<Comment> commentPage =
-        commentRepository.findByEpisodeIdOrderByCreatedAtAsc(episodeId, pageable);
+        Page<Comment> commentPage = commentRepository.findByEpisodeIdOrderByCreatedAtAsc(episodeId, pageable);
 
         List<Comment> comments = commentPage.getContent();
-        if (comments.isEmpty())
-        { return new PageImpl<>(List.of(), pageable, commentPage.getTotalElements()); }
-
         List<Long> commentIds = comments.stream().map(Comment::getId).toList();
 
         List<Recomment> recomments = commentIds.isEmpty()
@@ -62,7 +58,14 @@ public class EpisodeCommentService {
             .map(r -> common.toRecommentItem(r, loginUserId)).toList()
         ).build()).toList();
 
-        return new PageImpl<>(threads, pageable, commentPage.getTotalElements());
+        long parentCount = commentPage.getTotalElements();
+        long childCount  = recommentRepository.countByComment_EpisodeId(episodeId);
+        long totalCount  = parentCount + childCount;
+
+        return new CommentDTO.ThreadPageRes(
+            threads, commentPage.getNumber(), commentPage.getTotalPages(),
+            parentCount, totalCount
+        );
     }
 
     // page == -1 이면 마지막 페이지

@@ -31,36 +31,39 @@ public class PostCommentService {
 
     // 조회
     @Transactional(readOnly = true)
-    public Page<CommentDTO.ThreadItem> getPostComments(Long postId, int page, String loginUserId) {
+    public CommentDTO.ThreadPageRes getPostComments(Long postId, int page, String loginUserId) {
         final int size = 10;
 
         int resolvedPage = resolvePageForLast(postId, page, size);
         Pageable pageable = PageRequest.of(resolvedPage, size);
 
-        Page<Comment> commentPage =
-        commentRepository.findByPost_IdOrderByCreatedAtAsc(postId, pageable);
+        Page<Comment> commentPage = commentRepository.findByPost_IdOrderByCreatedAtAsc(postId, pageable);
 
         List<Comment> comments = commentPage.getContent();
-        if (comments.isEmpty())
-        { return new PageImpl<>(List.of(), pageable, commentPage.getTotalElements()); }
 
         List<Long> commentIds = comments.stream().map(Comment::getId).toList();
 
-        List<Recomment> recomments = commentIds.isEmpty() ? Collections.emptyList()
-        : recommentRepository.findByComment_IdInOrderByCreatedAtAsc(commentIds);
+        List<Recomment> recomments = commentIds.isEmpty()
+        ? Collections.emptyList() : recommentRepository.findByComment_IdInOrderByCreatedAtAsc(commentIds);
 
         Map<Long, List<Recomment>> recommentMap = recomments.stream()
         .collect(Collectors.groupingBy(r -> r.getComment().getId()));
 
         List<CommentDTO.ThreadItem> threads = comments.stream()
         .map(c -> CommentDTO.ThreadItem.builder()
-        .comment(common.toCommentItem(c, loginUserId))
-        .recomments(
+        .comment(common.toCommentItem(c, loginUserId)).recomments(
             recommentMap.getOrDefault(c.getId(), List.of()).stream()
             .map(r -> common.toRecommentItem(r, loginUserId)).toList()
         ).build()).toList();
 
-        return new PageImpl<>(threads, pageable, commentPage.getTotalElements());
+        long parentCount = commentPage.getTotalElements(); // 원댓글 총 개수
+        long childCount  = recommentRepository.countByComment_Post_Id(postId);
+        long totalCount  = parentCount + childCount;
+
+        return new CommentDTO.ThreadPageRes(
+            threads, commentPage.getNumber(), commentPage.getTotalPages(),
+            parentCount, totalCount
+        );
     }
 
     // page == -1 이면 마지막 페이지

@@ -71,7 +71,7 @@ function loadComments(page) {
         const pager = document.querySelector("[data-pagination]");
         if (pager) { renderPagination(pager, data.number, data.totalPages, loadComments); }
 
-        setCommentCount(data.totalElements);
+        setCommentCount(data.totalCount ?? 0);
     });
 }
 
