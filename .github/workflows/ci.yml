@@ -1,10 +1,24 @@
 name: ci
 
 on:
-  pull_request:
-    branches: ["dev"]
   push:
     branches: ["dev"]
+    paths:
+      - "src/**"
+      - "build.gradle"
+      - "settings.gradle"
+      - "gradle/**"
+      - "Dockerfile"
+      - ".github/workflows/**"
+  pull_request:
+    branches: ["dev"]
+    paths:
+      - "src/**"
+      - "build.gradle"
+      - "settings.gradle"
+      - "gradle/**"
+      - "Dockerfile"
+      - ".github/workflows/**"
   workflow_dispatch:
 
 jobs:
