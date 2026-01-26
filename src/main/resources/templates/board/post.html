@@ -22,9 +22,9 @@
 <!--        <div class="ad"></div>-->
         <div class="postConetentWarp pd-md">
             <div class="postInfo">
-                <h1 class="text1" th:text="${post.category.name}"></h1>
+                <h1 class="text1 normal" th:text="${post.category.name}"></h1>
                 <h2 class="title2Text bold" th:text="${post.title}"></h2>
-                <h3 class="text1" th:if="${post.subTitle != null and !#strings.isEmpty(post.subTitle)}" th:text="${post.subTitle}"></h3>
+                <h3 class="text1 normal" th:if="${post.subTitle != null and !#strings.isEmpty(post.subTitle)}" th:text="${post.subTitle}"></h3>
                 <p class="text1 black2" th:if="${post.detailLink != null and !#strings.isEmpty(post.detailLink)}">
                     GIT - <a class="black2" target="_blank" th:href="${post.detailLink}" th:text="${post.detailLink}"></a>
                 </p>
