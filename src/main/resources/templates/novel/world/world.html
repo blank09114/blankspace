@@ -19,8 +19,11 @@
     <section class="flex flex-column justify-center gap-lg">
         <div class="postConetentWarp pd-md">
             <div class="postInfo">
-                <p class="text1" th:text="${world.category}"></p>
-                <p class="title2Text bold" th:text="${world.name}"></p>
+                <h1 class="text1">
+                    <span th:text="${novelCard.name}"></span> -
+                    <span th:text="${world.category}"></span>
+                </h1>
+                <h2 class="title2Text bold" th:text="${world.name}"></h2>
                 <p class="text1 black2" th:text="${#temporals.format(world.createdAt, 'yyyy.MM.dd')}"></p>
             </div>
             <div class="postConetent" th:utext="${world.content}"></div>

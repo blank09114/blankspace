@@ -21,8 +21,11 @@
     <section class="flex flex-column align-center gap-lg">
         <div class="postConetentWarp pd-md">
             <div class="postInfo">
-                <p class="text1" th:text="${episode.displayNo} + '화'"></p>
-                <p class="title2Text bold" th:text="${episode.name}"></p>
+                <h1 class="text1">
+                    <span th:text="${novelCard.name}"></span> -
+                    <span th:text="${episode.displayNo} + '화'"></span>
+                </h1>
+                <h2 class="title2Text bold" th:text="${episode.name}"></h2>
                 <p class="text1 black2" th:text="${#temporals.format(episode.createdAt, 'yyyy.MM.dd.')}"></p>
             </div>
             <div class="postConetent" th:utext="${episode.content}"></div>

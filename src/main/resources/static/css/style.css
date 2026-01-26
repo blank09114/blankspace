@@ -40,6 +40,7 @@
     box-sizing: border-box;
 
     font-family: 'Pretendard Variable';
+    font-weight: normal;
     color: var(--black-1);
     
     transition: all 0.3s ease;

@@ -12,7 +12,7 @@
             <span> · </span>
             <span th:text="${novelCard.end ? '완결' : '연재 중'}"></span>
         </p>
-        <p class="title3Text bold" th:text="${novelCard.name}"></p>
+        <h1 class="title3Text bold" th:text="${novelCard.name}"></h1>
         <p class="text1 intro" th:text="${novelCard.intro}"></p>
     </div>
     <div class="btnsWrap" sec:authorize="hasRole('ADMIN')">

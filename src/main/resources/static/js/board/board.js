@@ -78,9 +78,9 @@ function renderPostList(items, boardName)
 
         return `
             <a class="card pd-md" href="${href}">
-                <img class="thumbnail" src="${thumb}" alt="thumbnail"
+                <img class="thumbnail" src="${thumb}" alt="썸네일"
                      onerror="this.onerror=null; this.src='${DEFAULT_THUMBNAIL}';">
-                <p class="title2Text text-center bold">${title}</p>
+                <p class="title3Text text-center bold">${title}</p>
                 ${subTitleHtml}
             </a>
         `;
