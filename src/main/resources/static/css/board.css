@@ -38,7 +38,6 @@ form[name="categoryForm"] { width: 100%; }
 .btnsWrap.post { justify-content: space-between; }
 .btnsWrap.post .btn { width: 100px !important; }
 .btn.disabled { pointer-events: none; opacity: 0.5; }
-postConetent strong { font-weight: bold; }
 
 /* 댓글 */
 .commentMenu, .commentForm { width: 100%; }
