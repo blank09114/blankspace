@@ -33,7 +33,7 @@ form[name="categoryForm"] { width: 100%; }
 }
 .postInfo { padding-bottom: 5px; border-bottom: 1px solid var(--gray-2); }
 .postConetent { min-height: 300px; margin-top: 10px; }
-.postConetent * { line-height: 1.5; }
+.postConetent * { line-height: 1.7; }
 .postConetentWarp .btnsWrap { margin-top: 5px; }
 .btnsWrap.post { justify-content: space-between; }
 .btnsWrap.post .btn { width: 100px !important; }
