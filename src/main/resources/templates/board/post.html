@@ -26,7 +26,7 @@
                 <h2 class="title2Text bold" th:text="${post.title}"></h2>
                 <h3 class="text1" th:if="${post.subTitle != null and !#strings.isEmpty(post.subTitle)}" th:text="${post.subTitle}"></h3>
                 <p class="text1 black2" th:if="${post.detailLink != null and !#strings.isEmpty(post.detailLink)}">
-                    GIT -<a class="black2" target="_blank" th:href="${post.detailLink}" th:text="${post.detailLink}"></a>
+                    GIT - <a class="black2" target="_blank" th:href="${post.detailLink}" th:text="${post.detailLink}"></a>
                 </p>
                 <p class="text1 black2" th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd. HH:mm')}"></p>
             </div>
