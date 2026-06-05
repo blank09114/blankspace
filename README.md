@@ -23,7 +23,7 @@
 | Front-end | HTML, CSS, JavaScript, Thymeleaf |
 | Back-end | Java, Spring Boot, Spring Data JPA, Spring Security, Lombok |
 | Database | MySQL |
-| Infra | AWS EC2, AWS S3 |
+| Infra | AWS EC2, AWS RDS, AWS S3 |
 | DevOps/CI·CD | Docker, GitHub Actions |
 | Dev Tools | IntelliJ IDEA, VS Code, Git/GitHub |
 
